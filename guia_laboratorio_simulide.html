@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Laboratorio SimulIDE: Circuitos con Transistores BJT y Análisis del Punto Q</title>
+  
+  <!-- KaTeX for math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  
+  <style>
+    :root {
+      --bg-page: #0f172a;
+      --bg-card: #1e293b;
+      --border-card: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-amber: #fbbf24;
+      --accent-red: #f87171;
+      --accent-purple: #c084fc;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      padding: 20px 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Top Sticky Control Bar */
+    .top-bar {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .doc-brand {
+      font-weight: 700;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.02rem;
+    }
+
+    .mode-switch-group {
+      display: flex;
+      background: #090d16;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-card);
+      gap: 4px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mode-btn:hover {
+      color: #fff;
+    }
+
+    .mode-btn.active.btn-docente {
+      background: #059669;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4);
+    }
+
+    .mode-btn.active.btn-estudiante {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.84rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #273549;
+    }
+
+    .btn-print {
+      background: #334155;
+      color: #f8fafc;
+    }
+
+    /* Mode Banner */
+    .mode-banner {
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mode-banner-docente {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+
+    .mode-banner-estudiante {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+    }
+
+    /* Header styling */
+    .doc-header {
+      text-align: center;
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--border-card);
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .badge-lab {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue);
+    }
+
+    h1.doc-title {
+      font-size: 2.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .doc-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 860px;
+      margin: 0 auto 16px auto;
+    }
+
+    .header-metadata {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      flex-wrap: wrap;
+    }
+
+    .header-metadata span strong {
+      color: var(--accent-blue);
+    }
+
+    /* Section Styling */
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin: 32px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--border-card);
+      padding-bottom: 8px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .practice-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .tag-circuit {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: rgba(192, 132, 252, 0.18);
+      color: var(--accent-purple);
+      border: 1px solid var(--accent-purple);
+    }
+
+    /* Circuit Image Box for original images from angelmicelti.github.io */
+    .circuit-image-box {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 18px auto;
+      max-width: 540px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .circuit-image-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 8px;
+    }
+
+    .circuit-img {
+      max-width: 100%;
+      height: auto;
+      max-height: 290px;
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .circuit-img.img-tall {
+      max-height: 380px;
+    }
+
+    .circuit-caption {
+      font-size: 0.82rem;
+      color: #0f172a;
+      font-weight: 600;
+      margin-top: 10px;
+      text-align: center;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 8px;
+      width: 100%;
+      letter-spacing: 0.01em;
+      line-height: 1.4;
+    }
+
+    .circuit-caption a {
+      color: #0284c7;
+      text-decoration: underline;
+    }
+
+    /* Analysis & Step-by-Step Boxes */
+    .math-analysis-box {
+      background: #090d16;
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+
+    .math-analysis-box.docente-box {
+      border-left-color: #10b981;
+      background: #061e16;
+    }
+
+    .math-analysis-box.estudiante-box {
+      border-left-color: #38bdf8;
+      background: #071929;
+    }
+
+    .math-analysis-box h4 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .math-analysis-box.docente-box h4 {
+      color: #34d399;
+    }
+
+    .math-analysis-box.estudiante-box h4 {
+      color: #38bdf8;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1e293b;
+      color: var(--accent-blue);
+      font-family: monospace;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 6px;
+      border: 1px solid var(--border-card);
+    }
+
+    /* Student fill blanks and calculation inputs */
+    .fill-blank {
+      display: inline-block;
+      min-width: 90px;
+      padding: 1px 8px;
+      border-bottom: 2px dashed #38bdf8;
+      color: #fbbf24;
+      font-family: monospace;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .student-guided-step {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .student-guided-step h5 {
+      color: #93c5fd;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .calc-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+    }
+
+    .calc-input {
+      background: #090d16;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      width: 120px;
+      text-align: center;
+    }
+
+    .calc-input:focus {
+      outline: none;
+      border-color: #4ade80;
+      box-shadow: 0 0 6px rgba(74, 222, 128, 0.4);
+    }
+
+    /* Collapsible Teacher Solution Drawer for quick in-class checking */
+    .solution-drawer {
+      margin-top: 14px;
+      border: 1px solid #059669;
+      border-radius: 8px;
+      background: #041d15;
+      overflow: hidden;
+    }
+
+    .solution-drawer summary {
+      padding: 10px 14px;
+      background: #064e3b;
+      color: #6ee7b7;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .solution-drawer summary:hover {
+      background: #047857;
+    }
+
+    .solution-drawer-content {
+      padding: 14px 16px;
+      border-top: 1px solid #059669;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    /* SimulIDE Steps Box */
+    .simulide-steps-box {
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .simulide-steps-box h4 {
+      color: var(--accent-green);
+      font-size: 0.98rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .simulide-steps-box ol, .simulide-steps-box ul {
+      padding-left: 20px;
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+
+    .simulide-steps-box li {
+      margin-bottom: 6px;
+    }
+
+    /* Data Collection Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.88rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border-card);
+      text-align: center;
+    }
+
+    .data-table th {
+      background: #090d16;
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+
+    .data-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .data-table td.text-left {
+      text-align: left;
+    }
+
+    /* Alerts and Tips */
+    .tip-box {
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 4px solid var(--accent-amber);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+      font-size: 0.88rem;
+      color: #fef08a;
+    }
+
+    .question-list {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 14px;
+    }
+
+    .question-list h5 {
+      color: var(--accent-purple);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .question-list ol {
+      padding-left: 20px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .question-list li {
+      margin-bottom: 6px;
+    }
+
+    /* Visibility rules for Docente vs Estudiante */
+    body.mode-docente .view-estudiante-only {
+      display: none !important;
+    }
+
+    body.mode-estudiante .view-docente-only {
+      display: none !important;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0;
+      }
+      .top-bar, .nav-actions, .mode-banner, .solution-drawer summary {
+        display: none !important;
+      }
+      .card, .math-analysis-box, .simulide-steps-box, .question-list, .student-guided-step {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+      .section-title, h1.doc-title, .practice-title, .math-analysis-box h4, .simulide-steps-box h4 {
+        color: #000 !important;
+      }
+      .circuit-image-box {
+        background: #ffffff !important;
+        border: 1.5px solid #000000 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+      .data-table th {
+        background: #f1f5f9 !important;
+        color: #000 !important;
+      }
+      .data-table td, .data-table th {
+        border-color: #cbd5e1 !important;
+        color: #000 !important;
+      }
+      .tip-box {
+        background: #fefce8 !important;
+        color: #854d0e !important;
+        border-left-color: #ca8a04 !important;
+      }
+      .fill-blank {
+        border-bottom-color: #000 !important;
+        color: #000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="mode-docente">
+
+  <div class="container">
+
+    <!-- Top Sticky Control Bar -->
+    <div class="top-bar">
+      <div class="doc-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="8" y1="8" x2="8" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="8"/>
+          <line x1="8" y1="12" x2="16" y2="16"/>
+        </svg>
+        <span>Laboratorio SimulIDE &bull; Circuitos con Transistores</span>
+      </div>
+
+      <!-- Segmented View Mode Toggle -->
+      <div class="mode-switch-group">
+        <button id="btn-docente" class="mode-btn active btn-docente" onclick="setDocMode('docente')" title="Ver cálculos analíticos completos y soluciones numéricas">
+          👨‍🏫 Versión Docente (Completa)
+        </button>
+        <button id="btn-estudiante" class="mode-btn btn-estudiante" onclick="setDocMode('estudiante')" title="Ver guía estructurada con mallas para completar los cálculos">
+          👨‍🎓 Versión Estudiante (Guiada)
+        </button>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-print" onclick="window.print()" title="Imprimir versión actual a papel o exportar como PDF">
+          🖨️ Imprimir / PDF
+        </button>
+        <a href="slides_transistor.html" class="btn" title="Ir a los Slides de Clase">
+          💻 Slides
+        </a>
+        <a href="guia_ejercicios_transistor.html" class="btn" title="Ir a la Guía de Ejercicios">
+          📝 Ejercicios
+        </a>
+      </div>
+    </div>
+
+    <!-- Mode Indicator Banner -->
+    <div id="mode-banner" class="mode-banner mode-banner-docente">
+      <div>
+        <strong id="banner-title">🎓 Versión Docente Activa:</strong>
+        <span id="banner-desc"> Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\text{V}$, transistor BC548B) y coordenadas resueltas del Punto Q.</span>
+      </div>
+      <button class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="toggleDocMode()">
+        Cambiar a Vista <span id="banner-btn-text">Estudiante</span>
+      </button>
+    </div>
+
+    <!-- Document Header -->
+    <header class="doc-header">
+      <span class="badge badge-lab">Prácticas Experimentales de Simulación Virtual</span>
+      <h1 class="doc-title">GUÍA DE LABORATORIO CON SIMULIDE:<br>CIRCUITOS CON TRANSISTORES Y ANÁLISIS DEL PUNTO Q</h1>
+      <p class="doc-subtitle">
+        Modelado, simulación interactiva y deducción analítica rigurosa del punto de trabajo $Q(V_{CEQ}, I_{CQ}, I_{BQ})$ con los valores exactos de los esquemáticos originales de SimulIDE: alimentación de 9V, transistor NPN BC548B, divisor LDR con potenciómetro de 5kΩ, NTC con relé y motor, temporizador de 150µF, astable de 100µF y par Darlington compuesto.
+      </p>
+      
+      <div class="header-metadata">
+        <span><strong>Asignatura:</strong> Fundamentos de Electrónica</span>
+        <span><strong>Herramienta:</strong> SimulIDE</span>
+        <span><strong>Alimentación Común:</strong> $V_{CC} = 9\text{ V}$</span>
+        <span><strong>Transistor Común:</strong> NPN BC548B ($\beta \approx 200$)</span>
+        <span><strong>Fuente Oficial:</strong> <a href="https://angelmicelti.github.io/4ESO/EAN/" target="_blank" style="color:var(--accent-blue);">Ángel Millán Cerdán (4º ESO)</a></span>
+      </div>
+    </header>
+
+    <!-- SECTION 1: OBJETIVOS -->
+    <section>
+      <h2 class="section-title">&#127919; 1. Objetivos de Aprendizaje y Competencias</h2>
+      <div class="card">
+        <ul style="padding-left: 20px; font-size: 0.95rem; color: #cbd5e1;">
+          <li style="margin-bottom: 8px;">
+            <strong>Comprender y calcular el Punto Q de polarización:</strong> Aplicar las Leyes de Kirchhoff de Voltaje (KVL) y Corriente (KCL) para determinar analíticamente las coordenadas $(V_{CEQ}, I_{CQ})$ y la corriente de base $I_{BQ}$ en las tres regiones de operación: <strong>Corte</strong>, <strong>Activa Lineal</strong> y <strong>Saturación</strong>, empleando los valores nominales exactos de los esquemáticos comerciales.
+          </li>
+          <li style="margin-bottom: 8px;">
+            <strong>Dominar el simulador virtual SimulIDE:</strong> Configurar fuentes de $9\text{ V}$, transistores BJT NPN BC548B ($\beta = 200$), termistores NTC, fotorresistencias (LDR), relés electromecánicos, motores de CC y osciloscopio virtual.
+          </li>
+          <li style="margin-bottom: 8px;">
+            <strong>Contrastar modelo teórico vs simulación:</strong> Evaluar cuantitativamente la concordancia entre los cálculos teóricos ($V_{BE} = 0.70 - 0.75\text{ V}, V_{CE(sat)} = 0.20\text{ V}$) y las mediciones de SimulIDE.
+          </li>
+          <li style="margin-bottom: 8px;">
+            <strong>Analizar la conmutación y la protección inductiva:</strong> Comprobar el fenómeno de sobretensión inductiva ($-L \frac{di}{dt}$) en bobinas de relé y motores y el papel protector del diodo <em>flyback</em> en antiparalelo.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 2: MARCO METODOLÓGICO -->
+    <section>
+      <h2 class="section-title">&#128208; 2. Marco Metodológico: Algoritmo para el Cálculo del Punto Q</h2>
+      <div class="card">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 14px;">
+          Para cualquier circuito con transistores bipolares (BJT), el análisis del punto de reposo $Q$ exige evaluar sistemáticamente las mallas de entrada y de salida siguiendo este procedimiento estándar:
+        </p>
+
+        <div class="math-analysis-box">
+          <h4 style="color: var(--accent-blue);">Algoritmo Sistemático de 3 Pasos para Resolver el Punto Q</h4>
+          <p style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 8px;">
+            <span class="step-badge">Paso 1</span> <strong>Análisis de la Malla de Entrada (Base - Emisor):</strong><br>
+            Reducir el circuito de polarización de base a su equivalente de Thévenin ($V_{TH}, R_{TH}$). Si la tensión en vacío es menor que el umbral de conducción ($V_{TH} < 0.65\text{ V}$), la unión base-emisor está bloqueada:
+            $$I_B = 0 \implies I_C = 0 \implies V_{CE} = V_{CC} = 9\text{ V} \quad \text{\textbf{(REGIÓN DE CORTE)}}$$
+          </p>
+          <p style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 8px;">
+            <span class="step-badge">Paso 2</span> <strong>Hipótesis de Región Activa Lineal:</strong><br>
+            Si $V_{TH} \ge 0.70\text{ V}$, se asume $V_{BE} \approx 0.70\text{ V}$ y se despeja la corriente de base considerando las resistencias en serie ($R_{TH} + R_B$):
+            $$I_B = \frac{V_{TH} - V_{BE}}{R_{TH} + R_B} \quad \implies \quad I_C = \beta \cdot I_B$$
+            Se calcula la tensión Colector-Emisor en la malla de salida:
+            $$V_{CE} = V_{CC} - I_C R_C - V_{carga}$$
+          </p>
+          <p style="font-size: 0.9rem; color: #e2e8f0;">
+            <span class="step-badge">Paso 3</span> <strong>Validación o Corrección a Saturación:</strong><br>
+            &bull; Si $V_{CE} > 0.25\text{ V}$, la hipótesis activa se confirma $\implies$ <strong>Punto Q en Región Activa</strong>.<br>
+            &bull; Si el cálculo da $V_{CE} \le 0.20\text{ V}$, el transistor está en <strong>Saturación</strong>. Se fija $V_{CE} = V_{CE(sat)} \approx 0.20\text{ V}$ y se recalcula la corriente máxima de colector impuesta por la carga:
+            $$I_{C(sat)} = \frac{V_{CC} - V_{carga} - V_{CE(sat)}}{R_C} \quad \text{y se verifica que } I_B > I_{B(min)} = \frac{I_{C(sat)}}{\beta}$$
+          </p>
+        </div>
+
+        <div class="tip-box">
+          <strong>💡 Configuración en SimulIDE:</strong> En todos los circuitos el transistor es el <strong>BC548B</strong>. En SimulIDE, haga clic derecho sobre el BJT $\to$ <em>Properties</em> y verifique que <code>Gain = 200</code> (o el valor de ganancia fijado para la sesión de laboratorio) para que los valores de simulación coincidan exactamente con la deducción analítica.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PRÁCTICA 1 - DETECTOR DE OSCURIDAD BÁSICO -->
+    <section id="practica1">
+      <h2 class="section-title">&#128262; 3. Práctica 1: Detector de Oscuridad Básico con LDR</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 1: Interruptor Crepuscular con Divisor LDR y Transistor BC548B</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad.html" target="_blank" style="color:var(--accent-blue);">detector_de_oscuridad.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Conmutación Corte / Saturación</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          El circuito consta de un divisor de tensión formado por el potenciómetro superior $\text{VR1} = 5\text{ k}\Omega$ y la fotorresistencia inferior $\text{LDR1}$. La base del transistor $\text{BC548B}$ se conecta al divisor a través de una resistencia limitadora de $R_B = 2.2\text{ k}\Omega$. En la salida, el colector controla un diodo LED $\text{D1}$ con una resistencia limitadora $R_C = 470\ \Omega$ alimentado a $+9\text{ V}$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/TDetOscuridad.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/TDetOscuridad.png';" 
+                 alt="Esquemático oficial: Detector de Oscuridad (Ángel Millán Cerdán)" 
+                 class="circuit-img" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 3.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $\text{VR1}=5\text{K}$, $R_B=2.2\text{K}$, $\text{BC548B}$, $R_C=470\ \Omega$, LED $\text{D1}$, $\text{LDR1}$.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, potenciómetro $\text{VR1} = 5\text{ k}\Omega$, resistencia en serie de base $R_B = 2.2\text{ k}\Omega$, resistencia de colector $R_C = 470\ \Omega$, caída de tensión en LED $V_{LED} \approx 1.8\text{ V}$, transistor $\text{BC548B}$ con $\beta = 200$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>Caso A: Iluminación Alta (Luz Plena, $R_{LDR} \approx 200\ \Omega$, potenciómetro al 100% $\text{VR1} = 5\text{ k}\Omega$):</strong><br>
+              Calculamos la tensión en el divisor de base en circuito abierto:
+              $$V_{nodo} = V_{CC} \cdot \frac{R_{LDR}}{\text{VR1} + R_{LDR}} = 9\text{ V} \cdot \frac{200\ \Omega}{5000\ \Omega + 200\ \Omega} = 9 \cdot \frac{200}{5200} \approx \mathbf{0.346\text{ V}}$$
+              Como $V_{nodo} = 0.346\text{ V} < 0.65\text{ V}$, la unión base-emisor no alcanza el potencial de umbral ($V_\gamma \approx 0.65\text{ V}$):
+              $$I_B = 0\ \mu\text{A}, \quad I_C = 0\text{ mA}, \quad V_{CE} = V_{CC} = \mathbf{9.0\text{ V}} \quad \implies \quad \mathbf{Q_{luz} = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+              El LED permanece <strong>totalmente apagado</strong>.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>Caso B: Oscuridad Plena ($R_{LDR} \approx 100\text{ k}\Omega$, $\text{VR1} = 5\text{ k}\Omega$):</strong><br>
+              Equivalente de Thévenin del divisor sensor:
+              $$V_{TH} = 9\text{ V} \cdot \frac{100\text{ k}\Omega}{5\text{ k}\Omega + 100\text{ k}\Omega} = 9 \cdot \frac{100}{105} \approx \mathbf{8.57\text{ V}}$$
+              $$R_{TH} = 5\text{ k}\Omega \parallel 100\text{ k}\Omega = \frac{500}{105} \approx \mathbf{4.76\text{ k}\Omega}$$
+              Resistencia total vista desde la base: $R_{B(total)} = R_{TH} + R_B = 4.76\text{ k}\Omega + 2.2\text{ k}\Omega = \mathbf{6.96\text{ k}\Omega}$.<br>
+              Corriente inyectada a la base ($V_{BE(sat)} \approx 0.75\text{ V}$):
+              $$I_B = \frac{V_{TH} - V_{BE}}{R_{B(total)}} = \frac{8.57\text{ V} - 0.75\text{ V}}{6.96\text{ k}\Omega} = \frac{7.82\text{ V}}{6.96\text{ k}\Omega} \approx \mathbf{1.124\text{ mA} = 1124\ \mu\text{A}}$$
+              Corriente de saturación máxima fijada por la malla de colector ($V_{CE(sat)} \approx 0.20\text{ V}$):
+              $$I_{C(sat)} = \frac{V_{CC} - V_{LED} - V_{CE(sat)}}{R_C} = \frac{9\text{ V} - 1.8\text{ V} - 0.2\text{ V}}{470\ \Omega} = \frac{7.0\text{ V}}{470\ \Omega} \approx \mathbf{14.89\text{ mA}}$$
+              Corriente mínima de base requerida para sostener la saturación ($\beta = 200$):
+              $$I_{B(min)} = \frac{I_{C(sat)}}{\beta} = \frac{14.89\text{ mA}}{200} \approx \mathbf{0.0745\text{ mA} = 74.5\ \mu\text{A}}$$
+              Factor de sobremarcha: $k_{OD} = \frac{I_B}{I_{B(min)}} = \frac{1124\ \mu\text{A}}{74.5\ \mu\text{A}} \approx 15.1$.<br>
+              Como $I_B \gg I_{B(min)}$, el transistor está en <strong>SATURACIÓN PROFUNDA</strong>:
+              $$\mathbf{Q_{oscuridad} = (0.20\text{ V},\ 14.89\text{ mA}) \quad [SATURACIÓN]}$$
+              El LED $\text{D1}$ enciende con brillo pleno ($I_{D1} \approx 14.9\text{ mA}$).
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, $\text{VR1} = 5\text{ k}\Omega$, $R_B = 2.2\text{ k}\Omega$, $R_C = 470\ \Omega$, $V_{LED} = 1.8\text{ V}$, transistor $\text{BC548B}$ con $\beta = 200$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Entrada en Iluminación Plena ($R_{LDR} = 200\ \Omega$)</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                Plantee el divisor de tensión en el nodo de base para comprobar si supera el voltaje umbral $V_\gamma \approx 0.65\text{ V}$:
+              </p>
+              $$V_{nodo} = V_{CC} \cdot \frac{R_{LDR}}{\text{VR1} + R_{LDR}} = (9\text{ V}) \cdot \frac{200\ \Omega}{5000\ \Omega + 200\ \Omega}$$
+              <div class="calc-row">
+                <span>$V_{nodo} =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.35 V">
+                <span>¿Conduce el BJT? ($V_{nodo} \ge 0.65\text{ V}$): </span><input type="text" class="calc-input" placeholder="Sí / No" style="width:80px;">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{luz}$ = (</strong><span class="fill-blank">___ V</span>, <span class="fill-blank">___ mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">CORTE</span></span>
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Malla de Entrada y Salida en Oscuridad Total ($R_{LDR} = 100\text{ k}\Omega$)</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                Deduzca el equivalente de Thévenin del divisor y sume la resistencia en serie de base $R_B = 2.2\text{ k}\Omega$:
+              </p>
+              $$V_{TH} = V_{CC} \cdot \frac{R_{LDR}}{\text{VR1} + R_{LDR}}, \qquad R_{B(total)} = \left(\frac{\text{VR1} \cdot R_{LDR}}{\text{VR1} + R_{LDR}}\right) + R_B$$
+              <div class="calc-row">
+                <span>$V_{TH} =$ </span><input type="text" class="calc-input" placeholder="Ej: 8.57 V">
+                <span>$R_{B(total)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 6.96 kΩ">
+                <span>$I_B = \frac{V_{TH} - 0.75\text{V}}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.12 mA">
+              </div>
+              <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 8px;">
+                Malla de colector: calcule la corriente máxima de saturación ($V_{CE(sat)} = 0.20\text{ V}$) y verifique el criterio de saturación:
+              </p>
+              $$I_{C(sat)} = \frac{V_{CC} - V_{LED} - V_{CE(sat)}}{R_C}, \qquad I_{B(min)} = \frac{I_{C(sat)}}{\beta}$$
+              <div class="calc-row">
+                <span>$I_{C(sat)} = \frac{9 - 1.8 - 0.2}{470\ \Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 14.89 mA">
+                <span>$I_{B(min)} = \frac{I_{C(sat)}}{200} =$ </span><input type="text" class="calc-input" placeholder="Ej: 74.5 μA">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{osc}$ = (</strong><span class="fill-blank">___ V</span>, <span class="fill-blank">___ mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">SATURACIÓN</span></span>
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; Luz ($200\ \Omega$): $V_{nodo} = 0.346\text{ V} < 0.65\text{ V} \implies I_B = 0,\ I_C = 0,\ V_{CE} = 9\text{ V} \implies \mathbf{Q_{luz} = (9.0\text{ V},\ 0\text{ mA}) \text{ [CORTE]}}$.<br>
+                &bull; Oscuridad ($100\text{ k}\Omega$): $V_{TH} = 8.57\text{ V},\ R_{B(total)} = 4.76\text{ k}\Omega + 2.2\text{ k}\Omega = 6.96\text{ k}\Omega \implies I_B = 1.124\text{ mA}$. Como $I_{C(sat)} = 14.89\text{ mA}$ e $I_{B(min)} = 74.5\ \mu\text{A} \ll I_B \implies \mathbf{Q_{osc} = (0.20\text{ V},\ 14.89\text{ mA}) \text{ [SATURACIÓN]}}$.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- PROCEDIMIENTO DE SIMULACIÓN EN SIMULIDE -->
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Coloque una fuente <code>Fixed Volt. (9V)</code> y <code>Gnd</code>.</li>
+            <li>Inserte un potenciómetro variable de $5\text{ k}\Omega$ ($\text{VR1}$) y una fotorresistencia ($\text{LDR1}$) conectada a masa.</li>
+            <li>Conecte una resistencia fija $R_B = 2.2\text{ k}\Omega$ entre el punto intermedio del divisor y la base del transistor <code>BJT NPN</code> ($\text{BC548B}$, con <code>Gain = 200</code>).</li>
+            <li>En el colector conecte una resistencia de $R_C = 470\ \Omega$ en serie con un <code>Led</code> rojo hacia la línea de $+9\text{ V}$.</li>
+            <li>Coloque un voltímetro entre Colector y Emisor para medir $V_{CE}$ y un amperímetro en serie con el Colector.</li>
+          </ol>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Condición LDR</th>
+              <th>$R_{LDR}$ Estimada</th>
+              <th>$V_B$ Medido</th>
+              <th>$V_{CE}$ Medido</th>
+              <th>$I_C$ Medida</th>
+              <th>Estado LED</th>
+              <th>Región del Transistor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Luz Plena</strong></td>
+              <td>$\approx 200\ \Omega$</td>
+              <td><span class="view-docente-only">$\approx 0.35\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$9.00\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$0.00\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Apagado</td>
+              <td><strong>Corte</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Luz Intermedia</strong></td>
+              <td>$\approx 1.5\text{ k}\Omega$</td>
+              <td><span class="view-docente-only">$\approx 0.68\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$\approx 4.20\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$\approx 6.4\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Tenue</td>
+              <td><strong>Activa Lineal</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Oscuridad Total</strong></td>
+              <td>$> 50\text{ k}\Omega$</td>
+              <td><span class="view-docente-only">$\approx 0.77\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$\approx 0.19\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">$\approx 14.8\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Pleno</td>
+              <td><strong>Saturación</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PRÁCTICA 2 - VENTILADOR CON NTC -->
+    <section id="practica2">
+      <h2 class="section-title">&#127777;&#65039; 4. Práctica 2: Ventilador Activado por Termistor NTC</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 2: Control de Refrigeración con Termistor NTC, Transistor y Relé</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/ventilador_activado_por_ntc.html" target="_blank" style="color:var(--accent-blue);">ventilador_activado_por_ntc.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Control de Relé y Motor DC</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          El circuito emplea un divisor de tensión formado por el termistor $\text{NTC}$ ($-t^\circ$) en la rama superior y un potenciómetro de $500\ \Omega$ en la rama inferior. La base del transistor $\text{BC548B}$ se conecta mediante una resistencia de $R_B = 2.2\text{ k}\Omega$. El colector acciona la bobina de un relé $\text{RL1}$ (con diodo de protección en antiparalelo). Al activarse el relé, sus contactos cierran el circuito para encender un motor de corriente continua $\text{MT1}$ conectado a la fuente de $+9\text{ V}$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/TVentilador.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/TVentilador.png';" 
+                 alt="Esquemático original: Ventilador activado por NTC (Ángel Millán Cerdán)" 
+                 class="circuit-img" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 4.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/ventilador_activado_por_ntc.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $\text{NTC}$ (arriba), Potenciómetro $500\ \Omega$ (abajo), $R_B=2.2\text{K}$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo, motor $\text{MT1}$.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, potenciómetro inferior fijado a $R_{pot} = 500\ \Omega$, resistencia en serie de base $R_B = 2.2\text{ k}\Omega$, bobina de relé con $R_{bobina} \approx 400\ \Omega$, transistor $\text{BC548B}$ con $\beta = 200$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>1. En reposo / Frío ($15^\circ\text{C}$, $R_{NTC} \approx 15\text{ k}\Omega$):</strong><br>
+              Calculamos la tensión en el nodo de base:
+              $$V_{nodo} = V_{CC} \cdot \frac{R_{pot}}{R_{NTC} + R_{pot}} = 9\text{ V} \cdot \frac{500\ \Omega}{15000\ \Omega + 500\ \Omega} = 9 \cdot \frac{500}{15500} \approx \mathbf{0.290\text{ V}}$$
+              Como $V_{nodo} = 0.29\text{ V} < 0.65\text{ V}$, el transistor está en <strong>CORTE</strong>:
+              $$I_B = 0\ \mu\text{A}, \quad I_C = 0\text{ mA}, \quad V_{CE} = V_{CC} = \mathbf{9.0\text{ V}} \quad \implies \quad \mathbf{Q_{frio} = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+              La bobina del relé está desenergizada, sus contactos permanecen abiertos y el motor $\text{MT1}$ está <strong>APAGADO</strong>.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>2. Activación por calor ($60^\circ\text{C}$, $R_{NTC} \approx 400\ \Omega$):</strong><br>
+              Equivalente de Thévenin del divisor:
+              $$V_{TH} = 9\text{ V} \cdot \frac{500\ \Omega}{400\ \Omega + 500\ \Omega} = 9 \cdot \frac{5}{9} = \mathbf{5.00\text{ V}}$$
+              $$R_{TH} = 400\ \Omega \parallel 500\ \Omega = \frac{200000}{900} \approx \mathbf{222\ \Omega}$$
+              Resistencia total de base: $R_{B(total)} = R_{TH} + R_B = 222\ \Omega + 2200\ \Omega = \mathbf{2422\ \Omega} \approx 2.42\text{ k}\Omega$.<br>
+              Corriente de base inyectada ($V_{BE(sat)} \approx 0.75\text{ V}$):
+              $$I_B = \frac{V_{TH} - V_{BE}}{R_{B(total)}} = \frac{5.00\text{ V} - 0.75\text{ V}}{2422\ \Omega} = \frac{4.25\text{ V}}{2422\ \Omega} \approx \mathbf{1.755\text{ mA} = 1755\ \mu\text{A}}$$
+              Corriente de saturación requerida para activar la bobina ($R_{bobina} = 400\ \Omega$, $V_{CE(sat)} = 0.20\text{ V}$):
+              $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}} = \frac{9\text{ V} - 0.2\text{ V}}{400\ \Omega} = \frac{8.8\text{ V}}{400\ \Omega} = \mathbf{22.0\text{ mA}}$$
+              Corriente de base mínima teórica ($\beta = 200$):
+              $$I_{B(min)} = \frac{I_{C(sat)}}{\beta} = \frac{22.0\text{ mA}}{200} = \mathbf{0.110\text{ mA} = 110\ \mu\text{A}}$$
+              Factor de sobremarcha: $k_{OD} = \frac{1755\ \mu\text{A}}{110\ \mu\text{A}} \approx 16.0 \gg 3$. Transistor en <strong>SATURACIÓN FORZADA</strong>:
+              $$\mathbf{Q_{calor} = (0.20\text{ V},\ 22.0\text{ mA}) \quad [SATURACIÓN\ FORZADA]}$$
+              El relé cierra sus contactos y el motor $\text{MT1}$ gira a plena velocidad alimentado a $9\text{ V}$.
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, potenciómetro inferior $R_{pot} = 500\ \Omega$, $R_B = 2.2\text{ k}\Omega$, bobina del relé $R_{bobina} = 400\ \Omega$, $\text{BC548B}$ con $\beta = 200$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Entrada en Frío ($R_{NTC} = 15\text{ k}\Omega$)</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                El NTC está en la rama superior. Calcule la tensión del divisor:
+              </p>
+              $$V_{nodo} = V_{CC} \cdot \frac{R_{pot}}{R_{NTC} + R_{pot}} = (9\text{ V}) \cdot \frac{500\ \Omega}{15000\ \Omega + 500\ \Omega}$$
+              <div class="calc-row">
+                <span>$V_{nodo} =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.29 V">
+                <span>Estado del relé y motor: </span><input type="text" class="calc-input" placeholder="Apagado / Encendido" style="width:130px;">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{frio}$ = (</strong><span class="fill-blank">___ V</span>, <span class="fill-blank">___ mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">CORTE</span></span>
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Conducción Térmica y Activación del Relé ($R_{NTC} = 400\ \Omega$)</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                Al calentarse, $R_{NTC}$ baja a $400\ \Omega$. Deduzca el circuito de base y de colector:
+              </p>
+              $$V_{TH} = 9\text{ V} \cdot \frac{500}{400 + 500}, \qquad R_{B(total)} = (400 \parallel 500) + 2200\ \Omega$$
+              <div class="calc-row">
+                <span>$V_{TH} =$ </span><input type="text" class="calc-input" placeholder="Ej: 5.00 V">
+                <span>$R_{B(total)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 2.42 kΩ">
+                <span>$I_B = \frac{V_{TH} - 0.75}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.75 mA">
+              </div>
+              <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 8px;">
+                Calcule la corriente de activación de la bobina del relé ($V_{CE(sat)} = 0.2\text{ V}$):
+              </p>
+              $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}}, \qquad I_{B(min)} = \frac{I_{C(sat)}}{\beta}$$
+              <div class="calc-row">
+                <span>$I_{C(sat)} = \frac{9 - 0.2}{400\ \Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 22.0 mA">
+                <span>$I_{B(min)} = \frac{22.0\text{ mA}}{200} =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.11 mA">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{calor}$ = (</strong><span class="fill-blank">___ V</span>, <span class="fill-blank">___ mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">SATURACIÓN FORZADA</span></span>
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; Frío: $V_{nodo} = 0.29\text{ V} < 0.65\text{ V} \implies \mathbf{Q_{frio} = (9.0\text{ V},\ 0\text{ mA}) \text{ [CORTE]}}$, relé abierto, motor apagado.<br>
+                &bull; Calor ($400\ \Omega$): $V_{TH} = 5.0\text{ V},\ R_{B(total)} = 2.42\text{ k}\Omega \implies I_B = 1.755\text{ mA}$. Como $I_{C(sat)} = 22.0\text{ mA}$ e $I_{B(min)} = 0.11\text{ mA} \ll I_B \implies \mathbf{Q_{calor} = (0.20\text{ V},\ 22.0\text{ mA}) \text{ [SATURACIÓN FORZADA]}}$, relé accionado y motor encendido.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Coloque una fuente <code>Fixed Volt. (9V)</code> y tierra.</li>
+            <li>Conecte el termistor NTC en la parte superior y un potenciómetro de $500\ \Omega$ en la parte inferior.</li>
+            <li>Conecte una resistencia de $R_B = 2.2\text{ k}\Omega$ hacia la base del $\text{BC548B}$.</li>
+            <li>En el colector conecte un <code>Relay</code> (fije <code>Coil Resistance = 400 Ω</code>) con un diodo en antiparalelo.</li>
+            <li>Conecte los contactos normalmente abiertos (NO) del relé a un <code>DC Motor</code> y alimente el motor desde $+9\text{ V}$.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PRÁCTICA 3 - TEMPORIZADOR RC -->
+    <section id="practica3">
+      <h2 class="section-title">&#9201;&#65039; 5. Práctica 3: Temporizador RC a la Desconexión</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 3: Retardo de Apagado con Condensador de 150µF y Transistor BC548B</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/temporizador.html" target="_blank" style="color:var(--accent-blue);">temporizador.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Transitorio RC y Conmutación</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          Al presionar el pulsador $\text{SW1}$, el condensador electrolítico $C_1 = 150\ \mu\text{F}$ se carga inmediatamente a $+9\text{ V}$. Al soltarlo, se descarga a través de la resistencia de base $R_B = 1.8\text{ k}\Omega$ y la unión base-emisor del transistor $\text{BC548B}$, sosteniendo la corriente de colector a través de la resistencia $R_C = 330\ \Omega$ y el LED hasta que el voltaje decae por debajo de $0.65\text{ V}$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/TTemporizador.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/TTemporizador.png';" 
+                 alt="Esquemático original: Temporizador a la desconexión (Ángel Millán Cerdán)" 
+                 class="circuit-img" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 5.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/temporizador.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $\text{SW1}$, $C_1=150\ \mu\text{F}$, $R_B=1.8\text{K}$, $\text{BC548B}$, $R_C=330\ \Omega$, LED.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, condensador $C_1 = 150\ \mu\text{F}$, resistencia de base $R_B = 1.8\text{ k}\Omega$, resistencia de colector $R_C = 330\ \Omega$, $V_{LED} \approx 1.8\text{ V}$, $\beta = 200$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>1. Al soltar el pulsador ($t = 0$):</strong> $V_{C1}(0) = 9\text{ V}$.<br>
+              Corriente inicial de base inyectada ($V_{BE(sat)} \approx 0.75\text{ V}$):
+              $$I_B(0) = \frac{V_{C1}(0) - V_{BE}}{R_B} = \frac{9.0\text{ V} - 0.75\text{ V}}{1.8\text{ k}\Omega} = \frac{8.25\text{ V}}{1800\ \Omega} \approx \mathbf{4.583\text{ mA} = 4583\ \mu\text{A}}$$
+              Corriente de saturación máxima en la malla de colector ($V_{CE(sat)} = 0.20\text{ V}$):
+              $$I_{C(sat)} = \frac{V_{CC} - V_{LED} - V_{CE(sat)}}{R_C} = \frac{9\text{ V} - 1.8\text{ V} - 0.2\text{ V}}{330\ \Omega} = \frac{7.0\text{ V}}{330\ \Omega} \approx \mathbf{21.21\text{ mA}}$$
+              Corriente de base mínima para saturar:
+              $$I_{B(min)} = \frac{I_{C(sat)}}{\beta} = \frac{21.21\text{ mA}}{200} \approx \mathbf{0.106\text{ mA} = 106\ \mu\text{A}}$$
+              Como $I_B(0) = 4583\ \mu\text{A} \gg 106\ \mu\text{A}$, el transistor entra en <strong>SATURACIÓN PLENA</strong>:
+              $$\mathbf{Q(0) = (0.20\text{ V},\ 21.21\text{ mA}) \quad [SATURACIÓN]}$$
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>2. Constante de tiempo y duración del temporizador:</strong><br>
+              $$\tau = R_B \cdot C_1 = 1800\ \Omega \times 150\times 10^{-6}\text{ F} = \mathbf{0.270\text{ segundos}}$$
+              El transistor permanece en conducción durante el transitorio hasta que el condensador se descarga a $V_{C1}(t) \le 0.65\text{ V}$, lo que ocurre aproximadamente a $t \approx 2.5\tau - 3\tau$:
+              $$t_{apagado} \approx 2.8 \times 0.27\text{ s} \approx \mathbf{0.75\text{ a } 0.80\text{ segundos}}$$
+              $$\mathbf{Q(t \to \infty) = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, $C_1 = 150\ \mu\text{F}$, $R_B = 1.8\text{ k}\Omega$, $R_C = 330\ \Omega$, $V_{LED} = 1.8\text{ V}$, $\beta = 200$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Base al Soltar el Pulsador ($t = 0$)</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                El condensador se cargó a $9\text{ V}$. Aplique KVL en la malla de entrada:
+              </p>
+              $$I_B(0) = \frac{V_C(0) - V_{BE}}{R_B} = \frac{9\text{ V} - 0.75\text{ V}}{1.8\text{ k}\Omega}$$
+              <div class="calc-row">
+                <span>$I_B(0) =$ </span><input type="text" class="calc-input" placeholder="Ej: 4.58 mA">
+                <span>$I_{C(sat)} = \frac{9 - 1.8 - 0.2}{330\ \Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 21.21 mA">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto Inicial $Q(0)$ = (</strong><span class="fill-blank">0.20 V</span>, <span class="fill-blank">21.2 mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">SATURACIÓN</span></span>
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Constante de Tiempo $\tau$ y Tiempo de Apagado</h5>
+              <p style="font-size: 0.88rem; color: #cbd5e1;">
+                Calcule la constante de tiempo $\tau$ con los valores de la figura:
+              </p>
+              $$\tau = R_B \cdot C_1 = (1800\ \Omega) \cdot (150\times 10^{-6}\text{ F})$$
+              <div class="calc-row">
+                <span>$\tau =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.27 s">
+                <span>Tiempo estimado de apagado ($t_{off} \approx 2.8\tau$): </span><input type="text" class="calc-input" placeholder="Ej: 0.76 s">
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; En $t = 0$: $I_B(0) = 4.58\text{ mA} \gg I_{B(min)} (106\ \mu\text{A}) \implies \mathbf{Q(0) = (0.20\text{ V},\ 21.21\text{ mA}) \text{ [SATURACIÓN]}}$.<br>
+                &bull; $\tau = 1.8\text{ k}\Omega \times 150\ \mu\text{F} = \mathbf{0.27\text{ s}} \implies t_{apagado} \approx 0.75 - 0.80\text{ s} \implies \mathbf{Q(t \to \infty) = (9.0\text{ V},\ 0\text{ mA}) \text{ [CORTE]}}$.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Coloque una fuente de $9\text{ V}$, pulsador <code>SW1</code> y un <code>Capacitor</code> electrolítico de $150\ \mu\text{F}$.</li>
+            <li>Conecte en serie con la base $R_B = 1.8\text{ k}\Omega$ al transistor $\text{BC548B}$.</li>
+            <li>En el colector conecte $R_C = 330\ \Omega$ y un LED rojo.</li>
+            <li>Conecte una sonda al condensador y otra al colector en el osciloscopio virtual para registrar el decaimiento.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: PRÁCTICA 4 - MULTIVIBRADOR ASTABLE -->
+    <section id="practica4">
+      <h2 class="section-title">&#128260; 6. Práctica 4: Multivibrador Astable a Transistores</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 4: Oscilador Astable con Condensadores de 100µF y Transistores BC548B</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/multivibrador_astable.html" target="_blank" style="color:var(--accent-blue);">multivibrador_astable.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Conmutación Cruzada</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          El oscilador astable simétrico emplea dos transistores $\text{BC548B}$, dos resistencias de colector $R_{C1} = R_{C2} = 330\ \Omega$ con LEDs, dos resistencias de base $R_{B1} = R_{B2} = 22\text{ k}\Omega$ hacia $+9\text{ V}$ y dos condensadores electrolíticos cruzados de $C_1 = C_2 = 100\ \mu\text{F}$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/TMVA.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/TMVA.png';" 
+                 alt="Esquemático original: Multivibrador Astable (Ángel Millán Cerdán)" 
+                 class="circuit-img" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 6.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/multivibrador_astable.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $R_{C}=330\ \Omega$, LEDs, $R_{B}=22\text{K}$, $C=100\ \mu\text{F}$, $2\times\text{BC548B}$.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, $R_{C1} = R_{C2} = 330\ \Omega$, $R_{B1} = R_{B2} = 22\text{ k}\Omega$, $C_1 = C_2 = 100\ \mu\text{F}$, $\beta = 200$, $V_{LED} = 1.8\text{ V}$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>Puntos Q en cada estado:</strong><br>
+              &bull; Transistor encendido (Saturación):
+              $$I_{C(sat)} = \frac{V_{CC} - V_{LED} - V_{CE(sat)}}{R_C} = \frac{9\text{ V} - 1.8\text{ V} - 0.2\text{ V}}{330\ \Omega} = \frac{7.0\text{ V}}{330\ \Omega} \approx \mathbf{21.21\text{ mA}}$$
+              $$I_B = \frac{V_{CC} - V_{BE}}{R_B} = \frac{9\text{ V} - 0.70\text{ V}}{22\text{ k}\Omega} = \frac{8.30\text{ V}}{22000\ \Omega} \approx \mathbf{0.377\text{ mA} = 377\ \mu\text{A}}$$
+              Como $I_{B(min)} = \frac{21.21\text{ mA}}{200} \approx 106\ \mu\text{A} < 377\ \mu\text{A}$, el transistor está plenamente saturado:
+              $$\mathbf{Q_{ON} = (0.20\text{ V},\ 21.21\text{ mA}) \quad [SATURACIÓN]}$$
+              &bull; Transistor apagado (Corte):
+              $$\mathbf{Q_{OFF} = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>Cálculo de Periodos y Frecuencia:</strong><br>
+              Duración de cada semiperiodo:
+              $$T_1 = T_2 = \ln(2) \cdot R_B \cdot C = 0.693 \times 22\text{ k}\Omega \times 100\ \mu\text{F} = 0.693 \times 2.2 = \mathbf{1.525\text{ segundos}}$$
+              Periodo completo de oscilación:
+              $$T = T_1 + T_2 = 1.525\text{ s} + 1.525\text{ s} = \mathbf{3.049\text{ segundos}}$$
+              Frecuencia de oscilación (parpadeo):
+              $$f = \frac{1}{T} = \frac{1}{3.049\text{ s}} \approx \mathbf{0.328\text{ Hz}} \quad (\approx 20\text{ alternancias por minuto})$$
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, $R_C = 330\ \Omega$, $R_B = 22\text{ k}\Omega$, $C = 100\ \mu\text{F}$, $\beta = 200$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Colector y Base del Transistor Encendido</h5>
+              <div class="calc-row">
+                <span>$I_{C(sat)} = \frac{9 - 1.8 - 0.2}{330\ \Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 21.21 mA">
+                <span>$I_B = \frac{9 - 0.70}{22\text{ k}\Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 377 μA">
+              </div>
+              <div class="calc-row">
+                <span>$Q_{ON} = ($<span class="fill-blank">0.20 V</span>, <span class="fill-blank">21.2 mA</span>$)$ &mdash; $Q_{OFF} = ($<span class="fill-blank">9.0 V</span>, <span class="fill-blank">0 mA</span>$)$</span>
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Tiempos y Frecuencia de Oscilación</h5>
+              $$T_1 = 0.693 \cdot R_B \cdot C = 0.693 \cdot (22\text{ k}\Omega) \cdot (100\ \mu\text{F})$$
+              <div class="calc-row">
+                <span>Semiperiodo $T_1 = T_2 =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.52 s">
+                <span>Periodo total $T =$ </span><input type="text" class="calc-input" placeholder="Ej: 3.05 s">
+                <span>Frecuencia $f = 1/T =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.33 Hz">
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; $I_{C(sat)} = 21.21\text{ mA},\ I_B = 377\ \mu\text{A} \implies \mathbf{Q_{ON} = (0.20\text{ V},\ 21.21\text{ mA})},\ \mathbf{Q_{OFF} = (9.0\text{ V},\ 0\text{ mA})}$.<br>
+                &bull; $T_1 = 0.693 \times 22\text{ k}\Omega \times 100\ \mu\text{F} = \mathbf{1.525\text{ s}} \implies T = \mathbf{3.05\text{ s}} \implies \mathbf{f \approx 0.33\text{ Hz}}$.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Monte los dos transistores <code>BC548B</code> con emisores a masa.</li>
+            <li>Conecte en cada colector $R_C = 330\ \Omega$ y un LED rojo hacia $+9\text{ V}$.</li>
+            <li>Conecte resistencias de polarización $R_{B1} = R_{B2} = 22\text{ k}\Omega$ a $+9\text{ V}$.</li>
+            <li>Cruce los condensadores electrolíticos de $100\ \mu\text{F}$ entre colector de uno y base del otro.</li>
+            <li>Conecte el <code>Oscilloscope</code> y mida el semiperiodo ($T_1 \approx 1.5\text{ s}$).</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: PRÁCTICA 5 - PAR DARLINGTON -->
+    <section id="practica5">
+      <h2 class="section-title">&#128257; 7. Práctica 5: Par Darlington (Sensor Táctil / Alta Sensibilidad)</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 5: Amplificador Compuesto Darlington ($R_{in} = 100\text{ k}\Omega, R_{C1} = 10\text{ k}\Omega, R_{C2} = 330\ \Omega$)</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/par_darlington.html" target="_blank" style="color:var(--accent-blue);">par_darlington.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Ganancia Compuesta Super-Beta</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          En este esquema original de Ángel Millán, el primer transistor $\text{BC548B}$ recibe corriente a través de una resistencia de $100\text{ k}\Omega$ con pulsador $\text{SW1}$. Su colector está alimentado independientemente a $+9\text{ V}$ mediante una resistencia $R_{C1} = 10\text{ k}\Omega$, y su emisor ataca directamente la base del segundo transistor $\text{BC548B}$, cuyo colector gobierna el LED con $R_{C2} = 330\ \Omega$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/TParDarlington.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/TParDarlington.png';" 
+                 alt="Esquemático original: Par Darlington (Ángel Millán Cerdán)" 
+                 class="circuit-img" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 7.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/par_darlington.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $R_{in}=100\text{K}$, $R_{C1}=10\text{K}$, $R_{C2}=330\ \Omega$, LED, $2\times\text{BC548B}$.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, $R_{in} = 100\text{ k}\Omega$, $R_{C1} = 10\text{ k}\Omega$, $R_{C2} = 330\ \Omega$, $V_{LED} = 1.8\text{ V}$, $\beta_1 = \beta_2 = 200$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>1. Caída umbral compuesta de entrada:</strong><br>
+              Para que circule corriente, deben encenderse las dos uniones base-emisor en serie ($Q_1$ y $Q_2$):
+              $$V_{BE(total)} = V_{BE1} + V_{BE2} \approx 0.70\text{ V} + 0.70\text{ V} = \mathbf{1.40\text{ V}}$$
+              Al cerrar $\text{SW1}$, la corriente inyectada por $R_{in} = 100\text{ k}\Omega$ es:
+              $$I_{B1} = \frac{V_{CC} - V_{BE(total)}}{R_{in}} = \frac{9.0\text{ V} - 1.40\text{ V}}{100\text{ k}\Omega} = \frac{7.60\text{ V}}{100000\ \Omega} = \mathbf{0.076\text{ mA} = 76\ \mu\text{A}}$$
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>2. Etapa intermedia ($Q_1$) y corriente inyectada a la base de $Q_2$:</strong><br>
+              La máxima corriente que el colector de $Q_1$ puede tomar está limitada por su resistor $R_{C1} = 10\text{ k}\Omega$:
+              $$I_{C1(sat)} = \frac{V_{CC} - V_{CE1(sat)} - V_{BE2}}{R_{C1}} = \frac{9\text{ V} - 0.2\text{ V} - 0.7\text{ V}}{10\text{ k}\Omega} = \frac{8.1\text{ V}}{10\text{ k}\Omega} = \mathbf{0.81\text{ mA}}$$
+              Como $\beta_1 \cdot I_{B1} = 200 \times 0.076\text{ mA} = 15.2\text{ mA} \gg 0.81\text{ mA}$, el transistor $Q_1$ se satura plenamente.<br>
+              La corriente total que sale por el emisor de $Q_1$ hacia la base de $Q_2$ es:
+              $$I_{B2} = I_{C1} + I_{B1} \approx 0.81\text{ mA} + 0.076\text{ mA} \approx \mathbf{0.886\text{ mA} = 886\ \mu\text{A}}$$
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
+              <strong>3. Etapa de salida ($Q_2$):</strong><br>
+              Corriente de colector de saturación impuesta por $R_{C2} = 330\ \Omega$:
+              $$I_{C2(sat)} = \frac{V_{CC} - V_{LED} - V_{CE2(sat)}}{R_{C2}} = \frac{9\text{ V} - 1.8\text{ V} - 0.2\text{ V}}{330\ \Omega} = \frac{7.0\text{ V}}{330\ \Omega} \approx \mathbf{21.21\text{ mA}}$$
+              Corriente mínima de base que $Q_2$ requiere para saturar:
+              $$I_{B2(min)} = \frac{I_{C2(sat)}}{\beta_2} = \frac{21.21\text{ mA}}{200} \approx \mathbf{0.106\text{ mA} = 106\ \mu\text{A}}$$
+              Como $I_{B2} = 886\ \mu\text{A} \gg 106\ \mu\text{A}$, $Q_2$ está en <strong>SATURACIÓN FIRME</strong>.<br>
+              <em>¡Detalle técnico crucial!:</em> Al no compartir $Q_1$ y $Q_2$ el mismo colector, $Q_2$ sí puede bajar su tensión hasta $V_{CE2(sat)} \approx \mathbf{0.20\text{ V}}$:
+              $$\mathbf{Q_{activo} = (V_{CE2(sat)},\ I_{C2(sat)}) = (0.20\text{ V},\ 21.21\text{ mA}) \quad [SATURACIÓN]}$$
+              $$\mathbf{Q_{reposo} = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, $R_{in} = 100\text{ k}\Omega$, $R_{C1} = 10\text{ k}\Omega$, $R_{C2} = 330\ \Omega$, $V_{LED} = 1.8\text{ V}$, $\beta_1 = \beta_2 = 200$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Entrada con Dos Uniones B-E en Serie</h5>
+              $$I_{B1} = \frac{V_{CC} - (V_{BE1} + V_{BE2})}{R_{in}} = \frac{9\text{ V} - 1.40\text{ V}}{100\text{ k}\Omega}$$
+              <div class="calc-row">
+                <span>$I_{B1} =$ </span><input type="text" class="calc-input" placeholder="Ej: 76 μA">
+                <span>$I_{B2} \approx \frac{9 - 0.9}{10\text{ k}\Omega} + I_{B1} =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.886 mA">
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Saturación del Transistor de Salida $Q_2$</h5>
+              $$I_{C2(sat)} = \frac{V_{CC} - V_{LED} - 0.2\text{V}}{R_{C2}}, \qquad I_{B2(min)} = \frac{I_{C2(sat)}}{\beta_2}$$
+              <div class="calc-row">
+                <span>$I_{C2(sat)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 21.21 mA">
+                <span>$I_{B2(min)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 106 μA">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{activo}$ = (</strong><span class="fill-blank">0.20 V</span>, <span class="fill-blank">21.2 mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">SATURACIÓN</span></span>
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; $I_{B1} = \frac{9 - 1.4}{100\text{ k}} = 76\ \mu\text{A}$. La corriente de emisor de $Q_1$ que entra a la base de $Q_2$ es $\approx 0.886\text{ mA}$.<br>
+                &bull; Como $I_{B2(min)} = \frac{21.21\text{ mA}}{200} = 106\ \mu\text{A} \ll 886\ \mu\text{A}$, $Q_2$ satura a fondo con $\mathbf{Q_{activo} = (0.20\text{ V},\ 21.21\text{ mA}) \text{ [SATURACIÓN]}}$.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Coloque dos transistores <code>BC548B</code>.</li>
+            <li>Conecte el emisor de $Q_1$ a la base de $Q_2$. El emisor de $Q_2$ va a masa.</li>
+            <li>Conecte el colector de $Q_1$ a $+9\text{ V}$ mediante $R_{C1} = 10\text{ k}\Omega$.</li>
+            <li>Conecte el colector de $Q_2$ a $+9\text{ V}$ mediante $R_{C2} = 330\ \Omega$ y un LED rojo.</li>
+            <li>Conecte en la base de $Q_1$ la resistencia $R_{in} = 100\text{ k}\Omega$ en serie con el pulsador <code>SW1</code> a $+9\text{ V}$.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: PRÁCTICA 6 - DETECTOR CON RELÉ -->
+    <section id="practica6">
+      <h2 class="section-title">&#128295; 8. Práctica 6: Detector de Oscuridad de Potencia con Relé</h2>
+      <div class="card">
+        <div class="card-header-flex">
+          <div>
+            <div class="practice-title">Circuito 6: Detector Crepuscular Completo con Relé RL1 y Carga LED Auxiliar</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+              Basado en: <a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad_con_activacin_de_rel.html" target="_blank" style="color:var(--accent-blue);">detector_de_oscuridad_con_activacin_de_rel.html</a> (Ángel Millán Cerdán)
+            </div>
+          </div>
+          <span class="tag-circuit">Conmutación con Aislamiento de Contacto</span>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #cbd5e1;">
+          Circuito sensor completo accionado por interruptor general $\text{SW1}$. El divisor formado por el potenciómetro $\text{POT1} = 5\text{ k}\Omega$ y la $\text{LDR1}$ gobierna la base del transistor $\text{BC548B}$ mediante $R_B = 2.2\text{ k}\Omega$. El colector conmuta la bobina del relé $\text{RL1}$ (protegida por el diodo $\text{D1}$). Al entrar en oscuridad, el relé cierra su contacto normalmente abierto (NO), activando un diodo LED ($\text{LED1}$) con resistencia limitadora de $470\ \Omega$ conectado a $+9\text{ V}$.
+        </p>
+
+        <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
+        <div class="circuit-image-box">
+          <div class="circuit-image-wrapper">
+            <img src="images/CircuitoCompleto2.png" 
+                 onerror="this.onerror=null; this.src='https://angelmicelti.github.io/4ESO/EAN/CircuitoCompleto2.png';" 
+                 alt="Esquemático original: Detector de oscuridad con activación de relé (Ángel Millán Cerdán)" 
+                 class="circuit-img img-tall" />
+          </div>
+          <div class="circuit-caption">
+            <strong>Figura 8.1:</strong> Esquemático oficial completo de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad_con_activacin_de_rel.html" target="_blank">angelmicelti.github.io</a>). 
+            Componentes: $9\text{V}$, $\text{SW1}$, $\text{POT1}=5\text{K}$, $R_B=2.2\text{K}$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo $\text{D1}$, $\text{LED1}$ con $470\ \Omega$.
+          </div>
+        </div>
+
+        <!-- ==================== VISTA DOCENTE ==================== -->
+        <div class="view-docente-only">
+          <div class="math-analysis-box docente-box">
+            <h4>📘 Solucionario Docente: Procedimiento Analítico con Valores Exactos del Esquema</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Parámetros del esquema:</strong> $V_{CC} = 9\text{ V}$, potenciómetro $\text{POT1} = 5\text{ k}\Omega$, resistencia en serie de base $R_B = 2.2\text{ k}\Omega$, bobina de relé con $R_{bobina} \approx 400\ \Omega$, transistor $\text{BC548B}$ con $\beta = 200$. Carga conmutada en contactos NO: $\text{LED1}$ en serie con $R = 470\ \Omega$.
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>1. Malla del BJT en Oscuridad ($R_{LDR} \approx 100\text{ k}\Omega$):</strong><br>
+              Equivalente de Thévenin del divisor de base:
+              $$V_{TH} = 9\text{ V} \cdot \frac{100\text{ k}\Omega}{5\text{ k}\Omega + 100\text{ k}\Omega} \approx \mathbf{8.57\text{ V}}, \quad R_{TH} = 5\text{ k} \parallel 100\text{ k} \approx \mathbf{4.76\text{ k}\Omega}$$
+              Resistencia total de base: $R_{B(total)} = 4.76\text{ k}\Omega + 2.2\text{ k}\Omega = \mathbf{6.96\text{ k}\Omega}$.<br>
+              Corriente de base inyectada ($V_{BE(sat)} \approx 0.75\text{ V}$):
+              $$I_B = \frac{V_{TH} - V_{BE}}{R_{B(total)}} = \frac{8.57\text{ V} - 0.75\text{ V}}{6.96\text{ k}\Omega} \approx \mathbf{1.124\text{ mA} = 1124\ \mu\text{A}}$$
+              Corriente de saturación de la bobina del relé ($V_{CE(sat)} = 0.20\text{ V}$):
+              $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}} = \frac{9.0\text{ V} - 0.2\text{ V}}{400\ \Omega} = \frac{8.8\text{ V}}{400\ \Omega} = \mathbf{22.0\text{ mA}}$$
+              Corriente de base mínima teórica:
+              $$I_{B(min)} = \frac{I_{C(sat)}}{\beta} = \frac{22.0\text{ mA}}{200} = \mathbf{0.110\text{ mA} = 110\ \mu\text{A}}$$
+              Factor de sobremarcha: $k_{OD} = \frac{1124\ \mu\text{A}}{110\ \mu\text{A}} \approx 10.2 \gg 3$. Saturación forzada garantizada:
+              $$\mathbf{Q_{osc} = (0.20\text{ V},\ 22.0\text{ mA}) \quad [SATURACIÓN\ FORZADA]}$$
+              $$\mathbf{Q_{luz} = (9.0\text{ V},\ 0\text{ mA}) \quad [CORTE]}$$
+            </p>
+
+            <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
+              <strong>2. Circuito auxiliar conmutado por los contactos del relé:</strong><br>
+              Al cerrar los contactos NO del relé, la rama del LED recibe $+9\text{ V}$:
+              $$I_{LED1} = \frac{V_{CC} - V_{LED}}{470\ \Omega} = \frac{9.0\text{ V} - 1.8\text{ V}}{470\ \Omega} = \frac{7.2\text{ V}}{470\ \Omega} \approx \mathbf{15.32\text{ mA}}$$
+              El diodo $\text{D1}$ en antiparalelo disipa de forma segura el transitorio $v_L = -L \frac{di}{dt}$ evitando que la tensión de colector perfore el transistor $\text{BC548B}$.
+            </p>
+          </div>
+        </div>
+
+        <!-- ==================== VISTA ESTUDIANTE ==================== -->
+        <div class="view-estudiante-only">
+          <div class="math-analysis-box estudiante-box">
+            <h4>✏️ Guía de Análisis para el Estudiante: Deducción de Mallas y Planteamiento</h4>
+            <p style="font-size: 0.9rem; color: #e2e8f0;">
+              <strong>Datos del esquema:</strong> $V_{CC} = 9\text{ V}$, $\text{POT1} = 5\text{ k}\Omega$, $R_B = 2.2\text{ k}\Omega$, $R_{bobina} = 400\ \Omega$, $\text{BC548B}$ con $\beta = 200$, carga auxiliar $R = 470\ \Omega$ con $\text{LED1}$.
+            </p>
+
+            <div class="student-guided-step">
+              <h5>Paso 1: Malla de Colector y Activación de la Bobina del Relé</h5>
+              $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}} = \frac{9\text{ V} - 0.2\text{ V}}{400\ \Omega}, \qquad I_{B(min)} = \frac{I_{C(sat)}}{\beta}$$
+              <div class="calc-row">
+                <span>$I_{C(sat)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 22.0 mA">
+                <span>$I_{B(min)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 0.11 mA">
+              </div>
+            </div>
+
+            <div class="student-guided-step">
+              <h5>Paso 2: Malla de Entrada en Oscuridad ($R_{LDR} = 100\text{ k}\Omega$)</h5>
+              <div class="calc-row">
+                <span>$V_{TH} =$ </span><input type="text" class="calc-input" placeholder="Ej: 8.57 V">
+                <span>$R_{B(total)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 6.96 kΩ">
+                <span>$I_B = \frac{V_{TH} - 0.75}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.12 mA">
+              </div>
+              <div class="calc-row">
+                <span><strong>Punto $Q_{osc}$ = (</strong><span class="fill-blank">0.20 V</span>, <span class="fill-blank">22.0 mA</span><strong>) &mdash; Región: </strong><span class="fill-blank">SATURACIÓN FORZADA</span></span>
+              </div>
+              <div class="calc-row">
+                <span>Corriente en $\text{LED1}$ al cerrar el relé: $I_{LED1} = \frac{9 - 1.8}{470\ \Omega} =$ </span><input type="text" class="calc-input" placeholder="Ej: 15.3 mA">
+              </div>
+            </div>
+
+            <details class="solution-drawer">
+              <summary>👁️ Consultar Solución Docente Paso a Paso (Para verificación en clase)</summary>
+              <div class="solution-drawer-content">
+                <strong>Respuestas verificadas:</strong><br>
+                &bull; $I_{C(sat)} = 22.0\text{ mA} \implies I_{B(min)} = 110\ \mu\text{A}$. Como $I_B \approx 1.12\text{ mA} \implies \mathbf{Q_{osc} = (0.20\text{ V},\ 22.0\text{ mA}) \text{ [SATURACIÓN FORZADA]}}$.<br>
+                &bull; Luz: $\mathbf{Q_{luz} = (9.0\text{ V},\ 0\text{ mA}) \text{ [CORTE]}}$. Al cerrar el relé, $I_{LED1} \approx 15.3\text{ mA}$.
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="simulide-steps-box">
+          <h4>Montaje y Medición en SimulIDE</h4>
+          <ol>
+            <li>Coloque la fuente de $9\text{ V}$ e interruptor <code>SW1</code>.</li>
+            <li>Monte el divisor con $\text{POT1} = 5\text{ k}\Omega$ y la fotorresistencia $\text{LDR1}$.</li>
+            <li>Conecte $R_B = 2.2\text{ k}\Omega$ hacia la base del $\text{BC548B}$.</li>
+            <li>En el colector conecte el <code>Relay</code> con su diodo en antiparalelo.</li>
+            <li>En los contactos normalmente abiertos (NO) conecte un LED en serie con $470\ \Omega$ alimentado a $+9\text{ V}$.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: TABLA MAESTRA COMPARATIVA -->
+    <section>
+      <h2 class="section-title">&#128203; 9. Síntesis Comparativa del Punto Q en los 6 Circuitos</h2>
+      <div class="card">
+        
+        <!-- Tabla Docente Completa con Valores Exactos -->
+        <div class="view-docente-only">
+          <p style="font-size: 0.92rem; color: #a7f3d0; margin-bottom: 12px; font-weight: 600;">
+            🎓 Tabla Maestra Resuelta con los Valores Exactos de los Esquemáticos ($V_{CC} = 9\text{V}$, BC548B):
+          </p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Circuito</th>
+                <th>Transistor</th>
+                <th>Punto Q en Reposo / Estado A</th>
+                <th>Punto Q en Activación / Estado B</th>
+                <th>Carga y Comportamiento</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left"><strong>1. Detector de Oscuridad</strong></td>
+                <td>BC548B</td>
+                <td>$Q_{luz} = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
+                <td>$Q_{osc} \approx (0.20\text{ V},\ 14.89\text{ mA})$ [Saturación]</td>
+                <td>LED $\text{D1}$ con $R_C = 470\ \Omega$.</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>2. Ventilador Térmico NTC</strong></td>
+                <td>BC548B</td>
+                <td>$Q_{frio} = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
+                <td>$Q_{calor} \approx (0.20\text{ V},\ 22.0\text{ mA})$ [Saturación]</td>
+                <td>Relé activa motor DC $\text{MT1}$ a $9\text{V}$.</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>3. Temporizador RC</strong></td>
+                <td>BC548B</td>
+                <td>$Q(0) \approx (0.20\text{ V},\ 21.21\text{ mA})$ [Saturación]</td>
+                <td>$Q(t \to \infty) = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
+                <td>Retardo de apagado ($\tau = 0.27\text{ s}$).</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>4. Multivibrador Astable</strong></td>
+                <td>$2\times$ BC548B</td>
+                <td>$Q_1$ [Sat], $Q_2$ [Corte] ($1.52\text{ s}$)</td>
+                <td>$Q_1$ [Corte], $Q_2$ [Sat] ($1.52\text{ s}$)</td>
+                <td>Oscilador continuo ($T \approx 3.05\text{ s}, f \approx 0.33\text{ Hz}$).</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>5. Par Darlington</strong></td>
+                <td>$2\times$ BC548B</td>
+                <td>$Q_{abierto} = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
+                <td>$Q_{ON} \approx (0.20\text{ V},\ 21.21\text{ mA})$ [Saturación]</td>
+                <td>$Q_1$ con $10\text{ k}\Omega$; $Q_2$ conmuta LED con $330\ \Omega$.</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>6. Detector con Relé</strong></td>
+                <td>BC548B</td>
+                <td>$Q_{luz} = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
+                <td>$Q_{osc} \approx (0.20\text{ V},\ 22.0\text{ mA})$ [Saturación]</td>
+                <td>Relé activa $\text{LED1}$ con $470\ \Omega$ ($15.3\text{ mA}$).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tabla Estudiante para Completar -->
+        <div class="view-estudiante-only">
+          <p style="font-size: 0.92rem; color: #bae6fd; margin-bottom: 12px; font-weight: 600;">
+            📝 Cuadro de Consolidación para el Estudiante (Complete con sus resultados analíticos y de simulación):
+          </p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Circuito</th>
+                <th>Transistor</th>
+                <th>Punto Q Reposo (Teórico / Simul)</th>
+                <th>Punto Q Activación (Teórico / Simul)</th>
+                <th>Región Operación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left"><strong>1. Detector de Oscuridad</strong></td>
+                <td>BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Corte / Saturación</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>2. Ventilador Térmico NTC</strong></td>
+                <td>BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Corte / Saturación Forzada</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>3. Temporizador RC</strong></td>
+                <td>BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Saturación $\to$ Corte</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>4. Multivibrador Astable</strong></td>
+                <td>$2\times$ BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Alternancia Sat / Corte</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>5. Par Darlington</strong></td>
+                <td>$2\times$ BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Corte / Saturación</td>
+              </tr>
+              <tr>
+                <td class="text-left"><strong>6. Detector con Relé</strong></td>
+                <td>BC548B</td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td><span class="fill-blank">(__ V, __ mA)</span></td>
+                <td>Corte / Saturación Forzada</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="question-list">
+          <h5>Cuestionario de Evaluación y Análisis Crítico de Laboratorio</h5>
+          <ol>
+            <li><strong>Posición del sensor en el divisor:</strong> En el detector de oscuridad, la LDR va abajo y el potenciómetro arriba. En el ventilador térmico, el termistor NTC va arriba y el potenciómetro abajo. Demuestre mediante la ecuación del divisor por qué esta disposición garantiza que en ambos casos la base supere los $0.65\text{ V}$ únicamente bajo la condición deseada (oscuridad o calor).</li>
+            <li><strong>Función de la resistencia de $2.2\text{ k}\Omega$ en la base:</strong> En los circuitos 1, 2 y 6 se incluye una resistencia de $2.2\text{ k}\Omega$ en serie con la base. ¿Qué ocurriría con el transistor $\text{BC548B}$ si el potenciómetro se ajustara a su valor mínimo ($0\ \Omega$) bajo máxima activación sin dicha resistencia?</li>
+            <li><strong>Protección contra transitorios inductivos:</strong> En los circuitos con relé y motor DC, explique qué fenómeno físico destructivo ocurriría si se omitiera el diodo conectado en antiparalelo con la bobina. Demuestre su respuesta aplicando la ley de Faraday-Lenz ($v_L = -L \frac{di}{dt}$).</li>
+            <li><strong>Estructura del Par Darlington con resistencia de colector independiente:</strong> En la figura 5.1 del Par Darlington, el colector de $Q_1$ no está unido al de $Q_2$, sino que se polariza a través de $R_{C1} = 10\text{ k}\Omega$. ¿Por qué esta variante permite que la tensión $V_{CE2}$ de salida baje hasta $0.20\text{ V}$, a diferencia de la configuración Darlington clásica donde la tensión mínima de saturación es de $\approx 0.85\text{ V}$?</li>
+            <li><strong>Criterio de Saturación Forzada:</strong> En los circuitos con relé, explique por qué no basta con inyectar la corriente mínima teórica $I_{B(min)} = I_{C(sat)}/\beta$ y por qué los esquemas suministran un factor de sobremarcha $k_{OD} \ge 5$.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function setDocMode(mode) {
+      const btnDocente = document.getElementById('btn-docente');
+      const btnEstudiante = document.getElementById('btn-estudiante');
+      const banner = document.getElementById('mode-banner');
+      const bannerTitle = document.getElementById('banner-title');
+      const bannerDesc = document.getElementById('banner-desc');
+      const bannerBtnText = document.getElementById('banner-btn-text');
+
+      if (mode === 'docente') {
+        document.body.classList.remove('mode-estudiante');
+        document.body.classList.add('mode-docente');
+
+        btnDocente.classList.add('active');
+        btnEstudiante.classList.remove('active');
+
+        banner.className = 'mode-banner mode-banner-docente';
+        bannerTitle.textContent = '🎓 Versión Docente Activa:';
+        bannerDesc.textContent = ' Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\\text{V}$, transistor BC548B) y coordenadas resueltas del Punto Q.';
+        bannerBtnText.textContent = 'Estudiante';
+      } else {
+        document.body.classList.remove('mode-docente');
+        document.body.classList.add('mode-estudiante');
+
+        btnEstudiante.classList.add('active');
+        btnDocente.classList.remove('active');
+
+        banner.className = 'mode-banner mode-banner-estudiante';
+        bannerTitle.textContent = '📝 Versión Estudiante Activa:';
+        bannerDesc.textContent = ' Guía analítica estructurada para deducir mallas KVL/Thévenin y completar los cálculos del Punto Q con los componentes exactos de SimulIDE.';
+        bannerBtnText.textContent = 'Docente';
+      }
+
+      try {
+        localStorage.setItem('simulide_lab_guide_mode', mode);
+      } catch (e) {}
+
+      // Re-trigger KaTeX rendering on dynamic updates
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ]
+        });
+      }
+    }
+
+    function toggleDocMode() {
+      if (document.body.classList.contains('mode-docente')) {
+        setDocMode('estudiante');
+      } else {
+        setDocMode('docente');
+      }
+    }
+
+    // Initialize mode from localStorage or default to docente
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedMode = localStorage.getItem('simulide_lab_guide_mode') || 'docente';
+      setDocMode(savedMode);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Ejercicios y Solucionario Docente: Transistor Bipolar BJT</title>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  
+  <style>
+    :root {
+      --bg-page: #0f172a;
+      --bg-card: #1e293b;
+      --border-card: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-amber: #fbbf24;
+      --accent-red: #f87171;
+      --accent-purple: #c084fc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    /* Top Sticky Control Bar */
+    .top-bar {
+      position: sticky;
+      top: 12px;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .doc-brand {
+      font-weight: 700;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mode-switch-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+
+    .btn-active:hover {
+      background: #0369a1;
+      color: #fff;
+    }
+
+    /* Header styling */
+    .doc-header {
+      text-align: center;
+      padding: 30px 20px 20px 20px;
+      border-bottom: 1px solid var(--border-card);
+      margin-bottom: 30px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .badge-docente {
+      background: rgba(192, 132, 252, 0.2);
+      color: var(--accent-purple);
+      border: 1px solid var(--accent-purple);
+    }
+
+    .badge-estudiante {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue);
+    }
+
+    h1.doc-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .doc-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Section & Cards */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin: 30px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--border-card);
+      padding-bottom: 8px;
+    }
+
+    .exercise-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .exercise-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .difficulty-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tag-easy { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); }
+    .tag-medium { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); }
+    .tag-hard { background: rgba(248, 113, 113, 0.2); color: var(--accent-red); }
+
+    .exercise-body {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    .circuit-box {
+      background: #090d16;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Esquemáticos técnicos con fondo blanco y trazos negros */
+    .circuit-box-white {
+      background: #ffffff;
+      border: 2px solid #0f172a;
+      border-radius: 8px;
+      padding: 14px 10px 8px 10px;
+      margin: 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .circuit-box-white svg {
+      background: #ffffff;
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .circuit-caption {
+      font-size: 0.82rem;
+      color: #0f172a;
+      font-weight: 700;
+      margin-top: 8px;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+      width: 100%;
+      letter-spacing: 0.01em;
+    }
+
+    .formula-box {
+      background: #090d16;
+      border-left: 3px solid var(--accent-blue);
+      padding: 10px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0;
+      font-size: 0.92rem;
+    }
+
+    /* Solution Box (Visible in Docente Mode) */
+    .solution-box {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--accent-purple);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 18px;
+      display: block; /* Toggled by JS */
+    }
+
+    .solution-title {
+      color: var(--accent-purple);
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(192, 132, 252, 0.3);
+      padding-bottom: 6px;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #334155;
+      color: var(--accent-blue);
+      font-family: monospace;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    .pedagogical-note {
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 3px solid var(--accent-amber);
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: #fef08a;
+    }
+
+    /* Summary Table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .summary-table th, .summary-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--border-card);
+      text-align: left;
+    }
+
+    .summary-table th {
+      background: #090d16;
+      color: var(--accent-blue);
+    }
+
+    .summary-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0;
+      }
+      .top-bar, .mode-switch-group {
+        display: none !important;
+      }
+      .exercise-card {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+      .circuit-box, .formula-box, .solution-box {
+        background: #f8fafc !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+      }
+      .circuit-box-white {
+        background: #ffffff !important;
+        border: 1.5px solid #000000 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+      .exercise-title, .section-title, h1.doc-title {
+        color: #000 !important;
+      }
+      .step-badge {
+        background: #eee !important;
+        color: #000 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Top Sticky Control Bar -->
+    <div class="top-bar">
+      <div class="doc-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Guía Pedagógica BJT</span>
+      </div>
+
+      <div class="mode-switch-group">
+        <button class="btn btn-active" id="btnDocente" onclick="setMode('docente')">
+          &#128104;&#8205;&#127979; Vista Docente (Con Solucionario)
+        </button>
+        <button class="btn" id="btnEstudiante" onclick="setMode('estudiante')">
+          &#127891; Vista Estudiante (Ejercicios)
+        </button>
+        <button class="btn" onclick="window.print()">
+          &#128424; Imprimir / PDF
+        </button>
+        <a href="guia_laboratorio_simulide.html" class="btn" style="border-color: var(--accent-green); color: var(--accent-green);">
+          &#128300; Lab SimulIDE
+        </a>
+        <a href="slides_transistor.html" class="btn" style="border-color: var(--accent-blue); color: var(--accent-blue);">
+          &#8592; Ver Slides
+        </a>
+      </div>
+    </div>
+
+    <!-- Document Header -->
+    <header class="doc-header">
+      <span class="badge badge-docente" id="modeBadge">Versión para el Docente con Soluciones Detalladas</span>
+      <h1 class="doc-title">GUÍA DE EJERCICIOS Y PROBLEMAS DE APLICACIÓN</h1>
+      <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px;">
+        Transistores Bipolares (BJT): Regiones de Corte, Activa y Saturación
+      </h2>
+      <p class="doc-subtitle">
+        Diseño y análisis analítico de circuitos de conmutación (Low-side, High-side, sensores LDR), polarización de amplificadores lineales, recta de carga estática y prevención de distorsión por recorte.
+      </p>
+    </header>
+
+    <!-- SECTION: Formulario y Criterios Fundamentales -->
+    <section>
+      <h2 class="section-title">&#128208; Formulario de Referencia Rápida y Criterios de Diseño</h2>
+      
+      <div class="exercise-card">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Región</th>
+              <th>Condición de Polarización</th>
+              <th>Ecuaciones Principales</th>
+              <th>Parámetro de Diseño Clave</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--accent-red);">Corte (Cutoff)</strong></td>
+              <td>$V_{BE} < 0.6\text{ V}$<br>Unión BE en inversa</td>
+              <td>$I_B \approx 0$<br>$I_C \approx 0$<br>$V_{CE} \approx V_{CC}$</td>
+              <td>Interruptor Abierto. Potencia de reposo $P_D \approx 0\text{ W}$. Asegurar $V_B < 0.5\text{ V}$ con margen de ruido.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-blue);">Activa Lineal</strong></td>
+              <td>$V_{BE} \approx 0.7\text{ V}$<br>$V_{CE} > 0.3\text{ V}$</td>
+              <td>$I_C = \beta \cdot I_B$<br>$I_E = (\beta + 1)I_B$<br>$V_{CE} = V_{CC} - I_C R_C - I_E R_E$</td>
+              <td>Amplificación lineal. Para máxima excursión simétrica sin distorsión: $V_{CEQ} \approx \frac{V_{CC}}{2}$.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-green);">Saturación</strong></td>
+              <td>$V_{BE} \approx 0.7 - 0.8\text{ V}$<br>Uniones BE y BC en directa</td>
+              <td>$V_{CE} = V_{CE(sat)} \approx 0.1 - 0.2\text{ V}$<br>$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_C}$<br>$I_C < \beta \cdot I_B$</td>
+              <td>Interruptor Cerrado. Criterio de sobremarcha forzada:<br>$I_B \ge \frac{I_{C(sat)}}{\beta_{min}} \cdot k_{od} \quad (k_{od} = 2 \text{ a } 5)$.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: Bloque de Ejercicios -->
+    <section>
+      <h2 class="section-title">&#9999;&#65039; Banco de Problemas de Aplicación</h2>
+
+      <!-- EJERCICIO 1 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 1: Dimensionamiento de Driver NPN para Relé con Microcontrolador</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Conmutación Low-Side &bull; Saturación Forzada &bull; Protección Inductiva</div>
+          </div>
+          <span class="difficulty-tag tag-easy">Nivel Básico</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Se desea controlar una bobina de relé de $12\text{ V}$ con resistencia interna $R_{bobina} = 300\ \Omega$ utilizando un pin GPIO de un microcontrolador que entrega $V_{IN} = 3.3\text{ V}$ en estado lógico ALTO y $0\text{ V}$ en BAJO. Para el driver se dispone de un transistor NPN 2N2222 con $\beta_{min} = 100$ y $V_{CE(sat)} = 0.2\text{ V}$.
+          </p>
+
+          <!-- Esquemático Ejercicio 1: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 400 200" style="max-height: 195px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+              
+              <!-- +12V Rail -->
+              <line x1="260" y1="15" x2="260" y2="40" stroke="#000000" stroke-width="2"/>
+              <circle cx="260" cy="15" r="3.5" fill="#000000"/>
+              <text x="272" y="20" fill="#000000" font-size="12" font-weight="bold">+V_CC (+12V)</text>
+
+              <!-- Node above relay and flyback diode -->
+              <circle cx="260" cy="40" r="3" fill="#000000"/>
+              <line x1="260" y1="40" x2="330" y2="40" stroke="#000000" stroke-width="2"/>
+
+              <!-- Relay coil (L and R_bobina) -->
+              <rect x="245" y="40" width="30" height="55" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+              <text x="260" y="62" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">RELÉ</text>
+              <text x="260" y="76" fill="#000000" font-size="8" text-anchor="middle">300 Ω</text>
+              <line x1="260" y1="95" x2="260" y2="115" stroke="#000000" stroke-width="2"/>
+
+              <!-- Flyback diode (1N4007) pointing UP -->
+              <line x1="330" y1="40" x2="330" y2="115" stroke="#000000" stroke-width="2"/>
+              <!-- Diode symbol: cathode on top, anode on bottom -->
+              <polygon points="330,62 318,85 342,85" fill="#000000" stroke="#000000" stroke-width="1.5"/>
+              <line x1="316" y1="62" x2="344" y2="62" stroke="#000000" stroke-width="3"/>
+              <text x="348" y="78" fill="#000000" font-size="9" font-weight="bold">1N4007</text>
+              <text x="348" y="90" fill="#000000" font-size="8">(Flyback)</text>
+
+              <!-- Node below relay and flyback diode -->
+              <line x1="260" y1="115" x2="330" y2="115" stroke="#000000" stroke-width="2"/>
+              <circle cx="260" cy="115" r="3" fill="#000000"/>
+
+              <!-- Collector line to transistor -->
+              <line x1="260" y1="115" x2="260" y2="128" stroke="#000000" stroke-width="2"/>
+              <text x="270" y="126" fill="#000000" font-size="10" font-weight="bold">C</text>
+
+              <!-- NPN Transistor (2N2222) -->
+              <line x1="260" y1="128" x2="236" y2="142" stroke="#000000" stroke-width="2"/>
+              <line x1="236" y1="130" x2="236" y2="160" stroke="#000000" stroke-width="3.5"/>
+              <line x1="236" y1="148" x2="260" y2="162" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="258,161 245,152 249,165" fill="#000000"/>
+              <text x="270" y="165" fill="#000000" font-size="10" font-weight="bold">E</text>
+              <text x="275" y="146" fill="#000000" font-size="10" font-weight="bold">2N2222</text>
+
+              <!-- Emitter to GND -->
+              <line x1="260" y1="162" x2="260" y2="185" stroke="#000000" stroke-width="2"/>
+              <line x1="246" y1="185" x2="274" y2="185" stroke="#000000" stroke-width="2.5"/>
+              <line x1="251" y1="189" x2="269" y2="189" stroke="#000000" stroke-width="2"/>
+              <line x1="256" y1="193" x2="264" y2="193" stroke="#000000" stroke-width="1.5"/>
+              <text x="280" y="190" fill="#000000" font-size="9">GND (0V)</text>
+
+              <!-- Base circuit -->
+              <line x1="236" y1="145" x2="190" y2="145" stroke="#000000" stroke-width="2"/>
+              <text x="210" y="138" fill="#000000" font-size="10" font-weight="bold">B</text>
+
+              <!-- RB Resistor -->
+              <rect x="125" y="137" width="45" height="16" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+              <text x="147" y="149" fill="#000000" font-size="10" font-weight="bold" text-anchor="middle">R_B</text>
+
+              <!-- Input from MCU -->
+              <line x1="125" y1="145" x2="70" y2="145" stroke="#000000" stroke-width="2"/>
+              <circle cx="70" cy="145" r="3.5" fill="#000000"/>
+              <text x="65" y="130" fill="#000000" font-size="11" font-weight="bold" text-anchor="end">V_IN</text>
+              <text x="65" y="145" fill="#000000" font-size="9" text-anchor="end">(0V / 3.3V)</text>
+              <text x="65" y="158" fill="#000000" font-size="8" text-anchor="end">GPIO MCU</text>
+            </svg>
+            <div class="circuit-caption">Figura 1.1: Driver conmutador NPN para bobina de relé con diodo flyback.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Calcule la corriente de colector en saturación $I_{C(sat)}$.</li>
+            <li>Determine la corriente de base teórica mínima necesaria para llevar el transistor al límite de la saturación.</li>
+            <li>Aplicando un factor de sobremarcha forzada $k_{od} = 3$ (para garantizar saturación robusta ante fluctuaciones térmicas), calcule el valor comercial de la resistencia de base $R_B$ más adecuado (serie E24).</li>
+            <li>Calcule la potencia disipada en el transistor durante el estado de saturación ($P_{sat}$) y compárela con la potencia que disiparía si por un error de cálculo operara en región activa con $V_{CE} = 6\text{ V}$.</li>
+            <li>Explique por qué es estrictamente necesario conectar un diodo 1N4007 en antiparalelo con la bobina del relé.</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 1 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 1</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Corriente de colector en saturación ($I_{C(sat)}$):</strong></p>
+            $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}} = \frac{12\text{ V} - 0.2\text{ V}}{300\ \Omega} = \frac{11.8\text{ V}}{300\ \Omega} = 0.03933\text{ A} \approx 39.33\text{ mA}$$
+
+            <p><span class="step-badge">Paso 2</span> <strong>Corriente de base mínima teórica ($I_{B(min)}$):</strong></p>
+            $$I_{B(min)} = \frac{I_{C(sat)}}{\beta_{min}} = \frac{39.33\text{ mA}}{100} = 0.3933\text{ mA} = 393.3\ \mu\text{A}$$
+
+            <p><span class="step-badge">Paso 3</span> <strong>Diseño con sobremarcha $k_{od} = 3$ y cálculo de $R_B$:</strong></p>
+            $$I_{B(diseño)} = k_{od} \cdot I_{B(min)} = 3 \cdot 0.3933\text{ mA} = 1.18\text{ mA}$$
+            Aplicando KVL en la malla de entrada de base ($V_{IN} - I_B R_B - V_{BE(sat)} = 0$, considerando $V_{BE(sat)} \approx 0.75\text{ V}$):
+            $$R_B = \frac{V_{IN} - V_{BE(sat)}}{I_{B(diseño)}} = \frac{3.3\text{ V} - 0.75\text{ V}}{1.18\text{ mA}} = \frac{2.55\text{ V}}{1.18 \cdot 10^{-3}\text{ A}} \approx 2161\ \Omega$$
+            <em>Selección de valor comercial:</em> El valor estándar comercial E24 inmediatamente inferior para asegurar aún mayor corriente de base es <strong>$R_B = 2.0\text{ k}\Omega$</strong> o <strong>$2.2\text{ k}\Omega$</strong>.
+            Verificación con $R_B = 2.2\text{ k}\Omega$: $I_B = \frac{2.55}{2200} = 1.16\text{ mA}$, lo que arroja un $\beta_{forzado} = \frac{39.33}{1.16} \approx 33.9 \ll 100$ (saturación profunda garantizada). La corriente demandada al micro ($1.16\text{ mA}$) está muy por debajo del límite seguro de un pin GPIO ($20\text{ mA}$).
+
+            <p><span class="step-badge">Paso 4</span> <strong>Comparación de disipación de potencia:</strong></p>
+            $$P_{sat} = V_{CE(sat)} \cdot I_{C(sat)} + V_{BE(sat)} \cdot I_B = (0.2\text{ V})(39.33\text{ mA}) + (0.75\text{ V})(1.16\text{ mA}) = 7.87\text{ mW} + 0.87\text{ mW} \approx \mathbf{8.74\text{ mW}} \quad (\text{Frío})$$
+            Si operara indebidamente en región activa con $V_{CE} = 6\text{ V}$ y $I_C = \frac{12 - 6}{300} = 20\text{ mA}$:
+            $$P_{activa} \approx V_{CE} \cdot I_C = (6\text{ V})(20\text{ mA}) = \mathbf{120\text{ mW}} \quad (13.7\text{ veces más calor})$$
+
+            <p><span class="step-badge">Paso 5</span> <strong>Función del Diodo Flyback (Rueda Libre):</strong></p>
+            Al apagarse el transistor, la corriente de la bobina inductiva $L$ intenta cesar bruscamente. Por la ley de Faraday-Lenz ($v_L = L \frac{di}{dt}$), la inductancia invierte su polaridad generando un pico de tensión transitorio de decenas o cientos de voltios. El diodo en antiparalelo conduce dicho transitorio cerrando el circuito sobre la propia bobina, protegiendo la unión colector-emisor del BJT de una sobretensión destructiva por ruptura (Breakdown).
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Es frecuente que los estudiantes olviden restar $V_{BE} \approx 0.7\text{ V}$ al calcular $R_B$, calculando erróneamente $R_B = \frac{V_{IN}}{I_B}$. Resalte en clase que $0.7\text{ V}$ representa casi el $22\%$ de la señal total en sistemas de $3.3\text{ V}$.
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 2 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 2: Conmutador High-Side con PNP y Problema de Interfaz Lógica</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Transistor PNP &bull; Conmutación High-Side &bull; Niveles de Voltaje</div>
+          </div>
+          <span class="difficulty-tag tag-medium">Nivel Medio</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Un ingeniero desea encender y apagar una barra de iluminación de $12\text{ V}$ que consume $I_{carga} = 150\text{ mA}$ utilizando un transistor PNP 2N3906 conectado como <strong>conmutador High-Side</strong> (Emisor conectado a $+12\text{ V}$, Colector a la carga y el otro extremo de la carga a GND).
+          </p>
+
+          <!-- Esquemático Ejercicio 2: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 420 205" style="max-height: 200px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +12V Rail -->
+              <line x1="180" y1="15" x2="340" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="340" cy="15" r="3.5" fill="#000000"/>
+              <text x="348" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+12V)</text>
+
+              <!-- PNP Transistor (2N3906) High-Side -->
+              <!-- Emitter connection to +12V -->
+              <circle cx="300" cy="15" r="3" fill="#000000"/>
+              <line x1="300" y1="15" x2="300" y2="35" stroke="#000000" stroke-width="2"/>
+              <line x1="300" y1="35" x2="276" y2="48" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter arrow pointing INTO base -->
+              <polygon points="280,46 293,40 289,52" fill="#000000"/>
+              <text x="306" y="42" fill="#000000" font-size="10" font-weight="bold">E</text>
+
+              <!-- PNP Base bar -->
+              <line x1="276" y1="38" x2="276" y2="68" stroke="#000000" stroke-width="3.5"/>
+              <text x="258" y="50" fill="#000000" font-size="10" font-weight="bold">B</text>
+
+              <!-- PNP Collector -->
+              <line x1="276" y1="58" x2="300" y2="72" stroke="#000000" stroke-width="2"/>
+              <text x="306" y="70" fill="#000000" font-size="10" font-weight="bold">C</text>
+              <text x="320" y="55" fill="#000000" font-size="10" font-weight="bold">2N3906 (PNP)</text>
+
+              <!-- Collector to Load (LED Bar) -->
+              <line x1="300" y1="72" x2="300" y2="95" stroke="#000000" stroke-width="2"/>
+              <rect x="282" y="95" width="36" height="50" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+              <text x="300" y="116" fill="#000000" font-size="8" font-weight="bold" text-anchor="middle">CARGA</text>
+              <text x="300" y="128" fill="#000000" font-size="8" text-anchor="middle">Barra LED</text>
+              <text x="300" y="139" fill="#000000" font-size="7" text-anchor="middle">150 mA</text>
+
+              <!-- Load to GND -->
+              <line x1="300" y1="145" x2="300" y2="175" stroke="#000000" stroke-width="2"/>
+              <line x1="288" y1="175" x2="312" y2="175" stroke="#000000" stroke-width="2"/>
+              <line x1="293" y1="179" x2="307" y2="179" stroke="#000000" stroke-width="1.5"/>
+              <text x="318" y="179" fill="#000000" font-size="8">GND</text>
+
+              <!-- Pull-up resistor Rup (4.7k) between +12V and PNP base -->
+              <circle cx="210" cy="15" r="3" fill="#000000"/>
+              <line x1="210" y1="15" x2="210" y2="30" stroke="#000000" stroke-width="2"/>
+              <rect x="202" y="30" width="16" height="30" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="195" y="48" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_up</text>
+              <text x="195" y="58" fill="#000000" font-size="7" text-anchor="end">4.7 kΩ</text>
+              <line x1="210" y1="60" x2="210" y2="75" stroke="#000000" stroke-width="2"/>
+
+              <!-- Connection from Rup and PNP Base to RB_PNP -->
+              <circle cx="210" cy="75" r="3" fill="#000000"/>
+              <line x1="276" y1="53" x2="210" y2="53" stroke="#000000" stroke-width="2"/>
+              <line x1="210" y1="53" x2="210" y2="75" stroke="#000000" stroke-width="2"/>
+
+              <!-- RB_PNP Resistor (680 ohms) -->
+              <rect x="202" y="75" width="16" height="28" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="195" y="92" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_B(PNP)</text>
+              <text x="195" y="102" fill="#000000" font-size="7" text-anchor="end">680 Ω</text>
+              <line x1="210" y1="103" x2="210" y2="120" stroke="#000000" stroke-width="2"/>
+
+              <!-- NPN Pre-driver Transistor (2N3904) -->
+              <line x1="210" y1="120" x2="186" y2="134" stroke="#000000" stroke-width="2"/>
+              <line x1="186" y1="122" x2="186" y2="152" stroke="#000000" stroke-width="3.5"/>
+              <line x1="186" y1="140" x2="210" y2="154" stroke="#000000" stroke-width="2"/>
+              <!-- NPN Emitter arrow -->
+              <polygon points="208,153 195,145 199,158" fill="#000000"/>
+              <text x="218" y="140" fill="#000000" font-size="9" font-weight="bold">2N3904 (NPN)</text>
+
+              <!-- NPN Emitter to GND -->
+              <line x1="210" y1="154" x2="210" y2="175" stroke="#000000" stroke-width="2"/>
+              <line x1="198" y1="175" x2="222" y2="175" stroke="#000000" stroke-width="2"/>
+              <line x1="203" y1="179" x2="217" y2="179" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- Base resistor for NPN -->
+              <line x1="186" y1="137" x2="150" y2="137" stroke="#000000" stroke-width="2"/>
+              <rect x="95" y="129" width="45" height="16" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="117" y="141" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">R_B(NPN)</text>
+              <text x="117" y="156" fill="#000000" font-size="8" text-anchor="middle">2.7 kΩ</text>
+
+              <!-- Control input from MCU -->
+              <line x1="95" y1="137" x2="50" y2="137" stroke="#000000" stroke-width="2"/>
+              <circle cx="50" cy="137" r="3.5" fill="#000000"/>
+              <text x="45" y="124" fill="#000000" font-size="10" font-weight="bold" text-anchor="end">V_control</text>
+              <text x="45" y="137" fill="#000000" font-size="8" text-anchor="end">(0V / 5V)</text>
+              <text x="45" y="149" fill="#000000" font-size="8" text-anchor="end">GPIO Micro</text>
+            </svg>
+            <div class="circuit-caption">Figura 2.1: Conmutador High-Side con transistor PNP e interfaz adaptadora NPN.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Escriba las condiciones de voltaje en la base $V_B$ requeridas para poner el PNP en: a) Saturación (ON) y b) Corte (OFF).</li>
+            <li>Si el ingeniero conecta directamente la base del PNP (a través de una resistencia $R_B$) a la salida de un microcontrolador de $5\text{ V}$, demuestre cuantitativamente por qué <strong>el transistor NUNCA se apagará</strong>, incluso cuando el microcontrolador ponga su salida en nivel ALTO ($5\text{ V}$).</li>
+            <li>Proponga y dibuje el circuito de solución estándar de la industria utilizando un transistor NPN de bajo costo (ej. 2N3904) como etapa previa inversora de nivel. Calcule las resistencias del circuito propuesto.</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 2 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 2</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Condiciones de control para BJT PNP con emisor a $+12\text{ V}$:</strong></p>
+            <ul>
+              <li>Para <strong>Saturación (ON):</strong> Se requiere polarización directa de la unión Emisor-Base ($V_{EB} \approx 0.7\text{ V}$), es decir:
+              $$V_B \le V_E - 0.7\text{ V} = 12\text{ V} - 0.7\text{ V} = 11.3\text{ V}$$
+              (Cuanto más baje $V_B$ hacia tierra, mayor será la corriente de base y más profundo el estado de saturación).
+              </li>
+              <li>Para <strong>Corte (OFF):</strong> La unión Emisor-Base no debe conducir ($V_{EB} < 0.5\text{ V}$), lo que exige:
+              $$V_B \ge V_E - 0.5\text{ V} = 12\text{ V} - 0.5\text{ V} = 11.5\text{ V}$$
+              Idealmente, $V_B = 12\text{ V}$ para $I_B = 0$.
+              </li>
+            </ul>
+
+            <p><span class="step-badge">Paso 2</span> <strong>Demostración de falla con microcontrolador de $5\text{ V}$:</strong></p>
+            Cuando el microcontrolador envía nivel BAJO ($0\text{ V}$): $V_B \approx 0\text{ V} \ll 11.3\text{ V} \implies$ El PNP conduce plenamente (ON).<br>
+            Cuando el microcontrolador envía nivel ALTO ($5\text{ V}$):
+            $$V_{EB} = V_E - V_B = 12\text{ V} - 5\text{ V} = 7.0\text{ V}$$
+            Como $V_{EB} = 7.0\text{ V}$ es inmensamente superior a los $0.7\text{ V}$ necesarios para conducir, la unión Emisor-Base sigue en conducción masiva. <strong>El transistor permanece encendido permanentemente</strong> y la corriente excesiva inyectada hacia el pin de $5\text{ V}$ puede quemar el microcontrolador.
+
+            <p><span class="step-badge">Paso 3</span> <strong>Circuito de Interfaz con Transistor NPN previo:</strong></p>
+            <div class="formula-box">
+              <strong>Estructura:</strong>
+              El pin del micro ($0-5\text{ V}$) conmuta la base de un NPN (2N3904). El colector del NPN se conecta a la base del PNP. Se coloca una resistencia de pull-up $R_{up} = 4.7\text{ k}\Omega$ entre $+12\text{ V}$ y la base del PNP.
+            </div>
+            <ul>
+              <li>Cuando GPIO = $0\text{ V} \implies$ NPN en Corte $\implies$ La resistencia de pull-up lleva la base del PNP a $+12\text{ V} \implies$ <strong>PNP en Corte (OFF)</strong>.</li>
+              <li>Cuando GPIO = $5\text{ V} \implies$ NPN en Saturación $\implies$ Conecta la base del PNP a través de $R_{B(PNP)}$ a tierra $\implies$ <strong>PNP en Saturación (ON)</strong>.</li>
+            </ul>
+            <em>Cálculo de componentes:</em>
+            Para $I_C = 150\text{ mA}$, con $\beta_{sat} = 10 \implies I_{B(PNP)} = 15\text{ mA}$.
+            $$R_{B(PNP)} = \frac{12\text{ V} - 0.7\text{ V} - V_{CE(NPN)}}{I_{B(PNP)}} = \frac{12 - 0.7 - 0.2}{15\text{ mA}} \approx 740\ \Omega \implies \text{Comercial } 680\ \Omega$$
+            Para el NPN: $I_{B(NPN)} = \frac{15\text{ mA}}{10} = 1.5\text{ mA} \implies R_{B(NPN)} = \frac{5\text{ V} - 0.7\text{ V}}{1.5\text{ mA}} = 2.86\text{ k}\Omega \implies \text{Comercial } 2.7\text{ k}\Omega$.
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Este es uno de los errores clásicos de diseño más habituales en proyectos de grado y prácticas de laboratorio. Resalta la importancia del concepto de "diferencia de potencial" frente a "voltaje absoluto".
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 3 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 3: Diseño de Sensor Crepuscular Automático con Fotorresistencia (LDR)</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Sensores Analógicos &bull; Divisor de Tensión &bull; Umbral de Conmutación</div>
+          </div>
+          <span class="difficulty-tag tag-medium">Nivel Medio</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Se desea diseñar un circuito detector de oscuridad para encender una luminaria LED de emergencia ($V_{CC} = 9\text{ V}$, corriente del LED con su resistencia limitadora $I_{LED} = 40\text{ mA}$).
+            Se cuenta con una fotorresistencia (LDR) cuyas características medidas en laboratorio son:
+            <br>&bull; A pleno sol ($1000\text{ Lux}$): $R_{LDR} = 600\ \Omega$.
+            <br>&bull; En penumbra / atardecer ($20\text{ Lux}$): $R_{LDR} = 25\text{ k}\Omega$.
+            <br>&bull; En oscuridad total ($< 1\text{ Lux}$): $R_{LDR} = 180\text{ k}\Omega$.
+            <br>Se utiliza un transistor NPN con $\beta = 120$ y $V_{CE(sat)} = 0.2\text{ V}$.
+          </p>
+
+          <!-- Esquemático Ejercicio 3: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 400 205" style="max-height: 200px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +9V Rail -->
+              <line x1="90" y1="15" x2="270" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="270" cy="15" r="3.5" fill="#000000"/>
+              <text x="278" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+9V)</text>
+
+              <!-- Left Branch: Potentiometer R1 -->
+              <circle cx="100" cy="15" r="3" fill="#000000"/>
+              <line x1="100" y1="15" x2="100" y2="30" stroke="#000000" stroke-width="2"/>
+              <rect x="91" y="30" width="18" height="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <!-- Variable resistor diagonal arrow -->
+              <line x1="82" y1="56" x2="118" y2="36" stroke="#000000" stroke-width="1.5"/>
+              <polygon points="118,36 109,37 113,44" fill="#000000"/>
+              <text x="116" y="52" fill="#000000" font-size="9" font-weight="bold">R_1 (Pot)</text>
+              <text x="116" y="63" fill="#000000" font-size="8">500 kΩ</text>
+              <line x1="100" y1="64" x2="100" y2="85" stroke="#000000" stroke-width="2"/>
+
+              <!-- Center Node VB -->
+              <circle cx="100" cy="85" r="3.5" fill="#000000"/>
+              <text x="86" y="82" fill="#000000" font-size="10" font-weight="bold" text-anchor="end">V_B</text>
+              <line x1="100" y1="85" x2="200" y2="85" stroke="#000000" stroke-width="2"/>
+
+              <!-- Bottom of divider: LDR -->
+              <line x1="100" y1="85" x2="100" y2="105" stroke="#000000" stroke-width="2"/>
+              <circle cx="100" cy="120" r="15" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <path d="M 91,120 Q 95,115 100,120 Q 105,125 109,120" fill="none" stroke="#000000" stroke-width="1.8"/>
+              <!-- Photon light arrows -->
+              <line x1="68" y1="102" x2="82" y2="112" stroke="#000000" stroke-width="1.5"/>
+              <polygon points="85,114 78,111 81,106" fill="#000000"/>
+              <line x1="64" y1="114" x2="78" y2="124" stroke="#000000" stroke-width="1.5"/>
+              <polygon points="81,126 74,123 77,118" fill="#000000"/>
+              <text x="122" y="120" fill="#000000" font-size="9" font-weight="bold">LDR</text>
+              <text x="122" y="132" fill="#000000" font-size="8">(R_LDR)</text>
+
+              <!-- LDR to GND -->
+              <line x1="100" y1="135" x2="100" y2="170" stroke="#000000" stroke-width="2"/>
+              <line x1="88" y1="170" x2="112" y2="170" stroke="#000000" stroke-width="2"/>
+              <line x1="93" y1="174" x2="107" y2="174" stroke="#000000" stroke-width="1.5"/>
+              <text x="118" y="174" fill="#000000" font-size="8">GND</text>
+
+              <!-- Base to NPN Transistor (2N3904) -->
+              <line x1="200" y1="85" x2="220" y2="85" stroke="#000000" stroke-width="2"/>
+              <line x1="220" y1="70" x2="220" y2="100" stroke="#000000" stroke-width="3.5"/>
+              <line x1="220" y1="77" x2="246" y2="63" stroke="#000000" stroke-width="2"/>
+              <line x1="220" y1="93" x2="246" y2="107" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="244,106 231,97 235,110" fill="#000000"/>
+              <text x="254" y="105" fill="#000000" font-size="9" font-weight="bold">E</text>
+              <text x="254" y="65" fill="#000000" font-size="9" font-weight="bold">C</text>
+              <text x="265" y="88" fill="#000000" font-size="10" font-weight="bold">2N3904</text>
+
+              <!-- Collector Branch: Resistor + LED -->
+              <circle cx="246" cy="15" r="3" fill="#000000"/>
+              <line x1="246" y1="15" x2="246" y2="28" stroke="#000000" stroke-width="2"/>
+              <rect x="238" y="28" width="16" height="22" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="228" y="42" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_C</text>
+              <line x1="246" y1="50" x2="246" y2="54" stroke="#000000" stroke-width="2"/>
+              <!-- LED symbol pointing down towards collector -->
+              <polygon points="246,60 238,53 254,53" fill="#000000" stroke="#000000"/>
+              <line x1="238" y1="60" x2="254" y2="60" stroke="#000000" stroke-width="2"/>
+              <!-- Light rays from LED -->
+              <line x1="255" y1="53" x2="265" y2="47" stroke="#000000" stroke-width="1.2"/>
+              <line x1="257" y1="58" x2="267" y2="52" stroke="#000000" stroke-width="1.2"/>
+              <text x="272" y="52" fill="#000000" font-size="8" font-weight="bold">LED (40mA)</text>
+              <line x1="246" y1="60" x2="246" y2="63" stroke="#000000" stroke-width="2"/>
+
+              <!-- Emitter to GND -->
+              <line x1="246" y1="107" x2="246" y2="170" stroke="#000000" stroke-width="2"/>
+              <line x1="234" y1="170" x2="258" y2="170" stroke="#000000" stroke-width="2"/>
+              <line x1="239" y1="174" x2="253" y2="174" stroke="#000000" stroke-width="1.5"/>
+              <text x="264" y="174" fill="#000000" font-size="8">GND</text>
+            </svg>
+            <div class="circuit-caption">Figura 3.1: Circuito detector crepuscular (activado por oscuridad) con LDR.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Indique si la fotorresistencia debe conectarse en la parte superior (hacia $V_{CC}$) o en la parte inferior (hacia GND) del divisor de voltaje para lograr que el LED se encienda en la oscuridad. Justifique.</li>
+            <li>Dimensiones el valor del potenciómetro $R_1$ para que el transistor empiece a conducir justo cuando la iluminación descienda por debajo de $20\text{ Lux}$ ($R_{LDR} = 25\text{ k}\Omega$).</li>
+            <li>Compruebe el estado del transistor y el voltaje en colector $V_C$ a pleno sol ($R_{LDR} = 600\ \Omega$) y en oscuridad total ($R_{LDR} = 180\text{ k}\Omega$).</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 3 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 3</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Ubicación de la fotorresistencia en el divisor:</strong></p>
+            Para que el transistor NPN encienda el LED en la oscuridad, el voltaje en la base $V_B$ debe <strong>aumentar por encima de $0.7\text{ V}$ cuando haya oscuridad</strong>.<br>
+            Como la resistencia del LDR aumenta al oscurecer ($R_{LDR} \uparrow$), si ubicamos el LDR en la <strong>rama inferior conectada a GND</strong> y una resistencia $R_1$ en la rama superior a $V_{CC}$:
+            $$V_B = V_{CC} \cdot \frac{R_{LDR}}{R_1 + R_{LDR}}$$
+            Al oscurecer, $R_{LDR}$ sube mucho en relación a $R_1$, haciendo que $V_B$ suba e inyecte corriente a la base $\implies$ <strong>Conducción (ON)</strong>. En cambio, con luz solar, $R_{LDR} \approx 600\ \Omega \ll R_1$, obligando a que $V_B \to 0\text{ V} \implies$ <strong>Corte (OFF)</strong>.
+            <em>(Configuración alternativa válida: LDR arriba y PNP en High-side).</em>
+
+            <p><span class="step-badge">Paso 2</span> <strong>Dimensionamiento de $R_1$ para umbral de $20\text{ Lux}$:</strong></p>
+            En el umbral de disparo, se requiere que el divisor en circuito abierto alcance $V_B = 0.70\text{ V}$ con $R_{LDR} = 25\text{ k}\Omega$:
+            $$0.70\text{ V} = 9\text{ V} \cdot \frac{25\text{ k}\Omega}{R_1 + 25\text{ k}\Omega}$$
+            $$0.70(R_1 + 25\text{ k}\Omega) = 9 \cdot 25\text{ k}\Omega = 225\text{ k}\Omega\cdot\text{V}$$
+            $$0.70 R_1 = 225 - 17.5 = 207.5 \implies R_1 = \frac{207.5}{0.70} \approx 296.4\text{ k}\Omega$$
+            En la práctica, se selecciona un potenciómetro comercial de <strong>$500\text{ k}\Omega$</strong> (o uno de $250\text{ k}\Omega$ en serie con una resistencia fija de $47\text{ k}\Omega$) para permitir la calibración experimental fina en el laboratorio.
+
+            <p><span class="step-badge">Paso 3</span> <strong>Comprobación en los extremos:</strong></p>
+            <ul>
+              <li><strong>A pleno sol ($R_{LDR} = 600\ \Omega$ con $R_1 = 296\text{ k}\Omega$):</strong>
+              $$V_B = 9\text{ V} \cdot \frac{0.6\text{ k}\Omega}{296\text{ k}\Omega + 0.6\text{ k}\Omega} = 0.018\text{ V} \ll 0.7\text{ V}$$
+              Transistor firmemente en <strong>CORTE</strong>: $I_B = 0, I_C = 0 \implies V_C = V_{CC} = 9.0\text{ V}$ (LED apagado).
+              </li>
+              <li><strong>En oscuridad total ($R_{LDR} = 180\text{ k}\Omega$):</strong>
+              En vacío, $V_{Th} = 9 \cdot \frac{180}{296 + 180} = 3.40\text{ V}$, y $R_{Th} = 296\text{ k} \parallel 180\text{ k} = 111.9\text{ k}\Omega$.
+              Conectando la base ($V_{BE} = 0.7\text{ V}$):
+              $$I_B = \frac{3.40\text{ V} - 0.7\text{ V}}{111.9\text{ k}\Omega} = 24.1\ \mu\text{A}$$
+              Corriente disponible en colector: $I_{C(disp)} = \beta \cdot I_B = 120 \cdot 24.1\ \mu\text{A} = 2.89\text{ mA}$.
+              Si se desea saturación completa con $40\text{ mA}$, se requiere una etapa Darlington o un valor de $R_1$ más bajo.
+              </li>
+            </ul>
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Este ejercicio permite enseñar el concepto de "efecto de carga de la base" sobre el divisor de tensión: el cálculo en vacío ($V_{Th}$) debe completarse considerando la impedancia de Thevenin.
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 4 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 4: Trazado de Recta de Carga y Determinación de Punto Q</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Polarización Fija &bull; Malla KVL &bull; Identificación de Región</div>
+          </div>
+          <span class="difficulty-tag tag-easy">Nivel Básico</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Considere un circuito con polarización fija de base alimentado con $V_{CC} = 15\text{ V}$. Los componentes son: $R_B = 390\text{ k}\Omega$, $R_C = 1.5\text{ k}\Omega$, y el transistor tiene $\beta = 100$. Asuma $V_{BE} = 0.7\text{ V}$ y $V_{CE(sat)} = 0.2\text{ V}$.
+          </p>
+
+          <!-- Esquemático Ejercicio 4: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 380 200" style="max-height: 195px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +15V Rail -->
+              <line x1="120" y1="15" x2="260" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="260" cy="15" r="3.5" fill="#000000"/>
+              <text x="268" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+15V)</text>
+
+              <!-- Left Branch: RB -->
+              <circle cx="130" cy="15" r="3" fill="#000000"/>
+              <line x1="130" y1="15" x2="130" y2="35" stroke="#000000" stroke-width="2"/>
+              <rect x="122" y="35" width="16" height="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="115" y="52" fill="#000000" font-size="9" font-weight="bold" text-anchor="end">R_B</text>
+              <text x="115" y="63" fill="#000000" font-size="8" text-anchor="end">390 kΩ</text>
+              <line x1="130" y1="69" x2="130" y2="95" stroke="#000000" stroke-width="2"/>
+              <!-- Ib current arrow -->
+              <line x1="136" y1="78" x2="136" y2="88" stroke="#000000" stroke-width="1.2"/>
+              <polygon points="136,92 133,85 139,85" fill="#000000"/>
+              <text x="142" y="86" fill="#000000" font-size="8" font-weight="bold">I_B</text>
+
+              <!-- Connection to Base -->
+              <line x1="130" y1="95" x2="195" y2="95" stroke="#000000" stroke-width="2"/>
+
+              <!-- Right Branch: RC -->
+              <circle cx="225" cy="15" r="3" fill="#000000"/>
+              <line x1="225" y1="15" x2="225" y2="35" stroke="#000000" stroke-width="2"/>
+              <rect x="217" y="35" width="16" height="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="240" y="52" fill="#000000" font-size="9" font-weight="bold">R_C</text>
+              <text x="240" y="63" fill="#000000" font-size="8">1.5 kΩ</text>
+              <line x1="225" y1="69" x2="225" y2="78" stroke="#000000" stroke-width="2"/>
+              <!-- Ic current arrow -->
+              <line x1="233" y1="72" x2="233" y2="84" stroke="#000000" stroke-width="1.2"/>
+              <polygon points="233,88 230,81 236,81" fill="#000000"/>
+              <text x="238" y="82" fill="#000000" font-size="8" font-weight="bold">I_C</text>
+              <line x1="225" y1="78" x2="225" y2="78" stroke="#000000" stroke-width="2"/>
+
+              <!-- NPN Transistor -->
+              <line x1="195" y1="80" x2="195" y2="110" stroke="#000000" stroke-width="3.5"/>
+              <line x1="195" y1="87" x2="225" y2="73" stroke="#000000" stroke-width="2"/>
+              <line x1="195" y1="103" x2="225" y2="117" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="223,116 210,107 214,120" fill="#000000"/>
+              <text x="232" y="73" fill="#000000" font-size="9" font-weight="bold">C</text>
+              <text x="232" y="118" fill="#000000" font-size="9" font-weight="bold">E</text>
+              <text x="178" y="93" fill="#000000" font-size="9" font-weight="bold">B</text>
+              <text x="246" y="96" fill="#000000" font-size="10" font-weight="bold">β = 100</text>
+
+              <!-- VCE Voltage annotation -->
+              <path d="M 238,76 Q 248,95 238,114" fill="none" stroke="#000000" stroke-width="1" stroke-dasharray="2,2"/>
+              <text x="252" y="98" fill="#000000" font-size="8" font-weight="bold">V_CE</text>
+
+              <!-- Emitter to GND -->
+              <line x1="225" y1="117" x2="225" y2="160" stroke="#000000" stroke-width="2"/>
+              <line x1="213" y1="160" x2="237" y2="160" stroke="#000000" stroke-width="2"/>
+              <line x1="218" y1="164" x2="232" y2="164" stroke="#000000" stroke-width="1.5"/>
+              <line x1="222" y1="168" x2="228" y2="168" stroke="#000000" stroke-width="1"/>
+              <text x="244" y="164" fill="#000000" font-size="8">GND</text>
+            </svg>
+            <div class="circuit-caption">Figura 4.1: Circuito con polarización fija de base y recta de carga DC.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Escriba la ecuación algebraica de la recta de carga estática DC ($I_C$ en función de $V_{CE}$).</li>
+            <li>Determine las coordenadas de los dos puntos extremos de la recta: punto de corte ($I_C = 0$) y punto de saturación ($V_{CE} = 0$).</li>
+            <li>Calcule la corriente de base de reposo $I_{BQ}$.</li>
+            <li>Suponiendo inicialmente que el transistor opera en región activa, calcule $I_{CQ}$ y $V_{CEQ}$.</li>
+            <li>Valide si la suposición de región activa es correcta o si el transistor está saturado.</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 4 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 4</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Ecuación de la recta de carga DC:</strong></p>
+            Por KVL en la malla de salida de colector:
+            $$V_{CC} = I_C R_C + V_{CE} \implies 15 = 1500 I_C + V_{CE}$$
+            $$I_C = -\frac{1}{R_C} V_{CE} + \frac{V_{CC}}{R_C} = -\frac{1}{1500} V_{CE} + 10\text{ mA}$$
+
+            <p><span class="step-badge">Paso 2</span> <strong>Puntos extremos:</strong></p>
+            <ul>
+              <li><strong>Punto de Corte (Eje horizontal, $I_C = 0$):</strong> $V_{CE(corte)} = V_{CC} = \mathbf{15.0\text{ V}}$.</li>
+              <li><strong>Punto de Saturación ideal (Eje vertical, $V_{CE} = 0$):</strong> $I_{C(sat, ideal)} = \frac{15\text{ V}}{1.5\text{ k}\Omega} = \mathbf{10.0\text{ mA}}$.</li>
+            </ul>
+
+            <p><span class="step-badge">Paso 3</span> <strong>Corriente de base $I_{BQ}$:</strong></p>
+            Por KVL en la malla de entrada:
+            $$V_{CC} = I_B R_B + V_{BE} \implies I_{BQ} = \frac{V_{CC} - V_{BE}}{R_B} = \frac{15\text{ V} - 0.7\text{ V}}{390\text{ k}\Omega} = \frac{14.3\text{ V}}{390\cdot 10^3\ \Omega} \approx \mathbf{36.67\ \mu\text{A}}$$
+
+            <p><span class="step-badge">Paso 4</span> <strong>Cálculo preliminar en Activa:</strong></p>
+            $$I_{CQ} = \beta \cdot I_{BQ} = 100 \cdot 36.67\ \mu\text{A} = \mathbf{3.667\text{ mA}}$$
+            $$V_{CEQ} = V_{CC} - I_{CQ} R_C = 15\text{ V} - (3.667\text{ mA})(1.5\text{ k}\Omega) = 15\text{ V} - 5.50\text{ V} = \mathbf{9.50\text{ V}}$$
+
+            <p><span class="step-badge">Paso 5</span> <strong>Validación de la región:</strong></p>
+            Como $V_{CEQ} = 9.50\text{ V} > V_{CE(sat)} = 0.2\text{ V}$ y la unión BC está inversamente polarizada ($V_{BC} = V_B - V_C = 0.7\text{ V} - 9.50\text{ V} = -8.8\text{ V} < 0$), se <strong>confirma plenamente que el transistor opera en REGIÓN ACTIVA</strong>.
+            El punto de operación en reposo es:
+            $$Q = (V_{CEQ}, I_{CQ}) = (9.50\text{ V},\ 3.67\text{ mA})$$
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Es fundamental acostumbrar al estudiante al ciclo metodológico: <em>Plantear hipótesis $\to$ Calcular $\to$ Validar restricciones de la región</em>.
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 5 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 5: Polarización por Divisor de Tensión y Sensibilidad frente a $\beta$</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Teorema de Thévenin &bull; Estabilidad Térmica &bull; Emisor Común</div>
+          </div>
+          <span class="difficulty-tag tag-hard">Nivel Avanzado</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Para el amplificador de audio con polarización universal por divisor resistivo de la figura, se tienen los valores:
+            $V_{CC} = 12\text{ V}$, $R_1 = 47\text{ k}\Omega$, $R_2 = 10\text{ k}\Omega$, $R_C = 2.2\text{ k}\Omega$ y $R_E = 680\ \Omega$.
+          </p>
+
+          <!-- Esquemático Ejercicio 5: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 390 220" style="max-height: 210px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +12V Rail -->
+              <line x1="90" y1="15" x2="250" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="250" cy="15" r="3.5" fill="#000000"/>
+              <text x="258" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+12V)</text>
+
+              <!-- Left Branch: R1 on top -->
+              <circle cx="105" cy="15" r="3" fill="#000000"/>
+              <line x1="105" y1="15" x2="105" y2="30" stroke="#000000" stroke-width="2"/>
+              <rect x="97" y="30" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="90" y="46" fill="#000000" font-size="9" font-weight="bold" text-anchor="end">R_1</text>
+              <text x="90" y="57" fill="#000000" font-size="8" text-anchor="end">47 kΩ</text>
+              <line x1="105" y1="62" x2="105" y2="90" stroke="#000000" stroke-width="2"/>
+
+              <!-- Node VB -->
+              <circle cx="105" cy="90" r="3.5" fill="#000000"/>
+              <text x="92" y="87" fill="#000000" font-size="10" font-weight="bold" text-anchor="end">V_B</text>
+              <line x1="105" y1="90" x2="185" y2="90" stroke="#000000" stroke-width="2"/>
+
+              <!-- Left Branch: R2 on bottom -->
+              <line x1="105" y1="90" x2="105" y2="110" stroke="#000000" stroke-width="2"/>
+              <rect x="97" y="110" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="90" y="126" fill="#000000" font-size="9" font-weight="bold" text-anchor="end">R_2</text>
+              <text x="90" y="137" fill="#000000" font-size="8" text-anchor="end">10 kΩ</text>
+              <line x1="105" y1="142" x2="105" y2="185" stroke="#000000" stroke-width="2"/>
+
+              <!-- Ground for R2 -->
+              <line x1="93" y1="185" x2="117" y2="185" stroke="#000000" stroke-width="2"/>
+              <line x1="98" y1="189" x2="112" y2="189" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- Right Branch: RC on collector -->
+              <circle cx="215" cy="15" r="3" fill="#000000"/>
+              <line x1="215" y1="15" x2="215" y2="30" stroke="#000000" stroke-width="2"/>
+              <rect x="207" y="30" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="230" y="46" fill="#000000" font-size="9" font-weight="bold">R_C</text>
+              <text x="230" y="57" fill="#000000" font-size="8">2.2 kΩ</text>
+              <line x1="215" y1="62" x2="215" y2="74" stroke="#000000" stroke-width="2"/>
+              <circle cx="215" cy="74" r="3" fill="#000000"/>
+              <text x="225" y="74" fill="#000000" font-size="9" font-weight="bold">V_C</text>
+
+              <!-- NPN Transistor -->
+              <line x1="185" y1="90" x2="185" y2="90" stroke="#000000" stroke-width="2"/>
+              <line x1="185" y1="75" x2="185" y2="105" stroke="#000000" stroke-width="3.5"/>
+              <line x1="185" y1="82" x2="215" y2="74" stroke="#000000" stroke-width="2"/>
+              <line x1="185" y1="98" x2="215" y2="106" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="214,105 201,97 205,110" fill="#000000"/>
+              <text x="175" y="88" fill="#000000" font-size="9" font-weight="bold">B</text>
+              <text x="218" y="94" fill="#000000" font-size="9" font-weight="bold">β</text>
+
+              <!-- Right Branch: RE on emitter -->
+              <circle cx="215" cy="106" r="3" fill="#000000"/>
+              <text x="225" y="108" fill="#000000" font-size="9" font-weight="bold">V_E</text>
+              <line x1="215" y1="106" x2="215" y2="125" stroke="#000000" stroke-width="2"/>
+              <rect x="207" y="125" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="230" y="141" fill="#000000" font-size="9" font-weight="bold">R_E</text>
+              <text x="230" y="152" fill="#000000" font-size="8">680 Ω</text>
+              <line x1="215" y1="157" x2="215" y2="185" stroke="#000000" stroke-width="2"/>
+
+              <!-- Ground for RE -->
+              <line x1="203" y1="185" x2="227" y2="185" stroke="#000000" stroke-width="2"/>
+              <line x1="208" y1="189" x2="222" y2="189" stroke="#000000" stroke-width="1.5"/>
+              <text x="233" y="189" fill="#000000" font-size="8">GND</text>
+            </svg>
+            <div class="circuit-caption">Figura 5.1: Amplificador en Emisor Común con polarización por divisor de tensión.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Calcule el equivalente de Thévenin ($V_{TH}$ y $R_{TH}$) visto desde la base del transistor.</li>
+            <li>Calcule el punto de operación $Q(V_{CEQ}, I_{CQ})$ considerando un transistor con $\beta = 100$ ($V_{BE} = 0.7\text{ V}$).</li>
+            <li>Si debido al calentamiento o sustitución por otro transistor del mismo código el valor de $\beta$ se incrementa un $150\%$ ($\beta = 250$), recalcule el nuevo punto $Q$.</li>
+            <li>Calcule la variación porcentual de $I_{CQ}$ y explique por qué este circuito ofrece una estabilidad térmica enormemente superior frente a la polarización fija.</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 5 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 5</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Equivalente de Thévenin en la base:</strong></p>
+            $$V_{TH} = V_{CC} \cdot \frac{R_2}{R_1 + R_2} = 12\text{ V} \cdot \frac{10\text{ k}\Omega}{47\text{ k}\Omega + 10\text{ k}\Omega} = 12 \cdot \frac{10}{57} \approx \mathbf{2.105\text{ V}}$$
+            $$R_{TH} = R_1 \parallel R_2 = \frac{47 \cdot 10}{47 + 10}\text{ k}\Omega = \frac{470}{57}\text{ k}\Omega \approx \mathbf{8.246\text{ k}\Omega}$$
+
+            <p><span class="step-badge">Paso 2</span> <strong>Punto Q para $\beta = 100$:</strong></p>
+            Por KVL en la malla base-emisor:
+            $$V_{TH} - I_B R_{TH} - V_{BE} - I_E R_E = 0 \quad \text{con } I_E = (\beta + 1)I_B$$
+            $$I_B = \frac{V_{TH} - V_{BE}}{R_{TH} + (\beta + 1)R_E} = \frac{2.105\text{ V} - 0.7\text{ V}}{8.246\text{ k}\Omega + (101)(0.68\text{ k}\Omega)} = \frac{1.405\text{ V}}{8.246\text{ k}\Omega + 68.68\text{ k}\Omega} = \frac{1.405}{76.926\text{ k}\Omega} \approx 18.26\ \mu\text{A}$$
+            $$I_{CQ} = \beta \cdot I_B = 100 \cdot 18.26\ \mu\text{A} = \mathbf{1.826\text{ mA}}$$
+            $$I_E \approx I_C = 1.83\text{ mA}$$
+            Voltaje Colector-Emisor:
+            $$V_{CEQ} = V_{CC} - I_C R_C - I_E R_E = 12\text{ V} - (1.826\text{ mA})(2.2\text{ k}\Omega) - (1.844\text{ mA})(0.68\text{ k}\Omega)$$
+            $$V_{CEQ} = 12 - 4.017 - 1.254 = \mathbf{6.73\text{ V}}$$
+
+            <p><span class="step-badge">Paso 3</span> <strong>Recálculo para $\beta = 250$ ($+150\%$):</strong></p>
+            $$I_B' = \frac{1.405\text{ V}}{8.246\text{ k}\Omega + (251)(0.68\text{ k}\Omega)} = \frac{1.405\text{ V}}{8.246 + 170.68\text{ k}\Omega} = \frac{1.405}{178.93\text{ k}\Omega} \approx 7.85\ \mu\text{A}$$
+            $$I_{CQ}' = 250 \cdot 7.85\ \mu\text{A} = \mathbf{1.963\text{ mA}}$$
+            $$V_{CEQ}' = 12 - (1.963)(2.2) - (1.97)(0.68) = 12 - 4.319 - 1.340 = \mathbf{6.34\text{ V}}$$
+
+            <p><span class="step-badge">Paso 4</span> <strong>Análisis de estabilidad:</strong></p>
+            $$\Delta \beta = +150\% \quad \implies \quad \Delta I_{CQ} = \frac{1.963 - 1.826}{1.826} \times 100\% = \mathbf{+7.5\%}$$
+            <em>Explicación física:</em> La resistencia de emisor $R_E$ genera una realimentación negativa de corriente continua (DC). Si la temperatura o el $\beta$ intentan aumentar $I_C$, la corriente de emisor $I_E$ sube, elevando el voltaje $V_E = I_E R_E$. Como el voltaje de base $V_B$ está anclado por el divisor resistivo, el voltaje neto unión base-emisor ($V_{BE} = V_B - V_E$) se reduce, contrarrestando el incremento de corriente. En polarización fija, un cambio de $+150\%$ en $\beta$ hubiera producido exactamente un $+150\%$ de cambio en $I_C$, mandando el circuito a saturación.
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Muestre la regla de diseño beta-independiente de la industria: $\beta R_E \ge 10 R_{TH}$. En este ejercicio: $100 \cdot 680 = 68\text{ k}\Omega > 10 \cdot 8.25\text{ k}\Omega = 82.5\text{ k}\Omega$ (muy próximo al criterio ideal).
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 6 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 6: Máxima Excursión Simétrica ($V_{opp}$) y Diagnóstico de Clipping</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Amplificación AC &bull; Recorte por Saturación y Corte &bull; Rango Dinámico</div>
+          </div>
+          <span class="difficulty-tag tag-hard">Nivel Avanzado</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Un amplificador de audio en emisor común opera con $V_{CC} = 16\text{ V}$, $R_C = 1.8\text{ k}\Omega$, $R_E = 470\ \Omega$ (con capacitor de desacoplo $C_E$ en paralelo con $R_E$). El punto de trabajo fijado por la polarización es $V_{CEQ} = 4.5\text{ V}$ y $I_{CQ} = 5.0\text{ mA}$. La resistencia de carga de salida conectada mediante capacitor es $R_L = 3.3\text{ k}\Omega$. Considere $V_{CE(sat)} = 0.3\text{ V}$.
+          </p>
+
+          <!-- Esquemático Ejercicio 6: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 450 225" style="max-height: 215px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +16V Rail -->
+              <line x1="110" y1="15" x2="260" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="260" cy="15" r="3.5" fill="#000000"/>
+              <text x="268" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+16V)</text>
+
+              <!-- Bias divider: R1 -->
+              <circle cx="120" cy="15" r="3" fill="#000000"/>
+              <line x1="120" y1="15" x2="120" y2="28" stroke="#000000" stroke-width="2"/>
+              <rect x="112" y="28" width="16" height="30" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="105" y="45" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_1</text>
+              <line x1="120" y1="58" x2="120" y2="82" stroke="#000000" stroke-width="2"/>
+
+              <!-- Base Node -->
+              <circle cx="120" cy="82" r="3.5" fill="#000000"/>
+              <line x1="120" y1="82" x2="190" y2="82" stroke="#000000" stroke-width="2"/>
+
+              <!-- Bias divider: R2 -->
+              <line x1="120" y1="82" x2="120" y2="106" stroke="#000000" stroke-width="2"/>
+              <rect x="112" y="106" width="16" height="30" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="105" y="123" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_2</text>
+              <line x1="120" y1="136" x2="120" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="108" y1="190" x2="132" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="113" y1="194" x2="127" y2="194" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- AC Input source: vin and C1 -->
+              <circle cx="35" cy="82" r="10" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <path d="M 29,82 Q 32,77 35,82 Q 38,87 41,82" fill="none" stroke="#000000" stroke-width="1.5"/>
+              <text x="35" y="104" fill="#000000" font-size="8" font-weight="bold" text-anchor="middle">v_in(t)</text>
+              <line x1="45" y1="82" x2="68" y2="82" stroke="#000000" stroke-width="2"/>
+              <!-- Capacitor C1 -->
+              <line x1="68" y1="72" x2="68" y2="92" stroke="#000000" stroke-width="2"/>
+              <line x1="74" y1="72" x2="74" y2="92" stroke="#000000" stroke-width="2"/>
+              <text x="71" y="67" fill="#000000" font-size="8" font-weight="bold" text-anchor="middle">C_1</text>
+              <line x1="74" y1="82" x2="120" y2="82" stroke="#000000" stroke-width="2"/>
+
+              <!-- NPN Transistor -->
+              <line x1="190" y1="82" x2="190" y2="82" stroke="#000000" stroke-width="2"/>
+              <line x1="190" y1="67" x2="190" y2="97" stroke="#000000" stroke-width="3.5"/>
+              <line x1="190" y1="74" x2="220" y2="66" stroke="#000000" stroke-width="2"/>
+              <line x1="190" y1="90" x2="220" y2="98" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="219,97 206,89 210,102" fill="#000000"/>
+
+              <!-- Collector Branch: RC -->
+              <circle cx="220" cy="15" r="3" fill="#000000"/>
+              <line x1="220" y1="15" x2="220" y2="28" stroke="#000000" stroke-width="2"/>
+              <rect x="212" y="28" width="16" height="30" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="234" y="42" fill="#000000" font-size="8" font-weight="bold">R_C</text>
+              <text x="234" y="53" fill="#000000" font-size="7">1.8 kΩ</text>
+              <line x1="220" y1="58" x2="220" y2="66" stroke="#000000" stroke-width="2"/>
+
+              <!-- Node Collector to AC output -->
+              <circle cx="220" cy="66" r="3" fill="#000000"/>
+              <line x1="220" y1="66" x2="290" y2="66" stroke="#000000" stroke-width="2"/>
+
+              <!-- Capacitor C2 -->
+              <line x1="290" y1="56" x2="290" y2="76" stroke="#000000" stroke-width="2"/>
+              <line x1="296" y1="56" x2="296" y2="76" stroke="#000000" stroke-width="2"/>
+              <text x="293" y="51" fill="#000000" font-size="8" font-weight="bold" text-anchor="middle">C_2</text>
+              <line x1="296" y1="66" x2="350" y2="66" stroke="#000000" stroke-width="2"/>
+
+              <!-- Load Resistor RL -->
+              <circle cx="350" cy="66" r="3" fill="#000000"/>
+              <line x1="350" y1="66" x2="385" y2="66" stroke="#000000" stroke-width="2"/>
+              <circle cx="385" cy="66" r="3" fill="#000000"/>
+              <text x="392" y="70" fill="#000000" font-size="9" font-weight="bold">v_out</text>
+
+              <line x1="350" y1="66" x2="350" y2="90" stroke="#000000" stroke-width="2"/>
+              <rect x="342" y="90" width="16" height="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="364" y="107" fill="#000000" font-size="8" font-weight="bold">R_L</text>
+              <text x="364" y="118" fill="#000000" font-size="7">3.3 kΩ</text>
+              <line x1="350" y1="124" x2="350" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="338" y1="190" x2="362" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="343" y1="194" x2="357" y2="194" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- Emitter Network: RE and CE in parallel -->
+              <circle cx="220" cy="98" r="3" fill="#000000"/>
+              <line x1="220" y1="98" x2="220" y2="114" stroke="#000000" stroke-width="2"/>
+              <circle cx="220" cy="114" r="2.5" fill="#000000"/>
+
+              <!-- RE branch (left) -->
+              <line x1="220" y1="114" x2="195" y2="114" stroke="#000000" stroke-width="1.5"/>
+              <line x1="195" y1="114" x2="195" y2="124" stroke="#000000" stroke-width="1.5"/>
+              <rect x="187" y="124" width="16" height="28" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+              <text x="180" y="138" fill="#000000" font-size="8" font-weight="bold" text-anchor="end">R_E</text>
+              <text x="180" y="148" fill="#000000" font-size="7" text-anchor="end">470 Ω</text>
+              <line x1="195" y1="152" x2="195" y2="168" stroke="#000000" stroke-width="1.5"/>
+              <line x1="195" y1="168" x2="220" y2="168" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- CE branch (right) -->
+              <line x1="220" y1="114" x2="245" y2="114" stroke="#000000" stroke-width="1.5"/>
+              <line x1="245" y1="114" x2="245" y2="134" stroke="#000000" stroke-width="1.5"/>
+              <line x1="237" y1="134" x2="253" y2="134" stroke="#000000" stroke-width="2"/>
+              <line x1="237" y1="140" x2="253" y2="140" stroke="#000000" stroke-width="2"/>
+              <text x="258" y="140" fill="#000000" font-size="8" font-weight="bold">C_E</text>
+              <line x1="245" y1="140" x2="245" y2="168" stroke="#000000" stroke-width="1.5"/>
+              <line x1="245" y1="168" x2="220" y2="168" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- Common to GND -->
+              <circle cx="220" cy="168" r="2.5" fill="#000000"/>
+              <line x1="220" y1="168" x2="220" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="208" y1="190" x2="232" y2="190" stroke="#000000" stroke-width="2"/>
+              <line x1="213" y1="194" x2="227" y2="194" stroke="#000000" stroke-width="1.5"/>
+              <text x="238" y="194" fill="#000000" font-size="8">GND</text>
+            </svg>
+            <div class="circuit-caption">Figura 6.1: Etapa amplificadora con carga AC acoplada por capacitor.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Calcule la resistencia equivalente de corriente alterna (AC) en el colector: $r_c = R_C \parallel R_L$.</li>
+            <li>Determine el valor máximo de excursión pico hacia el corte ($\Delta V_{ce(corte)}$) y hacia la saturación ($\Delta V_{ce(sat)}$).</li>
+            <li>Calcule el voltaje máximo de salida pico a pico no distorsionado ($V_{opp(max)}$).</li>
+            <li>Identifique qué tipo de recorte (clipping) ocurrirá primero si se incrementa progresivamente la amplitud de la señal de entrada: ¿por saturación o por corte? Justifique analíticamente su respuesta.</li>
+            <li>¿A qué valor debería reajustarse $V_{CEQ}$ para obtener la máxima excursión simétrica perfecta?</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 6 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 6</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Resistencia dinámica de carga en AC ($r_c$):</strong></p>
+            Para señales de audio (AC), los capacitores actúan como cortocircuitos. La resistencia de carga $R_L$ queda en paralelo con $R_C$:
+            $$r_c = R_C \parallel R_L = \frac{1.8\text{ k}\Omega \cdot 3.3\text{ k}\Omega}{1.8\text{ k}\Omega + 3.3\text{ k}\Omega} = \frac{5.94}{5.1}\text{ k}\Omega \approx \mathbf{1.165\text{ k}\Omega} \quad (1165\ \Omega)$$
+
+            <p><span class="step-badge">Paso 2</span> <strong>Excursiones máximas posibles hacia cada extremo:</strong></p>
+            <ul>
+              <li><strong>Hacia la Saturación (Excursión negativa de $v_{ce}$):</strong>
+              El voltaje $V_{CE}$ solo puede caer desde $V_{CEQ}$ hasta $V_{CE(sat)}$:
+              $$\Delta V_{ce(sat)} = V_{CEQ} - V_{CE(sat)} = 4.5\text{ V} - 0.3\text{ V} = \mathbf{4.20\text{ V (pico)}}$$
+              </li>
+              <li><strong>Hacia el Corte (Excursión positiva de $v_{ce}$):</strong>
+              La corriente $I_C$ solo puede descender desde $I_{CQ}$ hasta $0$. La caída máxima de corriente en AC es $\Delta i_c = I_{CQ} = 5.0\text{ mA}$.
+              Por ley de Ohm en AC, esto se traduce en una variación máxima de voltaje de:
+              $$\Delta V_{ce(corte)} = I_{CQ} \cdot r_c = (5.0\text{ mA})(1.165\text{ k}\Omega) = \mathbf{5.825\text{ V (pico)}}$$
+              </li>
+            </ul>
+
+            <p><span class="step-badge">Paso 3 y 4</span> <strong>Máxima excursión pico a pico y diagnóstico de recorte:</strong></p>
+            Como $\Delta V_{ce(sat)} = 4.20\text{ V} < \Delta V_{ce(corte)} = 5.825\text{ V}$, el límite más restrictivo es la **saturación**.
+            Para una onda senoidal simétrica pura, la excursión máxima sin recorte está limitada por el doble del menor semieje:
+            $$V_{opp(max)} = 2 \cdot \min(\Delta V_{ce(sat)},\ \Delta V_{ce(corte)}) = 2 \cdot 4.20\text{ V} = \mathbf{8.40\text{ V_{p-p}}}$$
+            <strong>Diagnóstico pedagógico:</strong> Si se aumenta la señal de entrada, el amplificador sufrirá <strong>recorte prematuro por saturación</strong> (el valle inferior de la forma de onda de $V_{CE}$ se aplanará horizontalmente a $0.3\text{ V}$, mientras que el pico superior aún conserva margen antes del corte).
+
+            <p><span class="step-badge">Paso 5</span> <strong>Reajuste para Máxima Excursión Simétrica (MPP):</strong></p>
+            Para que ambas excursiones sean idénticas ($\Delta V_{ce(sat)} = \Delta V_{ce(corte)}$):
+            $$V_{CEQ(opt)} - V_{CE(sat)} = I_{CQ} \cdot r_c$$
+            Sustituyendo con la recta de carga AC, el punto óptimo se ubica aproximadamente en:
+            $$V_{CEQ(opt)} \approx \frac{V_{CC}'}{2} \approx \frac{V_{CE(corte, AC)} + V_{CE(sat)}}{2} \approx 5.3\text{ V} \text{ a } 5.5\text{ V}$$
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Conecte este ejercicio con la Simulación #3 de los slides HTML, donde los estudiantes pueden mover interactivamente el slider de $V_{CEQ}$ y observar en tiempo real cómo el osciloscopio pasa de recorte por saturación a linealidad limpia y luego a recorte por corte.
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 7 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 7: Fuente de Corriente Constante en Región Activa</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Regulador Lineal &bull; Diodo Zener &bull; Carga Activa</div>
+          </div>
+          <span class="difficulty-tag tag-medium">Nivel Medio</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Se requiere diseñar un generador de corriente constante para alimentar un arreglo serie de LEDs con exactamente $I_{carga} = 20\text{ mA}$, independiente de las variaciones del número de LEDs conectados o del voltaje de la batería ($V_{CC} = 15\text{ V}$).
+            Para ello se utiliza un transistor NPN en región activa cuya base se fija mediante un diodo Zener de $V_Z = 3.3\text{ V}$ polarizado a través de una resistencia $R_Z = 1.0\text{ k}\Omega$.
+          </p>
+
+          <!-- Esquemático Ejercicio 7: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 390 220" style="max-height: 210px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +15V Rail -->
+              <line x1="90" y1="15" x2="250" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="250" cy="15" r="3.5" fill="#000000"/>
+              <text x="258" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+15V)</text>
+
+              <!-- Left Branch: RZ -->
+              <circle cx="105" cy="15" r="3" fill="#000000"/>
+              <line x1="105" y1="15" x2="105" y2="30" stroke="#000000" stroke-width="2"/>
+              <rect x="97" y="30" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="90" y="46" fill="#000000" font-size="9" font-weight="bold" text-anchor="end">R_Z</text>
+              <text x="90" y="57" fill="#000000" font-size="8" text-anchor="end">1.0 kΩ</text>
+              <line x1="105" y1="62" x2="105" y2="85" stroke="#000000" stroke-width="2"/>
+
+              <!-- Node VB / Zener cathode -->
+              <circle cx="105" cy="85" r="3.5" fill="#000000"/>
+              <text x="92" y="82" fill="#000000" font-size="9" font-weight="bold" text-anchor="end">V_B = 3.3V</text>
+              <line x1="105" y1="85" x2="185" y2="85" stroke="#000000" stroke-width="2"/>
+
+              <!-- Zener Diode pointing down to GND (Cathode at top, Anode at GND) -->
+              <line x1="105" y1="85" x2="105" y2="105" stroke="#000000" stroke-width="2"/>
+              <!-- Zener bar bent wings -->
+              <path d="M 94,105 L 116,105 L 116,101" fill="none" stroke="#000000" stroke-width="2"/>
+              <line x1="94" y1="105" x2="94" y2="109" stroke="#000000" stroke-width="2"/>
+              <!-- Zener triangle -->
+              <polygon points="105,123 95,105 115,105" fill="#000000" stroke="#000000"/>
+              <line x1="105" y1="123" x2="105" y2="185" stroke="#000000" stroke-width="2"/>
+              <text x="122" y="116" fill="#000000" font-size="9" font-weight="bold">Zener</text>
+              <text x="122" y="127" fill="#000000" font-size="8">V_Z = 3.3V</text>
+
+              <!-- Zener Ground -->
+              <line x1="93" y1="185" x2="117" y2="185" stroke="#000000" stroke-width="2"/>
+              <line x1="98" y1="189" x2="112" y2="189" stroke="#000000" stroke-width="1.5"/>
+
+              <!-- NPN Transistor -->
+              <line x1="185" y1="85" x2="185" y2="85" stroke="#000000" stroke-width="2"/>
+              <line x1="185" y1="70" x2="185" y2="100" stroke="#000000" stroke-width="3.5"/>
+              <line x1="185" y1="77" x2="215" y2="68" stroke="#000000" stroke-width="2"/>
+              <line x1="185" y1="93" x2="215" y2="102" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="214,101 201,93 205,106" fill="#000000"/>
+              <text x="175" y="83" fill="#000000" font-size="9" font-weight="bold">B</text>
+              <text x="218" y="90" fill="#000000" font-size="9" font-weight="bold">β=100</text>
+
+              <!-- Collector Branch: LEDs in series -->
+              <circle cx="215" cy="15" r="3" fill="#000000"/>
+              <line x1="215" y1="15" x2="215" y2="25" stroke="#000000" stroke-width="2"/>
+              <!-- LED 1 -->
+              <polygon points="215,36 207,25 223,25" fill="#000000" stroke="#000000"/>
+              <line x1="207" y1="36" x2="223" y2="36" stroke="#000000" stroke-width="2"/>
+              <line x1="215" y1="36" x2="215" y2="44" stroke="#000000" stroke-width="2"/>
+              <!-- LED 2 -->
+              <polygon points="215,55 207,44 223,44" fill="#000000" stroke="#000000"/>
+              <line x1="207" y1="55" x2="223" y2="55" stroke="#000000" stroke-width="2"/>
+              <line x1="215" y1="55" x2="215" y2="68" stroke="#000000" stroke-width="2"/>
+              <text x="228" y="38" fill="#000000" font-size="8" font-weight="bold">N × LEDs</text>
+              <text x="228" y="49" fill="#000000" font-size="7">(3.0V c/u)</text>
+
+              <!-- Current arrow Ic = 20 mA -->
+              <line x1="245" y1="26" x2="245" y2="54" stroke="#000000" stroke-width="1.5"/>
+              <polygon points="245,58 241,50 249,50" fill="#000000"/>
+              <text x="253" y="44" fill="#000000" font-size="8" font-weight="bold">I_carga</text>
+              <text x="253" y="54" fill="#000000" font-size="8" font-weight="bold">20 mA</text>
+
+              <!-- Emitter Branch: RE -->
+              <circle cx="215" cy="102" r="3" fill="#000000"/>
+              <text x="225" y="104" fill="#000000" font-size="9" font-weight="bold">V_E = 2.6V</text>
+              <line x1="215" y1="102" x2="215" y2="125" stroke="#000000" stroke-width="2"/>
+              <rect x="207" y="125" width="16" height="32" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="230" y="141" fill="#000000" font-size="9" font-weight="bold">R_E</text>
+              <text x="230" y="152" fill="#000000" font-size="8">130 Ω</text>
+              <line x1="215" y1="157" x2="215" y2="185" stroke="#000000" stroke-width="2"/>
+
+              <!-- Emitter Ground -->
+              <line x1="203" y1="185" x2="227" y2="185" stroke="#000000" stroke-width="2"/>
+              <line x1="208" y1="189" x2="222" y2="189" stroke="#000000" stroke-width="1.5"/>
+              <text x="233" y="189" fill="#000000" font-size="8">GND</text>
+            </svg>
+            <div class="circuit-caption">Figura 7.1: Fuente de corriente constante (Current Sink) regulada por Zener.</div>
+          </div>
+          <ol style="margin: 12px 0 12px 24px;">
+            <li>Calcule el valor de la resistencia de emisor $R_E$ necesaria para establecer la corriente deseada ($V_{BE} = 0.7\text{ V}$).</li>
+            <li>Calcule la corriente que circula por el diodo Zener $I_Z$, considerando $\beta = 100$.</li>
+            <li>Si cada LED blanco tiene una caída nominal de $3.0\text{ V}$, calcule el número máximo de LEDs ($N_{max}$) que pueden conectarse en serie en el colector manteniendo al transistor dentro de su región activa ($V_{CE} \ge 1.0\text{ V}$).</li>
+          </ol>
+        </div>
+
+        <!-- SOLUCION 7 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 7</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Paso 1</span> <strong>Cálculo de la resistencia de emisor $R_E$:</strong></p>
+            El diodo Zener fija el voltaje de base en $V_B = V_Z = 3.3\text{ V}$.
+            El voltaje presente en el emisor es:
+            $$V_E = V_B - V_{BE} = 3.3\text{ V} - 0.7\text{ V} = 2.6\text{ V}$$
+            Despreciando la pequeña corriente de base ($I_E \approx I_C = 20\text{ mA}$):
+            $$R_E = \frac{V_E}{I_E} = \frac{2.6\text{ V}}{20\text{ mA}} = \frac{2.6}{0.02\text{ A}} = \mathbf{130\ \Omega}$$
+            <em>(Valor comercial exacto en serie E24: $130\ \Omega$).</em>
+
+            <p><span class="step-badge">Paso 2</span> <strong>Corriente del diodo Zener $I_Z$:</strong></p>
+            La corriente que desciende desde $V_{CC}$ por la resistencia $R_Z$ es:
+            $$I_{RZ} = \frac{V_{CC} - V_Z}{R_Z} = \frac{15\text{ V} - 3.3\text{ V}}{1.0\text{ k}\Omega} = \frac{11.7\text{ V}}{1000\ \Omega} = 11.7\text{ mA}$$
+            La corriente demandada por la base del transistor en región activa es:
+            $$I_B = \frac{I_C}{\beta} = \frac{20\text{ mA}}{100} = 0.2\text{ mA} = 200\ \mu\text{A}$$
+            Por la ley de corrientes de Kirchhoff (KCL) en el nodo de base:
+            $$I_Z = I_{RZ} - I_B = 11.7\text{ mA} - 0.2\text{ mA} = \mathbf{11.5\text{ mA}}$$
+            Como $I_Z = 11.5\text{ mA} > I_{Z(min)} \approx 1\text{ mA}$, el Zener opera en su zona de regulación óptima.
+
+            <p><span class="step-badge">Paso 3</span> <strong>Número máximo de LEDs en serie:</strong></p>
+            Por KVL en la malla de salida:
+            $$V_{CC} = V_{carga} + V_{CE} + V_E$$
+            $$15\text{ V} = (N \cdot V_{LED}) + V_{CE} + 2.6\text{ V}$$
+            Para mantener al transistor en **región activa** con $V_{CE} \ge 1.0\text{ V}$:
+            $$N \cdot V_{LED} \le 15\text{ V} - 2.6\text{ V} - 1.0\text{ V} = 11.4\text{ V}$$
+            $$N \le \frac{11.4\text{ V}}{3.0\text{ V/LED}} = 3.8\text{ LEDs}$$
+            Por tanto, se pueden conectar como máximo <strong>$N = 3$ LEDs en serie</strong>.
+            Si se conectara un cuarto LED ($4 \times 3.0 = 12.0\text{ V}$), el voltaje requerido en colector sería $12.0 + 2.6 = 14.6\text{ V}$, dejando solo $V_{CE} = 15 - 14.6 = 0.4\text{ V}$, precipitando al BJT hacia la saturación y perdiendo la regulación de corriente constante.
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Este problema demuestra claramente la propiedad de "fuente de corriente controlada" de la región activa y cómo el límite de saturación impone el "voltaje de cumplimiento" (compliance voltage).
+          </div>
+        </div>
+      </article>
+
+      <!-- EJERCICIO 8 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-title">Ejercicio 8: Diagnóstico de Fallas en Laboratorio (Troubleshooting)</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">Metodología Práctica &bull; Medición de Voltajes de Nodo &bull; Detección de Averías</div>
+          </div>
+          <span class="difficulty-tag tag-medium">Nivel Medio</span>
+        </div>
+
+        <div class="exercise-body">
+          <p>
+            Durante una sesión de laboratorio, cuatro grupos de estudiantes implementaron el mismo circuito con transistor NPN ($V_{CC} = 10\text{ V}$, $R_C = 1.0\text{ k}\Omega$, emisor conectado directamente a GND). Cada grupo midió con el voltímetro los potenciales de nodo respecto a tierra ($V_B$ y $V_C$).
+          </p>
+
+          <!-- Esquemático Ejercicio 8: Fondo blanco, trazos negros -->
+          <div class="circuit-box-white">
+            <svg viewBox="0 0 390 205" style="max-height: 200px;">
+              <rect width="100%" height="100%" fill="#ffffff"/>
+
+              <!-- +10V Rail -->
+              <line x1="160" y1="15" x2="250" y2="15" stroke="#000000" stroke-width="2"/>
+              <circle cx="250" cy="15" r="3.5" fill="#000000"/>
+              <text x="258" y="19" fill="#000000" font-size="11" font-weight="bold">+V_CC (+10V)</text>
+
+              <!-- Collector Branch: RC -->
+              <circle cx="225" cy="15" r="3" fill="#000000"/>
+              <line x1="225" y1="15" x2="225" y2="35" stroke="#000000" stroke-width="2"/>
+              <rect x="217" y="35" width="16" height="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="240" y="50" fill="#000000" font-size="9" font-weight="bold">R_C</text>
+              <text x="240" y="61" fill="#000000" font-size="8">1.0 kΩ</text>
+              <line x1="225" y1="69" x2="225" y2="76" stroke="#000000" stroke-width="2"/>
+
+              <!-- Collector Test Point VC -->
+              <circle cx="225" cy="76" r="4.5" fill="#000000"/>
+              <!-- Test probe label VC -->
+              <line x1="225" y1="76" x2="285" y2="76" stroke="#000000" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <rect x="285" y="66" width="60" height="20" fill="#ffffff" stroke="#000000" stroke-width="1.5" rx="3"/>
+              <text x="315" y="80" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">Sonda V_C</text>
+
+              <!-- NPN Transistor -->
+              <line x1="190" y1="95" x2="190" y2="95" stroke="#000000" stroke-width="2"/>
+              <line x1="190" y1="80" x2="190" y2="110" stroke="#000000" stroke-width="3.5"/>
+              <line x1="190" y1="87" x2="225" y2="76" stroke="#000000" stroke-width="2"/>
+              <line x1="190" y1="103" x2="225" y2="114" stroke="#000000" stroke-width="2"/>
+              <!-- Emitter Arrow -->
+              <polygon points="223,113 210,104 214,117" fill="#000000"/>
+              <text x="232" y="73" fill="#000000" font-size="9" font-weight="bold">C</text>
+              <text x="232" y="117" fill="#000000" font-size="9" font-weight="bold">E</text>
+
+              <!-- Base Line and Test Point VB -->
+              <line x1="190" y1="95" x2="155" y2="95" stroke="#000000" stroke-width="2"/>
+              <circle cx="155" cy="95" r="4.5" fill="#000000"/>
+              <!-- Test probe label VB -->
+              <line x1="155" y1="95" x2="155" y2="60" stroke="#000000" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <rect x="125" y="40" width="60" height="20" fill="#ffffff" stroke="#000000" stroke-width="1.5" rx="3"/>
+              <text x="155" y="54" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">Sonda V_B</text>
+
+              <!-- RB Resistor -->
+              <line x1="155" y1="95" x2="125" y2="95" stroke="#000000" stroke-width="2"/>
+              <rect x="75" y="87" width="40" height="16" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+              <text x="95" y="99" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">R_B</text>
+              <line x1="75" y1="95" x2="40" y2="95" stroke="#000000" stroke-width="2"/>
+              <circle cx="40" cy="95" r="3.5" fill="#000000"/>
+              <text x="35" y="99" fill="#000000" font-size="10" font-weight="bold" text-anchor="end">V_IN</text>
+
+              <!-- Emitter Test Point VE and Ground -->
+              <circle cx="225" cy="114" r="3" fill="#000000"/>
+              <line x1="225" y1="114" x2="225" y2="135" stroke="#000000" stroke-width="2"/>
+              <circle cx="225" cy="135" r="4.5" fill="#000000"/>
+              <line x1="225" y1="135" x2="285" y2="135" stroke="#000000" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <rect x="285" y="125" width="60" height="20" fill="#ffffff" stroke="#000000" stroke-width="1.5" rx="3"/>
+              <text x="315" y="139" fill="#000000" font-size="9" font-weight="bold" text-anchor="middle">Sonda V_E</text>
+
+              <line x1="225" y1="135" x2="225" y2="165" stroke="#000000" stroke-width="2"/>
+              <line x1="213" y1="165" x2="237" y2="165" stroke="#000000" stroke-width="2"/>
+              <line x1="218" y1="169" x2="232" y2="169" stroke="#000000" stroke-width="1.5"/>
+              <line x1="222" y1="173" x2="228" y2="173" stroke="#000000" stroke-width="1"/>
+              <text x="244" y="169" fill="#000000" font-size="8">GND (COM)</text>
+            </svg>
+            <div class="circuit-caption">Figura 8.1: Puntos de medición con voltímetro para diagnóstico de fallas.</div>
+          </div>
+          <table class="summary-table" style="margin: 12px 0;">
+            <thead>
+              <tr>
+                <th>Circuito</th>
+                <th>$V_B$ Medido</th>
+                <th>$V_C$ Medido</th>
+                <th>Diagnóstico del Estudiante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Grupo A</strong></td>
+                <td>$0.72\text{ V}$</td>
+                <td>$0.18\text{ V}$</td>
+                <td><em>¿Región / Estado?</em></td>
+              </tr>
+              <tr>
+                <td><strong>Grupo B</strong></td>
+                <td>$0.02\text{ V}$</td>
+                <td>$10.0\text{ V}$</td>
+                <td><em>¿Región / Estado?</em></td>
+              </tr>
+              <tr>
+                <td><strong>Grupo C</strong></td>
+                <td>$0.69\text{ V}$</td>
+                <td>$5.20\text{ V}$</td>
+                <td><em>¿Región / Estado?</em></td>
+              </tr>
+              <tr>
+                <td><strong>Grupo D</strong></td>
+                <td>$4.80\text{ V}$</td>
+                <td>$10.0\text{ V}$</td>
+                <td><em>¿Región / Estado?</em></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Para cada uno de los cuatro grupos, determine:
+            <br>a) La región de operación del transistor (Corte, Activa o Saturación).
+            <br>b) Si el comportamiento es normal o si existe una falla física en el montaje (desconexión, componente quemado o cortocircuito), explicando la causa exacta.
+          </p>
+        </div>
+
+        <!-- SOLUCION 8 -->
+        <div class="solution-box">
+          <div class="solution-title">
+            <span>&#128161; Solucionario Docente - Ejercicio 8</span>
+          </div>
+
+          <div>
+            <p><span class="step-badge">Grupo A</span> <strong>$V_B = 0.72\text{ V}$, $V_C = 0.18\text{ V}$:</strong></p>
+            <ul>
+              <li><strong>Región:</strong> <strong>SATURACIÓN</strong>.</li>
+              <li><strong>Diagnóstico:</strong> Operación normal como interruptor cerrado. $V_{BE} = 0.72\text{ V} > 0.7\text{ V}$ (unión B-E en directa) y $V_{CE} = 0.18\text{ V} \approx V_{CE(sat)}$ (típico $0.1 - 0.2\text{ V}$). La corriente de colector es máxima: $I_C = \frac{10 - 0.18}{1\text{ k}\Omega} = 9.82\text{ mA}$.</li>
+            </ul>
+
+            <p><span class="step-badge">Grupo B</span> <strong>$V_B = 0.02\text{ V}$, $V_C = 10.0\text{ V}$:</strong></p>
+            <ul>
+              <li><strong>Región:</strong> <strong>CORTE (CUTOFF)</strong>.</li>
+              <li><strong>Diagnóstico:</strong> Operación normal como interruptor abierto. Al ser $V_B < 0.6\text{ V}$, la unión B-E no conduce ($I_B = 0$). Como $I_C = 0$, no hay caída de voltaje en $R_C$ ($\Delta V_{RC} = I_C R_C = 0$), por lo que el multímetro lee el valor total de la fuente $V_C = V_{CC} = 10.0\text{ V}$.</li>
+            </ul>
+
+            <p><span class="step-badge">Grupo C</span> <strong>$V_B = 0.69\text{ V}$, $V_C = 5.20\text{ V}$:</strong></p>
+            <ul>
+              <li><strong>Región:</strong> <strong>ACTIVA LINEAL</strong>.</li>
+              <li><strong>Diagnóstico:</strong> Operación óptima como amplificador analógico. $V_{BE} = 0.69\text{ V}$ (unión en directa) y $V_{CE} = 5.20\text{ V}$ está a medio camino entre $0\text{ V}$ y $10\text{ V}$ ($V_{CEQ} \approx V_{CC} / 2$), proporcionando excelente excursión simétrica. $I_C = \frac{10 - 5.2}{1\text{ k}\Omega} = 4.8\text{ mA}$.</li>
+            </ul>
+
+            <p><span class="step-badge">Grupo D</span> <strong>$V_B = 4.80\text{ V}$, $V_C = 10.0\text{ V}$:</strong></p>
+            <ul>
+              <li><strong>Región:</strong> <strong>FALLA GRAVE EN CIRCUITO</strong>.</li>
+              <li><strong>Diagnóstico de Avería:</strong> En un transistor bipolar de silicio en buen estado conectado con emisor a tierra, el voltaje $V_{BE}$ NUNCA puede ser de $4.80\text{ V}$ (se comportaría como un diodo polarizado en directa en paralelo con tierra, fijando el voltaje en $\approx 0.7 - 0.8\text{ V}$).
+              <br>Causas físicas posibles:
+              <br>1) <strong>La unión Base-Emisor está abierta o destruida internamente</strong> (transistor quemado por sobrecorriente anterior).
+              <br>2) <strong>El terminal de emisor está desconectado del pin de tierra (GND)</strong> en la protoboard (falso contacto o emisor al aire).
+              Al no circular corriente por el colector ($I_C = 0$), $V_C$ se va a $10.0\text{ V}$.
+              </li>
+            </ul>
+          </div>
+
+          <div class="pedagogical-note">
+            <strong>&#128065; Nota Pedagógica:</strong> Las tablas de voltajes de nodo son la herramienta de evaluación diagnóstica más eficaz para comprobar si los estudiantes comprenden la física del transistor más allá de la memorización de fórmulas algebraicas.
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- SECTION: Rúbrica de Evaluación Sugerida para el Docente -->
+    <section id="rubricaSection" style="margin-top: 30px;">
+      <h2 class="section-title">&#128203; Rúbrica Analítica de Evaluación Sugerida (Para el Docente)</h2>
+      
+      <div class="exercise-card">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Criterio de Desempeño</th>
+              <th>Excelente (5.0 - 4.5)</th>
+              <th>Aceptable (4.4 - 3.5)</th>
+              <th>Insuficiente (&lt; 3.5)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Identificación de Regiones</strong></td>
+              <td>Identifica con precisión Corte, Activa y Saturación validando cuantitativamente las condiciones de unión ($V_{BE}, V_{CE}, I_B$).</td>
+              <td>Identifica la región pero omite verificar la hipótesis de saturación o activa con $V_{CE}$.</td>
+              <td>Confunde saturación con activa; asume $I_C = \beta I_B$ en circuitos de conmutación profunda.</td>
+            </tr>
+            <tr>
+              <td><strong>Cálculo de Mallas (KVL/KCL)</strong></td>
+              <td>Aplica rigurosamente KVL en entrada y salida, considerando caídas $V_{BE} \approx 0.7\text{ V}$ y $V_{CE(sat)} \approx 0.2\text{ V}$.</td>
+              <td>Comete errores aritméticos menores o redondeos prematuros que no alteran la conclusión física.</td>
+              <td>Plantea incorrectamente las ecuaciones de malla o ignora caídas de tensión en las uniones.</td>
+            </tr>
+            <tr>
+              <td><strong>Diseño para Saturación Forzada</strong></td>
+              <td>Aplica factores de sobremarcha $k_{od} \ge 2$ o $\beta_{sat} \approx 10$, seleccionando valores comerciales normalizados E24.</td>
+              <td>Calcula la corriente justa sin factor de seguridad ni selección comercial.</td>
+              <td>Diseña con el $\beta_{max}$ de la hoja de datos, dejando el circuito vulnerable a temperatura.</td>
+            </tr>
+            <tr>
+              <td><strong>Interpretación Práctica y Diagnóstico</strong></td>
+              <td>Explica el comportamiento físico, la disipación térmica ($P_D$) y diagnostica fallas de nodo con multímetro.</td>
+              <td>Obtiene los números correctos pero no interpreta la disipación ni el origen de las fallas.</td>
+              <td>Incapaz de correlacionar voltajes de nodo con el estado físico del componente semiconductor.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function setMode(mode) {
+      const solutions = document.querySelectorAll('.solution-box');
+      const rubrica = document.getElementById('rubricaSection');
+      const btnDocente = document.getElementById('btnDocente');
+      const btnEstudiante = document.getElementById('btnEstudiante');
+      const badge = document.getElementById('modeBadge');
+
+      if (mode === 'estudiante') {
+        solutions.forEach(box => box.style.display = 'none');
+        if (rubrica) rubrica.style.display = 'none';
+        btnEstudiante.classList.add('btn-active');
+        btnDocente.classList.remove('btn-active');
+        badge.textContent = 'Versión para el Estudiante (Guía de Práctica y Trabajo)';
+        badge.className = 'badge badge-estudiante';
+      } else {
+        solutions.forEach(box => box.style.display = 'block');
+        if (rubrica) rubrica.style.display = 'block';
+        btnDocente.classList.add('btn-active');
+        btnEstudiante.classList.remove('btn-active');
+        badge.textContent = 'Versión para el Docente con Soluciones Detalladas y Rúbrica';
+        badge.className = 'badge badge-docente';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Transistor Bipolar (BJT): Regiones de Operación, Circuitos de Aplicación y Simulaciones</title>
+  <!-- KaTeX for formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-amber: #fbbf24;
+      --accent-red: #f87171;
+      --accent-purple: #c084fc;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Presentation Header & Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent-blue);
+    }
+
+    .brand span {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-primary {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0369a1;
+      color: #fff;
+    }
+
+    .slide-counter {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 100%;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Slides Container */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide-wrapper {
+      width: 100%;
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .slide-wrapper.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Card Styling */
+    .slide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .badge-corte { background: rgba(248, 113, 113, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .badge-activa { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+    .badge-sat { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .badge-theory { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+    .badge-sim { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+
+    .slide-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
+
+    /* Grid Layouts for Content */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 960px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Content Boxes */
+    .info-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .info-box h3 {
+      color: var(--accent-blue);
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-box ul {
+      padding-left: 20px;
+      color: #cbd5e1;
+    }
+
+    .info-box li {
+      margin-bottom: 8px;
+    }
+
+    .formula-card {
+      background: #090d16;
+      border-left: 4px solid var(--accent-blue);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 12px 0;
+      font-size: 1rem;
+    }
+
+    /* Circuit Diagram Container */
+    .circuit-viewer {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .circuit-svg {
+      width: 100%;
+      max-height: 380px;
+    }
+
+    /* Interactive Simulation Controls */
+    .sim-panel {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .sim-control-group {
+      margin-bottom: 16px;
+    }
+
+    .sim-control-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .sim-control-label span.val {
+      color: var(--accent-blue);
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #334155;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Real-time Telemetry Dashboard */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .telemetry-card {
+      background: #1e293b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-blue);
+    }
+
+    .telemetry-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .telemetry-val {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: monospace;
+      color: #fff;
+    }
+
+    .state-indicator {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    /* Canvas styling */
+    canvas.sim-canvas {
+      width: 100%;
+      height: 320px;
+      background: #050811;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+    }
+
+    /* Table styles */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+
+    .custom-table th {
+      background: #0f172a;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--border-color);
+      color: var(--accent-blue);
+    }
+
+    .custom-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+
+    .custom-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Keybind hint bar at bottom */
+    footer {
+      background: rgba(15, 23, 42, 0.85);
+      border-top: 1px solid var(--border-color);
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .key-badge {
+      background: #334155;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
+
+    /* Quick jump modal / index list */
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -380px;
+      width: 360px;
+      height: 100vh;
+      background: #0f172a;
+      border-left: 1px solid var(--border-color);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+      z-index: 200;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.open {
+      right: 0;
+    }
+
+    .drawer-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .drawer-item {
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+
+    .drawer-item:hover {
+      background: var(--bg-card);
+      color: var(--accent-blue);
+    }
+
+    .drawer-item.active {
+      background: #0284c7;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 150;
+      display: none;
+    }
+
+    .backdrop.open {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="8" y1="8" x2="8" y2="16"/>
+        <line x1="8" y1="12" x2="16" y2="8"/>
+        <line x1="8" y1="12" x2="16" y2="16"/>
+      </svg>
+      <span>Fundamentos de Electrónica &bull; BJT</span>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn" onclick="prevSlide()" title="Anterior (Flecha Izq)">
+        &#8592; Anterior
+      </button>
+      <span class="slide-counter" id="slideCounter">1 / 14</span>
+      <button class="btn" onclick="nextSlide()" title="Siguiente (Flecha Der o Espacio)">
+        Siguiente &#8594;
+      </button>
+      <button class="btn" onclick="toggleDrawer()" title="Índice de Diapositivas">
+        &#9776; Temario
+      </button>
+      <a href="guia_ejercicios_transistor.html" target="_blank" class="btn btn-primary" title="Abrir Guía de Ejercicios">
+        &#128221; Guía de Ejercicios
+      </a>
+      <a href="guia_laboratorio_simulide.html" target="_blank" class="btn" style="border-color: var(--accent-green); color: var(--accent-green);" title="Abrir Guía de Laboratorio SimulIDE">
+        &#128300; Lab SimulIDE
+      </a>
+      <button class="btn" onclick="toggleFullScreen()" title="Pantalla Completa (Tecla F)">
+        &#x26F6;
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Slide Index Drawer -->
+  <div class="backdrop" id="backdrop" onclick="toggleDrawer()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span>Índice de Contenido</span>
+      <button class="btn" onclick="toggleDrawer()" style="padding:4px 8px;">&times;</button>
+    </div>
+    <div class="drawer-body" id="drawerList">
+      <!-- Generated via JS -->
+    </div>
+  </aside>
+
+  <!-- Main Slide Area -->
+  <main>
+
+    <!-- SLIDE 1: Portada -->
+    <section class="slide-wrapper active" data-title="Portada: Transistor Bipolar BJT">
+      <div class="slide-card" style="text-align: center; padding: 50px 30px;">
+        <span class="slide-badge badge-theory">Fundamentos de Electrónica</span>
+        <h1 class="slide-title" style="justify-content: center; font-size: 2.8rem; margin-top: 10px;">
+          EL TRANSISTOR BIPOLAR (BJT)
+        </h1>
+        <p class="slide-subtitle" style="font-size: 1.3rem; max-width: 800px; margin: 0 auto 30px auto;">
+          Principios físicos, regiones de operación (Corte, Activa, Saturación), circuitos de aplicación de conmutación y amplificación, y laboratorios de simulación interactiva.
+        </p>
+
+        <div class="grid-3" style="max-width: 1000px; margin: 0 auto 30px auto; text-align: left;">
+          <div class="info-box" style="border-top: 4px solid var(--accent-red);">
+            <h3 style="color: var(--accent-red);">1. Región de Corte</h3>
+            <p style="color: #cbd5e1; font-size: 0.9rem;">El transistor se comporta como un <strong>interruptor abierto</strong>. Corrientes prácticamente nulas ($I_B \approx 0, I_C \approx 0$). $V_{CE} \approx V_{CC}$.</p>
+          </div>
+          <div class="info-box" style="border-top: 4px solid var(--accent-blue);">
+            <h3 style="color: var(--accent-blue);">2. Región Activa</h3>
+            <p style="color: #cbd5e1; font-size: 0.9rem;">Comportamiento como <strong>amplificador lineal</strong> y fuente de corriente controlada. Se cumple $I_C = \beta I_B$, con $V_{BE} \approx 0.7\text{ V}$.</p>
+          </div>
+          <div class="info-box" style="border-top: 4px solid var(--accent-green);">
+            <h3 style="color: var(--accent-green);">3. Región de Saturación</h3>
+            <p style="color: #cbd5e1; font-size: 0.9rem;">El transistor opera como un <strong>interruptor cerrado</strong>. Máxima conducción ($V_{CE} = V_{CE(sat)} \approx 0.2\text{ V}$). La ganancia cae y $I_C < \beta I_B$.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+          <button class="btn btn-primary" onclick="nextSlide()" style="font-size: 1rem; padding: 12px 24px;">
+            Iniciar Lección Interactiva &#8594;
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Anatomía, Símbolos y Comparativa BJT vs FET -->
+    <section class="slide-wrapper" data-title="Estructura, Símbolos NPN/PNP y BJT vs FET">
+      <div class="slide-card">
+        <span class="slide-badge badge-theory">Fundamentos Físicos</span>
+        <h2 class="slide-title">Estructura, Símbolos y Tipos de Transistores</h2>
+        <p class="slide-subtitle">Dispositivos semiconductores de estado sólido de tres terminales: Colector (C), Base (B) y Emisor (E).</p>
+
+        <div class="grid-2">
+          <!-- Columna 1: NPN vs PNP -->
+          <div class="info-box">
+            <h3>NPN vs PNP: Flujo de Corriente y Conducción</h3>
+            <div style="display: flex; justify-content: space-around; margin: 16px 0; background: #0b1120; padding: 12px; border-radius: 8px;">
+              <!-- NPN Symbol -->
+              <div style="text-align: center;">
+                <svg width="120" height="110" viewBox="0 0 120 110">
+                  <line x1="20" y1="55" x2="50" y2="55" stroke="#38bdf8" stroke-width="3"/>
+                  <line x1="50" y1="25" x2="50" y2="85" stroke="#fff" stroke-width="4"/>
+                  <line x1="50" y1="40" x2="90" y2="15" stroke="#e2e8f0" stroke-width="3"/>
+                  <line x1="50" y1="70" x2="90" y2="95" stroke="#e2e8f0" stroke-width="3"/>
+                  <!-- Arrow pointing outwards (NPN) -->
+                  <polygon points="85,92 70,80 75,95" fill="#4ade80"/>
+                  <text x="5" y="58" fill="#38bdf8" font-size="12" font-weight="bold">B</text>
+                  <text x="95" y="20" fill="#cbd5e1" font-size="12" font-weight="bold">C</text>
+                  <text x="95" y="100" fill="#4ade80" font-size="12" font-weight="bold">E</text>
+                </svg>
+                <div style="color: #4ade80; font-weight: bold; font-size: 0.9rem;">Transistor NPN</div>
+                <div style="font-size: 0.78rem; color: #94a3b8;">La flecha sale en el Emisor.<br>Corriente: $C \to E$<br>ON cuando $V_B > V_E + 0.7\text{ V}$</div>
+              </div>
+
+              <!-- PNP Symbol -->
+              <div style="text-align: center;">
+                <svg width="120" height="110" viewBox="0 0 120 110">
+                  <line x1="20" y1="55" x2="50" y2="55" stroke="#38bdf8" stroke-width="3"/>
+                  <line x1="50" y1="25" x2="50" y2="85" stroke="#fff" stroke-width="4"/>
+                  <line x1="50" y1="40" x2="90" y2="15" stroke="#e2e8f0" stroke-width="3"/>
+                  <line x1="50" y1="70" x2="90" y2="95" stroke="#e2e8f0" stroke-width="3"/>
+                  <!-- Arrow pointing inwards (PNP) -->
+                  <polygon points="60,78 72,66 65,85" fill="#f87171"/>
+                  <text x="5" y="58" fill="#38bdf8" font-size="12" font-weight="bold">B</text>
+                  <text x="95" y="20" fill="#cbd5e1" font-size="12" font-weight="bold">C</text>
+                  <text x="95" y="100" fill="#f87171" font-size="12" font-weight="bold">E</text>
+                </svg>
+                <div style="color: #f87171; font-weight: bold; font-size: 0.9rem;">Transistor PNP</div>
+                <div style="font-size: 0.78rem; color: #94a3b8;">La flecha entra hacia la Base.<br>Corriente: $E \to C$<br>ON cuando $V_B < V_E - 0.7\text{ V}$</div>
+              </div>
+            </div>
+
+            <div class="formula-card">
+              <strong>Relación fundamental de corrientes:</strong>
+              $$I_E = I_C + I_B \quad \text{y en región activa:} \quad I_C = \beta \cdot I_B$$
+            </div>
+          </div>
+
+          <!-- Columna 2: BJT vs FET (Del documento base) -->
+          <div class="info-box">
+            <h3>Comparativa Clave: BJT vs FET / MOSFET</h3>
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Característica</th>
+                  <th>BJT (Bipolar)</th>
+                  <th>FET / MOSFET</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Control</strong></td>
+                  <td>Por <span style="color:var(--accent-amber);">Corriente</span> ($I_B \approx 1 - 20\text{ mA}$)</td>
+                  <td>Por <span style="color:var(--accent-blue);">Voltaje</span> ($V_{GS}$, $I_G \approx 0$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Impedancia Entrada</strong></td>
+                  <td>Media / Baja ($1-10\text{ k}\Omega$)</td>
+                  <td>Extremadamente alta ($>10^9\ \Omega$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Velocidad</strong></td>
+                  <td>Cientos de kHz a pocos MHz</td>
+                  <td>Decenas a cientos de MHz</td>
+                </tr>
+                <tr>
+                  <td><strong>Caída de Tensión ON</strong></td>
+                  <td>$V_{CE(sat)} \approx 0.1 - 0.3\text{ V}$ (fija)</td>
+                  <td>Resistiva ($R_{DS(on)}$ miliohms)</td>
+                </tr>
+                <tr>
+                  <td><strong>Costo relativo</strong></td>
+                  <td>Muy económico</td>
+                  <td>Ligeramente superior</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 8px;">
+              * Regla práctica: Para cargas pesadas (>2 A) suele preferirse MOSFET. Para interfaces lógicas, sensores, señales pequeñas y conmutación básica de baja/media corriente, el BJT es el estándar formativo y universal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Las Tres Regiones de Operación -->
+    <section class="slide-wrapper" data-title="Las Tres Regiones de Operación del BJT">
+      <div class="slide-card">
+        <span class="slide-badge badge-theory">Teoría de Polarización</span>
+        <h2 class="slide-title">Las Tres Regiones de Operación del BJT</h2>
+        <p class="slide-subtitle">Estado de las uniones p-n Base-Emisor (BE) y Base-Colector (BC).</p>
+
+        <table class="custom-table" style="margin-bottom: 24px;">
+          <thead>
+            <tr>
+              <th>Región</th>
+              <th>Unión B-E</th>
+              <th>Unión B-C</th>
+              <th>Voltajes Típicos</th>
+              <th>Comportamiento Eléctrico</th>
+              <th>Aplicación Típica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--accent-red);">Corte (Cutoff)</strong></td>
+              <td>Inversa o Desactivada ($V_{BE} < 0.6\text{ V}$)</td>
+              <td>Inversa ($V_{BC} < 0$)</td>
+              <td>$I_B \approx 0$, $I_C \approx 0$<br>$V_{CE} \approx V_{CC}$</td>
+              <td><strong>Circuito Abierto</strong> entre Colector y Emisor. Resistencia muy alta ($> \text{M}\Omega$).</td>
+              <td>Interruptor OFF, lógica '0' / '1' según configuración.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-blue);">Activa Lineal</strong></td>
+              <td>Directa ($V_{BE} \approx 0.7\text{ V}$)</td>
+              <td>Inversa ($V_{BC} < 0$, $V_{CE} > 0.3\text{ V}$)</td>
+              <td>$I_C = \beta I_B$<br>$V_{CE(sat)} < V_{CE} < V_{CC}$</td>
+              <td><strong>Fuente de corriente dependiente</strong> ($I_C$ controlada proporcionalmente por $I_B$).</td>
+              <td>Amplificadores de audio/RF, fuentes de corriente constante.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-green);">Saturación</strong></td>
+              <td>Directa ($V_{BE} \approx 0.7 - 0.8\text{ V}$)</td>
+              <td>Directa ($V_{BC} > 0.4\text{ V}$)</td>
+              <td>$V_{CE} = V_{CE(sat)} \approx 0.1 - 0.2\text{ V}$<br>$I_C < \beta I_B$</td>
+              <td><strong>Interruptor Cerrado</strong> (baja impedancia). La corriente de colector está limitada por la carga externa.</td>
+              <td>Interruptor ON, encendido de relés, motores, LEDs, compuertas RTL.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="grid-2">
+          <div class="info-box">
+            <h3 style="color: var(--accent-amber);">Criterio de Saturación Forzada</h3>
+            <p style="font-size: 0.92rem; color: #cbd5e1;">
+              Para garantizar que un transistor esté firmemente saturado sin importar variaciones de temperatura o dispersión de fabricación del $\beta$ ($h_{FE}$), en diseño industrial se utiliza un <strong>beta forzado</strong> ($\beta_{sat}$ o factor de sobremarcha $k$):
+            </p>
+            <div class="formula-card">
+              $$I_{B(sat)} \ge \frac{I_{C(sat)}}{\beta_{min}} \cdot k_{od} \quad \text{con } k_{od} = 2 \text{ a } 5 \quad (\text{o usar } \beta_{sat} \approx 10)$$
+            </div>
+            <p style="font-size: 0.85rem; color: #94a3b8;">
+              Si la corriente de base suministrada supera con creces la requerida, $V_{CE}$ cae al mínimo absoluto ($V_{CE(sat)} \approx 0.1 - 0.2\text{ V}$), minimizando la pérdida de voltaje en la carga y la disipación térmica del transistor.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3 style="color: var(--accent-purple);">Potencia Disipada en el Transistor</h3>
+            <p style="font-size: 0.92rem; color: #cbd5e1;">
+              La potencia total disipada por el transistor en estado estacionario es:
+            </p>
+            <div class="formula-card">
+              $$P_D = V_{CE} \cdot I_C + V_{BE} \cdot I_B \approx V_{CE} \cdot I_C$$
+            </div>
+            <ul style="font-size: 0.88rem; margin-top: 8px;">
+              <li><strong>En Corte:</strong> $I_C \approx 0 \implies P_D \approx 0\text{ W}$ (Transistor frío).</li>
+              <li><strong>En Saturación:</strong> $V_{CE} \approx 0.2\text{ V} \implies P_D$ es mínimo (Transistor frío o tibio).</li>
+              <li><strong>En Activa:</strong> Coexisten $V_{CE}$ y $I_C$ elevados $\implies P_D$ puede ser muy grande (¡Peligro de embalamiento térmico!).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Curvas Características y Recta de Carga -->
+    <section class="slide-wrapper" data-title="Curvas Características y Recta de Carga DC">
+      <div class="slide-card">
+        <span class="slide-badge badge-theory">Análisis Gráfico</span>
+        <h2 class="slide-title">Curvas de Salida y la Recta de Carga DC</h2>
+        <p class="slide-subtitle">La recta de carga representa todas las combinaciones posibles de $(V_{CE}, I_C)$ impuestas por el circuito exterior.</p>
+
+        <div class="grid-2">
+          <!-- Explicación de la ecuación de la recta -->
+          <div class="info-box">
+            <h3>Ecuación de la Malla de Colector</h3>
+            <p style="color: #cbd5e1; font-size: 0.95rem;">Aplicando la Ley de Voltajes de Kirchhoff (KVL) en la malla de salida:</p>
+            <div class="formula-card">
+              $$V_{CC} = I_C \cdot R_C + V_{CE}$$
+              $$I_C = -\frac{1}{R_C} \cdot V_{CE} + \frac{V_{CC}}{R_C}$$
+            </div>
+            
+            <h4 style="color: var(--accent-blue); margin: 12px 0 6px 0;">Puntos Extremos Notables:</h4>
+            <ul style="font-size: 0.9rem;">
+              <li>
+                <strong>Punto de Corte (Eje X, $I_C = 0$):</strong>
+                $$V_{CE(corte)} = V_{CC}$$
+              </li>
+              <li>
+                <strong>Punto de Saturación Teórico (Eje Y, $V_{CE} = 0$):</strong>
+                $$I_{C(sat)} = \frac{V_{CC}}{R_C}$$
+              </li>
+              <li>
+                <strong>Punto de Operación en Reposo $Q$:</strong>
+                Intersección de la recta de carga con la curva $I_B$ establecida por la base:
+                $$Q = (V_{CEQ}, I_{CQ})$$
+              </li>
+            </ul>
+          </div>
+
+          <!-- Gráfico SVG explicativo de las 3 zonas -->
+          <div class="circuit-viewer" style="padding: 10px;">
+            <svg viewBox="0 0 450 300" style="width: 100%; max-height: 290px;">
+              <!-- Background grid lines -->
+              <line x1="50" y1="20" x2="50" y2="260" stroke="#475569" stroke-width="2"/>
+              <line x1="50" y1="260" x2="430" y2="260" stroke="#475569" stroke-width="2"/>
+              
+              <!-- Axis labels -->
+              <text x="400" y="285" fill="#94a3b8" font-size="12" font-weight="bold">V_CE (V)</text>
+              <text x="15" y="30" fill="#94a3b8" font-size="12" font-weight="bold">I_C (mA)</text>
+
+              <!-- Regions shading -->
+              <!-- Saturation Zone (left strip) -->
+              <rect x="50" y="20" width="45" height="240" fill="rgba(74, 222, 128, 0.15)"/>
+              <text x="55" y="40" fill="#4ade80" font-size="10" font-weight="bold">SATURACIÓN</text>
+              <line x1="95" y1="20" x2="95" y2="260" stroke="#4ade80" stroke-dasharray="3,3" stroke-width="1"/>
+
+              <!-- Cutoff Zone (bottom strip) -->
+              <rect x="50" y="250" width="380" height="10" fill="rgba(248, 113, 113, 0.25)"/>
+              <text x="250" y="255" fill="#f87171" font-size="10" font-weight="bold">ZONA DE CORTE (I_B = 0)</text>
+
+              <!-- Active Zone label -->
+              <text x="180" y="60" fill="#38bdf8" font-size="14" font-weight="bold">ZONA ACTIVA (I_C = β·I_B)</text>
+
+              <!-- Transistor curves (Ib = 10, 20, 30, 40, 50 uA) -->
+              <path d="M 50,258 Q 80,245 95,220 L 420,215" fill="none" stroke="#64748b" stroke-width="1.5"/>
+              <text x="422" y="218" fill="#94a3b8" font-size="9">Ib=10µA</text>
+
+              <path d="M 50,258 Q 85,210 95,175 L 420,170" fill="none" stroke="#64748b" stroke-width="1.5"/>
+              <text x="422" y="173" fill="#94a3b8" font-size="9">Ib=20µA</text>
+
+              <path d="M 50,258 Q 90,160 95,130 L 420,125" fill="none" stroke="#38bdf8" stroke-width="2"/>
+              <text x="422" y="128" fill="#38bdf8" font-size="9" font-weight="bold">Ib_Q=30µA</text>
+
+              <path d="M 50,258 Q 90,120 95,85 L 420,80" fill="none" stroke="#64748b" stroke-width="1.5"/>
+              <text x="422" y="83" fill="#94a3b8" font-size="9">Ib=40µA</text>
+
+              <path d="M 50,258 Q 90,70 95,45 L 420,40" fill="none" stroke="#64748b" stroke-width="1.5"/>
+              <text x="422" y="43" fill="#94a3b8" font-size="9">Ib=50µA</text>
+
+              <!-- DC Load Line -->
+              <line x1="75" y1="40" x2="380" y2="260" stroke="#f59e0b" stroke-width="3"/>
+              <text x="60" y="32" fill="#f59e0b" font-size="11" font-weight="bold">I_C(sat) = V_CC/R_C</text>
+              <text x="360" y="250" fill="#f59e0b" font-size="11" font-weight="bold">V_CE = V_CC</text>
+
+              <!-- Operating Point Q -->
+              <circle cx="218" cy="143" r="6" fill="#ec4899" stroke="#fff" stroke-width="2"/>
+              <text x="230" y="140" fill="#ec4899" font-size="13" font-weight="bold">Punto Q (V_CEQ, I_CQ)</text>
+
+              <!-- Dotted projection to axes -->
+              <line x1="218" y1="143" x2="218" y2="260" stroke="#ec4899" stroke-dasharray="4,4"/>
+              <line x1="218" y1="143" x2="50" y2="143" stroke="#ec4899" stroke-dasharray="4,4"/>
+              <text x="205" y="275" fill="#ec4899" font-size="11">V_CEQ</text>
+              <text x="15" y="147" fill="#ec4899" font-size="11">I_CQ</text>
+            </svg>
+            <div style="font-size: 0.8rem; color: #94a3b8; text-align: center; margin-top: 4px;">
+              Diagrama oficial: Las tres regiones y el punto Q sobre la recta de carga estática.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: SIMULACIÓN INTERACTIVA 1 - Recta de Carga y Punto Q -->
+    <section class="slide-wrapper" data-title="Laboratorio 1: Simulación de Recta de Carga y Regiones">
+      <div class="slide-card">
+        <span class="slide-badge badge-sim">Simulación Interactiva #1</span>
+        <h2 class="slide-title">Laboratorio Virtual: Curvas $I_C$ vs $V_{CE}$ y Punto $Q$</h2>
+        <p class="slide-subtitle">Ajusta los parámetros del circuito para observar cómo se desplaza el punto de operación $Q$ en tiempo real.</p>
+
+        <div class="grid-2">
+          <!-- Canvas con gráfico en tiempo real -->
+          <div>
+            <canvas id="loadLineCanvas" class="sim-canvas" width="550" height="340"></canvas>
+            
+            <div id="sim1StateBadge" class="state-indicator" style="background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue);">
+              ESTADO ACTUAL: REGIÓN ACTIVA
+            </div>
+            
+            <div class="telemetry-grid">
+              <div class="telemetry-card">
+                <div class="telemetry-title">Corriente Base $I_B$</div>
+                <div class="telemetry-val" id="tele_ib">38.0 µA</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Corriente Colector $I_C$</div>
+                <div class="telemetry-val" id="tele_ic">5.70 mA</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Voltaje $V_{CE}$</div>
+                <div class="telemetry-val" id="tele_vce">6.30 V</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Potencia Transistor</div>
+                <div class="telemetry-val" id="tele_pd">35.9 mW</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controles interactivos y Esquema del Circuito -->
+          <div class="sim-panel">
+            <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+              <span>Circuito Bajo Prueba y Controles</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Polarización fija con BJT NPN</span>
+            </h3>
+
+            <!-- Esquema SVG del Circuito Simulado #1 -->
+            <div style="background: #050811; border: 1px solid #1e293b; border-radius: 8px; padding: 6px; margin-bottom: 14px; text-align: center;">
+              <svg viewBox="0 0 340 135" style="width: 100%; max-height: 125px;">
+                <!-- VCC Rail -->
+                <line x1="240" y1="12" x2="240" y2="30" stroke="#f87171" stroke-width="2"/>
+                <circle cx="240" cy="12" r="3" fill="#f87171"/>
+                <text x="248" y="16" fill="#f87171" font-size="10" font-weight="bold">+V_CC</text>
+
+                <!-- RC Resistor -->
+                <rect x="232" y="30" width="16" height="26" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="252" y="47" fill="#38bdf8" font-size="9" font-weight="bold">R_C</text>
+                <!-- Ic arrow -->
+                <line x1="225" y1="34" x2="225" y2="52" stroke="#4ade80" stroke-width="1.5"/>
+                <polygon points="225,55 222,48 228,48" fill="#4ade80"/>
+                <text x="210" y="46" fill="#4ade80" font-size="8">I_C</text>
+
+                <!-- Connection to Collector -->
+                <line x1="240" y1="56" x2="240" y2="70" stroke="#cbd5e1" stroke-width="2"/>
+
+                <!-- Transistor NPN -->
+                <line x1="240" y1="70" x2="216" y2="82" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="216" y1="74" x2="216" y2="96" stroke="#fff" stroke-width="3"/>
+                <line x1="216" y1="88" x2="240" y2="100" stroke="#4ade80" stroke-width="2"/>
+                <!-- Emitter Arrow -->
+                <polygon points="238,99 227,92 230,103" fill="#4ade80"/>
+
+                <!-- VCE label arrow -->
+                <path d="M 252,72 Q 258,85 252,98" fill="none" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="2,2"/>
+                <text x="260" y="88" fill="#fbbf24" font-size="8" font-weight="bold">V_CE</text>
+
+                <!-- Emitter to GND -->
+                <line x1="240" y1="100" x2="240" y2="120" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="230" y1="120" x2="250" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="234" y1="124" x2="246" y2="124" stroke="#94a3b8" stroke-width="1.5"/>
+                <line x1="238" y1="128" x2="242" y2="128" stroke="#94a3b8" stroke-width="1"/>
+                <text x="254" y="123" fill="#94a3b8" font-size="8">GND</text>
+
+                <!-- Base line -->
+                <line x1="216" y1="85" x2="175" y2="85" stroke="#38bdf8" stroke-width="2"/>
+                <!-- Ib arrow -->
+                <line x1="180" y1="78" x2="198" y2="78" stroke="#38bdf8" stroke-width="1.5"/>
+                <polygon points="202,78 195,75 195,81" fill="#38bdf8"/>
+                <text x="184" y="74" fill="#38bdf8" font-size="8">I_B</text>
+
+                <!-- RB Resistor -->
+                <rect x="135" y="77" width="40" height="16" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="146" y="89" fill="#38bdf8" font-size="9" font-weight="bold">R_B</text>
+
+                <!-- VBB Source -->
+                <line x1="135" y1="85" x2="95" y2="85" stroke="#cbd5e1" stroke-width="2"/>
+                <!-- Battery symbol VBB -->
+                <line x1="95" y1="73" x2="95" y2="97" stroke="#fbbf24" stroke-width="2.5"/>
+                <line x1="88" y1="79" x2="88" y2="91" stroke="#94a3b8" stroke-width="2"/>
+                <text x="70" y="75" fill="#fbbf24" font-size="10" font-weight="bold">+V_BB</text>
+                <text x="98" y="75" fill="#fbbf24" font-size="9">+</text>
+                <text x="82" y="75" fill="#94a3b8" font-size="9">-</text>
+
+                <!-- VBB to GND -->
+                <line x1="88" y1="85" x2="60" y2="85" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="60" y1="85" x2="60" y2="120" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="50" y1="120" x2="70" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="54" y1="124" x2="66" y2="124" stroke="#94a3b8" stroke-width="1.5"/>
+                <line x1="58" y1="128" x2="62" y2="128" stroke="#94a3b8" stroke-width="1"/>
+              </svg>
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Voltaje de Alimentación de Colector ($V_{CC}$):</span>
+                <span class="val" id="val_vcc">12.0 V</span>
+              </div>
+              <input type="range" id="slider_vcc" min="3" max="24" step="0.5" value="12" oninput="updateLoadLineSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Voltaje de Entrada Base ($V_{BB}$):</span>
+                <span class="val" id="val_vbb">2.5 V</span>
+              </div>
+              <input type="range" id="slider_vbb" min="0" max="5" step="0.05" value="2.5" oninput="updateLoadLineSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Resistencia de Base ($R_B$):</span>
+                <span class="val" id="val_rb">47 kΩ</span>
+              </div>
+              <input type="range" id="slider_rb" min="5" max="220" step="1" value="47" oninput="updateLoadLineSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Resistencia de Colector ($R_C$):</span>
+                <span class="val" id="val_rc">1.0 kΩ</span>
+              </div>
+              <input type="range" id="slider_rc" min="0.2" max="5" step="0.1" value="1.0" oninput="updateLoadLineSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Ganancia de Corriente ($\beta$ o $h_{FE}$):</span>
+                <span class="val" id="val_beta">150</span>
+              </div>
+              <input type="range" id="slider_beta" min="30" max="350" step="5" value="150" oninput="updateLoadLineSim()">
+            </div>
+
+            <div style="margin-top: 14px; background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; font-size: 0.82rem; color: #cbd5e1;">
+              <strong>Experimenta:</strong>
+              <br>&bull; Reduce $V_{BB} < 0.7\text{ V}$ para llevar el circuito a <strong>CORTE</strong>.
+              <br>&bull; Sube $V_{BB}$ o baja $R_B$ hasta que $I_C \approx V_{CC}/R_C$ para alcanzar <strong>SATURACIÓN</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Aplicación Conmutación - NPN Low-Side Switch -->
+    <section class="slide-wrapper" data-title="Circuito de Aplicación 1: Conmutador Digital NPN (Low-Side)">
+      <div class="slide-card">
+        <span class="slide-badge badge-corte">Aplicación Conmutación</span>
+        <h2 class="slide-title">Conmutador Digital NPN (Low-Side Switch)</h2>
+        <p class="slide-subtitle">Control de cargas de alta potencia (relés, solenoides, LEDs, motores) desde un microcontrolador (Arduino/ESP32).</p>
+
+        <div class="grid-2">
+          <!-- Circuito esquemático SVG -->
+          <div class="circuit-viewer">
+            <svg viewBox="0 0 420 320" class="circuit-svg">
+              <!-- VCC rail -->
+              <line x1="260" y1="30" x2="260" y2="70" stroke="#f87171" stroke-width="3"/>
+              <circle cx="260" cy="30" r="4" fill="#f87171"/>
+              <text x="270" y="35" fill="#f87171" font-weight="bold" font-size="14">+V_CC (+12V)</text>
+
+              <!-- Load (Relay Coil or Lamp) -->
+              <rect x="235" y="70" width="50" height="70" fill="#1e293b" stroke="#38bdf8" stroke-width="2" rx="4"/>
+              <text x="242" y="105" fill="#38bdf8" font-size="11" font-weight="bold">CARGA</text>
+              <text x="240" y="125" fill="#94a3b8" font-size="9">(Relé/LED)</text>
+
+              <!-- Flyback Diode (Diodo de rueda libre) -->
+              <line x1="320" y1="70" x2="320" y2="140" stroke="#a855f7" stroke-width="2"/>
+              <line x1="260" y1="70" x2="320" y2="70" stroke="#a855f7" stroke-width="2"/>
+              <line x1="260" y1="140" x2="320" y2="140" stroke="#a855f7" stroke-width="2"/>
+              <!-- Diode symbol pointing UP -->
+              <polygon points="320,85 310,115 330,115" fill="#a855f7"/>
+              <line x1="310" y1="85" x2="330" y2="85" stroke="#a855f7" stroke-width="3"/>
+              <text x="335" y="105" fill="#a855f7" font-size="10">Diodo Flyback (1N4007)</text>
+
+              <!-- Connection to Collector -->
+              <line x1="260" y1="140" x2="260" y2="180" stroke="#e2e8f0" stroke-width="3"/>
+              <text x="270" y="170" fill="#94a3b8" font-size="11">C</text>
+
+              <!-- BJT Transistor NPN (2N2222) -->
+              <line x1="260" y1="180" x2="230" y2="205" stroke="#e2e8f0" stroke-width="3"/>
+              <line x1="230" y1="190" x2="230" y2="230" stroke="#fff" stroke-width="4"/>
+              <line x1="230" y1="215" x2="260" y2="240" stroke="#4ade80" stroke-width="3"/>
+              <!-- Arrow in Emitter -->
+              <polygon points="255,236 242,224 246,238" fill="#4ade80"/>
+              <text x="270" y="245" fill="#4ade80" font-size="11">E</text>
+
+              <!-- Emitter to GND -->
+              <line x1="260" y1="240" x2="260" y2="290" stroke="#e2e8f0" stroke-width="3"/>
+              <line x1="240" y1="290" x2="280" y2="290" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="248" y1="296" x2="272" y2="296" stroke="#94a3b8" stroke-width="2"/>
+              <line x1="254" y1="302" x2="266" y2="302" stroke="#94a3b8" stroke-width="1.5"/>
+              <text x="290" y="295" fill="#94a3b8" font-size="11">GND (0V)</text>
+
+              <!-- Base circuit -->
+              <line x1="230" y1="210" x2="180" y2="210" stroke="#38bdf8" stroke-width="3"/>
+              <text x="210" y="202" fill="#38bdf8" font-size="11">B</text>
+
+              <!-- RB Resistor -->
+              <rect x="110" y="200" width="70" height="20" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+              <text x="125" y="214" fill="#38bdf8" font-size="11" font-weight="bold">R_B</text>
+
+              <!-- Input Signal from MCU -->
+              <line x1="40" y1="210" x2="110" y2="210" stroke="#38bdf8" stroke-width="3"/>
+              <circle cx="40" cy="210" r="4" fill="#38bdf8"/>
+              <text x="10" y="195" fill="#38bdf8" font-weight="bold" font-size="12">V_IN (0V / 5V)</text>
+              <text x="10" y="235" fill="#94a3b8" font-size="10">GPIO Micro</text>
+            </svg>
+            <div style="font-size: 0.8rem; color: #94a3b8; text-align: center;">
+              Configuración Low-side: El transistor conecta la carga a GND cuando conmuta a ON.
+            </div>
+          </div>
+
+          <!-- Diseño y Fórmulas Paso a Paso -->
+          <div class="info-box">
+            <h3>Metodología de Diseño para Saturación</h3>
+            
+            <div style="font-size: 0.9rem; color: #cbd5e1;">
+              <strong>Paso 1: Determinar la corriente de la carga ($I_C$):</strong>
+              $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{carga}} \approx \frac{V_{CC}}{R_{carga}}$$
+
+              <strong>Paso 2: Calcular la corriente de base necesaria para saturar:</strong>
+              Para garantizar saturación bajo cualquier condición de lote y temperatura:
+              $$I_B \ge \frac{I_{C(sat)}}{\beta_{min}} \cdot k_{od} \quad (k_{od} = 2 \text{ a } 3)$$
+
+              <strong>Paso 3: Calcular la resistencia de base $R_B$:</strong>
+              $$R_B = \frac{V_{IN} - V_{BE(sat)}}{I_B} = \frac{V_{MCU} - 0.7\text{ V}}{I_B}$$
+
+              <strong>Paso 4: ¡Diodo Flyback imprescindible para cargas inductivas!</strong>
+              Al apagarse bruscamente el BJT, la bobina del relé genera un pico de tensión inverso $V = -L \frac{di}{dt}$ que puede superar $100\text{ V}$ y destruir la unión colector-emisor. El diodo disipa esta energía.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: High-Side Switch con PNP y Regla de Oro -->
+    <section class="slide-wrapper" data-title="Circuito de Aplicación 2: Conmutador PNP High-Side vs NPN Low-Side">
+      <div class="slide-card">
+        <span class="slide-badge badge-sat">Aplicación Conmutación</span>
+        <h2 class="slide-title">Conmutador PNP High-Side vs NPN Low-Side</h2>
+        <p class="slide-subtitle">¿Cuándo usar cada configuración? La regla de oro del diseño electrónico profesional.</p>
+
+        <div class="grid-2">
+          <!-- Columna PNP High-Side -->
+          <div class="info-box" style="border-top: 4px solid var(--accent-purple);">
+            <h3 style="color: var(--accent-purple);">PNP High-Side Switch</h3>
+            <p style="font-size: 0.9rem; color: #cbd5e1;">
+              El transistor PNP se ubica <strong>entre la fuente $V_{CC}$ y la carga</strong>. La carga permanece conectada permanentemente a tierra (GND).
+            </p>
+
+            <div style="background: #090d16; padding: 12px; border-radius: 8px; margin: 12px 0; text-align: center;">
+              <svg viewBox="0 0 260 210" style="width: 100%; max-height: 190px;">
+                <!-- VCC rail -->
+                <line x1="80" y1="20" x2="80" y2="50" stroke="#f87171" stroke-width="2"/>
+                <text x="85" y="25" fill="#f87171" font-size="11" font-weight="bold">+V_CC (12V)</text>
+                <!-- PNP BJT -->
+                <line x1="80" y1="50" x2="110" y2="75" stroke="#4ade80" stroke-width="2"/>
+                <polygon points="98,64 90,52 105,58" fill="#f87171"/>
+                <text x="65" y="55" fill="#f87171" font-size="10">E</text>
+                <line x1="110" y1="65" x2="110" y2="105" stroke="#fff" stroke-width="3"/>
+                <line x1="110" y1="95" x2="80" y2="120" stroke="#e2e8f0" stroke-width="2"/>
+                <text x="65" y="125" fill="#cbd5e1" font-size="10">C</text>
+                <!-- Base -->
+                <line x1="110" y1="85" x2="160" y2="85" stroke="#38bdf8" stroke-width="2"/>
+                <!-- Resistor Base -->
+                <rect x="160" y="78" width="40" height="14" fill="#1e293b" stroke="#38bdf8"/>
+                <text x="170" y="89" fill="#38bdf8" font-size="9">R_B</text>
+                <text x="210" y="90" fill="#38bdf8" font-size="10">V_control</text>
+                <!-- Carga -->
+                <rect x="65" y="120" width="30" height="40" fill="#1e293b" stroke="#38bdf8"/>
+                <text x="68" y="145" fill="#38bdf8" font-size="8">Carga</text>
+                <!-- GND -->
+                <line x1="80" y1="160" x2="80" y2="185" stroke="#e2e8f0" stroke-width="2"/>
+                <line x1="70" y1="185" x2="90" y2="185" stroke="#94a3b8" stroke-width="2"/>
+                <text x="95" y="190" fill="#94a3b8" font-size="10">GND</text>
+              </svg>
+            </div>
+
+            <div class="formula-card" style="font-size: 0.85rem;">
+              <strong>Condiciones de control PNP:</strong><br>
+              &bull; <strong>ON (Saturación):</strong> $V_B < V_{CC} - 0.7\text{ V}$ (La base se drena a tierra).<br>
+              &bull; <strong>OFF (Corte):</strong> $V_B \ge V_{CC} - 0.2\text{ V}$ (La base debe subir a $V_{CC}$).
+            </div>
+            <p style="font-size: 0.82rem; color: #94a3b8;">
+              <strong>Ventaja de seguridad:</strong> Si el cable hacia la carga sufre un cortocircuito accidental con el chasis metálico (GND), no se enciende involuntariamente.
+            </p>
+          </div>
+
+          <!-- Regla de Oro y Comparativa -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-amber);">Regla de Oro (Documento Oficial Slide 16)</h3>
+            <div style="background: rgba(251, 191, 36, 0.1); border-left: 4px solid var(--accent-amber); padding: 14px; border-radius: 0 8px 8px 0; margin-bottom: 14px;">
+              <p style="font-size: 0.95rem; font-weight: 600; color: #fff;">
+                "Use transistores NPN para conmutación Low-Side (Emisor conectado a GND).<br>
+                Use transistores PNP para conmutación High-Side (Emisor conectado a VCC)."
+              </p>
+            </div>
+
+            <table class="custom-table" style="font-size: 0.88rem;">
+              <thead>
+                <tr>
+                  <th>Parámetro</th>
+                  <th>NPN Low-Side</th>
+                  <th>PNP High-Side</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Referencia de Emisor</strong></td>
+                  <td>GND (0V)</td>
+                  <td>$V_{CC}$ (Voltaje positivo)</td>
+                </tr>
+                <tr>
+                  <td><strong>Señal para Activar (ON)</strong></td>
+                  <td>Voltaje ALTO ($V_{IN} > 0.7\text{ V}$)</td>
+                  <td>Voltaje BAJO ($V_{IN} < V_{CC} - 0.7\text{ V}$)</td>
+                </tr>
+                <tr>
+                  <td><strong>Control directo desde MCU</strong></td>
+                  <td>Directo con 3.3V o 5V</td>
+                  <td>Requiere BJT NPN previo si $V_{CC} > V_{MCU}$</td>
+                </tr>
+                <tr>
+                  <td><strong>Referencia de la Carga</strong></td>
+                  <td>Flotante respecto a GND al estar OFF</td>
+                  <td>Referenciada sólidamente a GND</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Interruptor Crepuscular con LDR (Luz / Oscuridad) -->
+    <section class="slide-wrapper" data-title="Circuito de Aplicación 3: Interruptor con LDR (Luz y Oscuridad)">
+      <div class="slide-card">
+        <span class="slide-badge badge-corte">Control Automático</span>
+        <h2 class="slide-title">Interruptor Automático con Sensor LDR</h2>
+        <p class="slide-subtitle">Circuitos activados por oscuridad (Darkness-activated) y por luz (Light-activated) extraídos del documento base (Slides 17-20).</p>
+
+        <div class="grid-2">
+          <!-- Darkness Activated -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-blue);">1. Activado por Oscuridad (Darkness-Activated)</h3>
+            <p style="font-size: 0.88rem; color: #cbd5e1;">
+              Enciende una lámpara o LED cuando cae la noche.
+            </p>
+            
+            <div style="background: #090d16; padding: 12px; border-radius: 8px; margin: 10px 0;">
+              <svg viewBox="0 0 320 200" style="width: 100%; max-height: 170px;">
+                <text x="20" y="25" fill="#f87171" font-size="11" font-weight="bold">+6V / +12V</text>
+                <line x1="80" y1="20" x2="260" y2="20" stroke="#f87171" stroke-width="2"/>
+                
+                <!-- R1 on top -->
+                <rect x="65" y="40" width="30" height="35" fill="#1e293b" stroke="#38bdf8"/>
+                <text x="70" y="62" fill="#38bdf8" font-size="9">R1 (10k)</text>
+                <line x1="80" y1="20" x2="80" y2="40" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="80" y1="75" x2="80" y2="105" stroke="#cbd5e1" stroke-width="2"/>
+
+                <!-- LDR on bottom -->
+                <circle cx="80" cy="125" r="16" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+                <text x="70" y="129" fill="#fbbf24" font-size="8">LDR</text>
+                <!-- Arrows for light -->
+                <line x1="50" y1="105" x2="65" y2="115" stroke="#fbbf24" stroke-width="1.5"/>
+                <line x1="45" y1="115" x2="60" y2="125" stroke="#fbbf24" stroke-width="1.5"/>
+
+                <line x1="80" y1="141" x2="80" y2="175" stroke="#cbd5e1" stroke-width="2"/>
+                <text x="65" y="190" fill="#94a3b8" font-size="10">GND</text>
+
+                <!-- Divisor node to Base -->
+                <circle cx="80" cy="90" r="4" fill="#38bdf8"/>
+                <line x1="80" y1="90" x2="160" y2="90" stroke="#38bdf8" stroke-width="2"/>
+                <text x="95" y="85" fill="#38bdf8" font-size="9">V_B</text>
+
+                <!-- NPN BJT -->
+                <line x1="160" y1="90" x2="190" y2="90" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="190" y1="75" x2="190" y2="105" stroke="#fff" stroke-width="3"/>
+                <line x1="190" y1="80" x2="220" y2="60" stroke="#e2e8f0" stroke-width="2"/>
+                <line x1="190" y1="100" x2="220" y2="120" stroke="#4ade80" stroke-width="2"/>
+                <polygon points="216,118 205,108 208,122" fill="#4ade80"/>
+
+                <!-- Collector LED and RC -->
+                <rect x="210" y="25" width="20" height="25" fill="#1e293b" stroke="#38bdf8"/>
+                <line x1="220" y1="20" x2="220" y2="25" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="220" y1="50" x2="220" y2="60" stroke="#cbd5e1" stroke-width="2"/>
+                
+                <!-- Emitter to GND -->
+                <line x1="220" y1="120" x2="220" y2="175" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="210" y1="175" x2="230" y2="175" stroke="#94a3b8" stroke-width="2"/>
+              </svg>
+            </div>
+
+            <div class="formula-card" style="font-size: 0.85rem;">
+              $$V_B = V_{CC} \cdot \frac{R_{LDR}}{R_1 + R_{LDR}}$$
+              &bull; <strong>Con Luz:</strong> $R_{LDR} \approx 500\ \Omega \implies V_B \approx 0.3\text{ V} < 0.7\text{ V} \to$ <strong>CORTE (LED OFF)</strong>.<br>
+              &bull; <strong>En Oscuridad:</strong> $R_{LDR} > 100\text{ k}\Omega \implies V_B > 0.7\text{ V} \to$ <strong>SATURACIÓN (LED ON)</strong>.
+            </div>
+          </div>
+
+          <!-- Light Activated -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-amber);">2. Activado por Luz (Light-Activated)</h3>
+            <p style="font-size: 0.88rem; color: #cbd5e1;">
+              Enciende la carga cuando incide luz solar o artificial sobre el sensor.
+            </p>
+            
+            <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 8px;">
+              <strong>Principio de inversión:</strong> Basta con <strong>intercambiar la posición</strong> de $R_1$ y el $LDR$:
+            </p>
+            <ul style="font-size: 0.85rem; margin: 10px 0 10px 20px;">
+              <li>$LDR$ conectado arriba a $V_{CC}$.</li>
+              <li>Resistencia o potenciómetro $R_1$ conectado abajo a tierra (GND).</li>
+            </ul>
+
+            <div class="formula-card" style="font-size: 0.85rem;">
+              $$V_B = V_{CC} \cdot \frac{R_1}{R_{LDR} + R_1}$$
+              &bull; <strong>Con Luz:</strong> $R_{LDR}$ cae drásticamente $\implies V_B$ sube sobrepasando $0.7\text{ V} \to$ <strong>SATURACIÓN (ON)</strong>.<br>
+              &bull; <strong>En Oscuridad:</strong> $R_{LDR} \approx 1\text{ M}\Omega \implies V_B \approx 0\text{ V} \to$ <strong>CORTE (OFF)</strong>.
+            </div>
+
+            <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 10px;">
+              * Al colocar un potenciómetro en lugar de una resistencia fija $R_1$, se puede calibrar el umbral exacto de luminosidad para el disparo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: SIMULACIÓN INTERACTIVA 2 - Sensor Crepuscular -->
+    <section class="slide-wrapper" data-title="Laboratorio 2: Simulación del Sensor de Luz con LDR">
+      <div class="slide-card">
+        <span class="slide-badge badge-sim">Simulación Interactiva #2</span>
+        <h2 class="slide-title">Laboratorio Virtual: Sensor Crepuscular y Conmutación</h2>
+        <p class="slide-subtitle">Regula el nivel de luz exterior y observa la transición precisa entre Corte y Saturación.</p>
+
+        <div class="grid-2">
+          <!-- Visualizador interactivo de luz y foco -->
+          <div>
+            <div id="sim2Scene" style="height: 280px; background: #050811; border: 1px solid #1e293b; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: background 0.4s ease;">
+              
+              <!-- Sun / Moon indicator -->
+              <div id="sim2SkyIcon" style="position: absolute; top: 20px; left: 24px; font-size: 2.2rem;">
+                &#127769; <!-- Moon -->
+              </div>
+
+              <!-- Lamp / Bulb -->
+              <div id="sim2Bulb" style="width: 80px; height: 80px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: 0 0 0px #000; transition: all 0.3s ease;">
+                &#128161;
+              </div>
+              <div id="sim2BulbText" style="margin-top: 14px; font-weight: bold; font-size: 1.1rem; color: #94a3b8;">
+                LÁMPARA: APAGADA (CORTE)
+              </div>
+
+              <div id="sim2LdrVisual" style="position: absolute; bottom: 12px; right: 20px; font-size: 0.82rem; color: #cbd5e1; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px;">
+                Sensor LDR: <span id="tele2_rldr" style="color:var(--accent-amber); font-weight: bold;">120 kΩ</span>
+              </div>
+            </div>
+
+            <div id="sim2StateBadge" class="state-indicator" style="background: rgba(248, 113, 113, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red);">
+              ESTADO DEL BJT: CORTE (I_C ≈ 0)
+            </div>
+
+            <div class="telemetry-grid">
+              <div class="telemetry-card">
+                <div class="telemetry-title">Voltaje Base $V_B$</div>
+                <div class="telemetry-val" id="tele2_vb">0.32 V</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Corriente $I_C$</div>
+                <div class="telemetry-val" id="tele2_ic">0.0 mA</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Voltaje $V_{CE}$</div>
+                <div class="telemetry-val" id="tele2_vce">9.00 V</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Estado de la Carga</div>
+                <div class="telemetry-val" id="tele2_load" style="color: var(--accent-red);">DESACTIVADA</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controles de la simulación 2 y Esquema del Circuito -->
+          <div class="sim-panel">
+            <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+              <span>Circuito del Sensor y Parámetros</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Divisor LDR + Driver BJT</span>
+            </h3>
+
+            <!-- Esquema SVG del Circuito Simulado #2 -->
+            <div style="background: #050811; border: 1px solid #1e293b; border-radius: 8px; padding: 6px; margin-bottom: 14px; text-align: center;">
+              <svg viewBox="0 0 340 135" style="width: 100%; max-height: 125px;">
+                <!-- VCC Rail across top -->
+                <line x1="80" y1="12" x2="250" y2="12" stroke="#f87171" stroke-width="2"/>
+                <circle cx="250" cy="12" r="3" fill="#f87171"/>
+                <text x="258" y="16" fill="#f87171" font-size="10" font-weight="bold">+V_CC</text>
+
+                <!-- Divisor: Branch down at x=90 -->
+                <line x1="90" y1="12" x2="90" y2="25" stroke="#cbd5e1" stroke-width="1.5"/>
+                <!-- R1 (Potentiometer) -->
+                <rect x="82" y="25" width="16" height="28" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <!-- Arrow for variable resistor -->
+                <line x1="74" y1="46" x2="106" y2="30" stroke="#38bdf8" stroke-width="1.2"/>
+                <polygon points="106,30 99,31 103,37" fill="#38bdf8"/>
+                <text x="104" y="44" fill="#38bdf8" font-size="9" font-weight="bold">R_1 (Pot)</text>
+
+                <!-- Center node VB -->
+                <line x1="90" y1="53" x2="90" y2="72" stroke="#cbd5e1" stroke-width="1.5"/>
+                <circle cx="90" cy="62" r="3" fill="#38bdf8"/>
+                <line x1="90" y1="62" x2="180" y2="62" stroke="#38bdf8" stroke-width="2"/>
+                <text x="100" y="58" fill="#38bdf8" font-size="9" font-weight="bold">V_B</text>
+
+                <!-- LDR Photoresistor -->
+                <circle cx="90" cy="88" r="13" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
+                <path d="M 83,88 Q 87,83 90,88 Q 93,93 97,88" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+                <!-- Light rays hitting LDR -->
+                <line x1="60" y1="74" x2="72" y2="82" stroke="#fbbf24" stroke-width="1.5"/>
+                <polygon points="75,84 68,81 72,76" fill="#fbbf24"/>
+                <line x1="56" y1="84" x2="68" y2="92" stroke="#fbbf24" stroke-width="1.5"/>
+                <polygon points="71,94 64,91 68,86" fill="#fbbf24"/>
+                <text x="108" y="92" fill="#fbbf24" font-size="9" font-weight="bold">LDR</text>
+
+                <!-- LDR to GND -->
+                <line x1="90" y1="101" x2="90" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+                <line x1="80" y1="120" x2="100" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="84" y1="124" x2="96" y2="124" stroke="#94a3b8" stroke-width="1.5"/>
+
+                <!-- Base connection to NPN Transistor -->
+                <line x1="180" y1="62" x2="200" y2="62" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="200" y1="50" x2="200" y2="74" stroke="#fff" stroke-width="3"/>
+                <line x1="200" y1="56" x2="225" y2="44" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="200" y1="68" x2="225" y2="80" stroke="#4ade80" stroke-width="2"/>
+                <!-- Emitter Arrow -->
+                <polygon points="223,79 212,72 215,83" fill="#4ade80"/>
+
+                <!-- Collector load: Lamp/Bulb -->
+                <line x1="225" y1="12" x2="225" y2="24" stroke="#cbd5e1" stroke-width="1.5"/>
+                <circle cx="225" cy="34" r="10" fill="#1e293b" stroke="#facc15" stroke-width="1.5"/>
+                <text x="221" y="38" fill="#facc15" font-size="10">&#128161;</text>
+                <text x="240" y="36" fill="#facc15" font-size="9" font-weight="bold">Lámpara</text>
+                <line x1="225" y1="44" x2="225" y2="44" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                <!-- Emitter to GND -->
+                <line x1="225" y1="80" x2="225" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+                <line x1="215" y1="120" x2="235" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="219" y1="124" x2="231" y2="124" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="240" y="123" fill="#94a3b8" font-size="8">GND</text>
+              </svg>
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Modo de Operación del Sensor:</span>
+                <span class="val" id="val_mode_label">Activado por Oscuridad</span>
+              </div>
+              <select id="select_ldr_mode" class="btn" style="width: 100%; text-align: left;" onchange="updateLdrSim()">
+                <option value="dark">Activado por Oscuridad (Luz de calle / Automático)</option>
+                <option value="light">Activado por Luz (Alarma de luz solar / Fotocelda)</option>
+              </select>
+            </div>
+
+            <div class="sim-control-group" style="margin-top: 16px;">
+              <div class="sim-control-label">
+                <span>Nivel de Iluminación Ambiental (Lux):</span>
+                <span class="val" id="val_lux">10 Lux (Noche)</span>
+              </div>
+              <input type="range" id="slider_lux" min="0" max="1000" step="5" value="10" oninput="updateLdrSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Resistencia Ajustable / Potenciómetro ($R_1$):</span>
+                <span class="val" id="val_pot">22 kΩ</span>
+              </div>
+              <input type="range" id="slider_pot" min="1" max="100" step="1" value="22" oninput="updateLdrSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Voltaje de Alimentación ($V_{CC}$):</span>
+                <span class="val" id="val_vcc_ldr">9.0 V</span>
+              </div>
+              <input type="range" id="slider_vcc_ldr" min="5" max="15" step="0.5" value="9" oninput="updateLdrSim()">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; font-size: 0.82rem; color: #cbd5e1;">
+              <strong>Principio Físico:</strong>
+              El LDR reduce su resistencia con la intensidad de fotones:
+              $$R_{LDR} = \frac{1000}{\text{Lux}^{0.7}} \text{ k}\Omega$$
+              Al variar el potenciómetro $R_1$, el docente puede mostrar cómo se calibra la sensibilidad exacta del umbral de encendido.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Región Activa y Transistor como Amplificador -->
+    <section class="slide-wrapper" data-title="Región Activa: Transistor como Amplificador">
+      <div class="slide-card">
+        <span class="slide-badge badge-activa">Región Activa</span>
+        <h2 class="slide-title">Región Activa: El Transistor como Amplificador</h2>
+        <p class="slide-subtitle">Una pequeña variación en la corriente de base ($I_B$ en microamperios) genera una variación idéntica pero amplificada en colector ($I_C$ en miliamperios).</p>
+
+        <div class="grid-2">
+          <!-- Principio de amplificación y circuito Emisor Común -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-blue);">Configuración Emisor Común (CE)</h3>
+            <p style="font-size: 0.9rem; color: #cbd5e1;">
+              Es la configuración clásica con <strong>ganancia de voltaje y de corriente elevadas</strong>. La señal de entrada se inyecta por la base y la salida amplificada se toma en el colector con un desfase de $180^\circ$.
+            </p>
+
+            <div class="formula-card">
+              $$I_C = \beta \cdot I_B \quad \implies \quad i_c(t) = \beta \cdot i_b(t)$$
+              $$A_v = \frac{v_{out}}{v_{in}} \approx -\frac{R_C}{r_e'} \quad \text{donde } r_e' = \frac{26\text{ mV}}{I_{CQ}}$$
+            </div>
+
+            <ul style="font-size: 0.88rem; margin-top: 10px;">
+              <li><strong>Desfase de $180^\circ$:</strong> Cuando la entrada $v_{in}$ sube, $I_B$ aumenta $\to$ $I_C$ aumenta $\to$ la caída en $R_C$ aumenta $\to$ el voltaje de salida $V_C = V_{CC} - I_C R_C$ disminuye.</li>
+              <li><strong>Capacitores de acople ($C_1, C_2$):</strong> Bloquean los niveles continuos (DC) de polarización para no perturbar ni la fuente de señal ni la carga, dejando pasar únicamente la señal alterna (AC).</li>
+            </ul>
+          </div>
+
+          <!-- Esquema del Amplificador en Emisor Común con divisor -->
+          <div class="circuit-viewer">
+            <svg viewBox="0 0 380 280" class="circuit-svg">
+              <!-- VCC -->
+              <line x1="180" y1="20" x2="180" y2="40" stroke="#f87171" stroke-width="2"/>
+              <text x="185" y="25" fill="#f87171" font-size="11" font-weight="bold">+V_CC (12V)</text>
+              <line x1="80" y1="40" x2="250" y2="40" stroke="#f87171" stroke-width="2"/>
+
+              <!-- R1 -->
+              <rect x="70" y="55" width="20" height="40" fill="#1e293b" stroke="#38bdf8"/>
+              <text x="50" y="80" fill="#38bdf8" font-size="9">R1</text>
+              <line x1="80" y1="40" x2="80" y2="55" stroke="#cbd5e1"/>
+              <line x1="80" y1="95" x2="80" y2="135" stroke="#cbd5e1"/>
+
+              <!-- R2 -->
+              <rect x="70" y="145" width="20" height="40" fill="#1e293b" stroke="#38bdf8"/>
+              <text x="50" y="170" fill="#38bdf8" font-size="9">R2</text>
+              <line x1="80" y1="135" x2="80" y2="145" stroke="#cbd5e1"/>
+              <line x1="80" y1="185" x2="80" y2="240" stroke="#cbd5e1"/>
+
+              <!-- Vin and C_in -->
+              <line x1="20" y1="135" x2="40" y2="135" stroke="#cbd5e1"/>
+              <line x1="40" y1="125" x2="40" y2="145" stroke="#a855f7" stroke-width="2"/>
+              <line x1="46" y1="125" x2="46" y2="145" stroke="#a855f7" stroke-width="2"/>
+              <line x1="46" y1="135" x2="80" y2="135" stroke="#cbd5e1"/>
+              <text x="10" y="155" fill="#a855f7" font-size="9">Vin (AC)</text>
+
+              <!-- Node to Base -->
+              <circle cx="80" cy="135" r="3" fill="#38bdf8"/>
+              <line x1="80" y1="135" x2="140" y2="135" stroke="#38bdf8" stroke-width="2"/>
+
+              <!-- Transistor -->
+              <line x1="140" y1="120" x2="140" y2="150" stroke="#fff" stroke-width="3"/>
+              <line x1="140" y1="125" x2="180" y2="105" stroke="#cbd5e1" stroke-width="2"/>
+              <line x1="140" y1="145" x2="180" y2="165" stroke="#4ade80" stroke-width="2"/>
+              <polygon points="176,164 165,152 168,168" fill="#4ade80"/>
+
+              <!-- RC -->
+              <rect x="170" y="55" width="20" height="40" fill="#1e293b" stroke="#38bdf8"/>
+              <text x="195" y="80" fill="#38bdf8" font-size="9">RC</text>
+              <line x1="180" y1="40" x2="180" y2="55" stroke="#cbd5e1"/>
+              <line x1="180" y1="95" x2="180" y2="105" stroke="#cbd5e1"/>
+
+              <!-- RE and CE -->
+              <line x1="180" y1="165" x2="180" y2="185" stroke="#cbd5e1"/>
+              <rect x="170" y="185" width="20" height="35" fill="#1e293b" stroke="#38bdf8"/>
+              <text x="195" y="205" fill="#38bdf8" font-size="9">RE</text>
+              <line x1="180" y1="220" x2="180" y2="240" stroke="#cbd5e1"/>
+
+              <!-- Vout and C_out -->
+              <circle cx="180" cy="100" r="3" fill="#f87171"/>
+              <line x1="180" y1="100" x2="230" y2="100" stroke="#cbd5e1"/>
+              <line x1="230" y1="90" x2="230" y2="110" stroke="#a855f7" stroke-width="2"/>
+              <line x1="236" y1="90" x2="236" y2="110" stroke="#a855f7" stroke-width="2"/>
+              <line x1="236" y1="100" x2="270" y2="100" stroke="#cbd5e1"/>
+              <text x="280" y="105" fill="#a855f7" font-weight="bold" font-size="11">Vout (AC)</text>
+
+              <!-- GND rail -->
+              <line x1="60" y1="240" x2="220" y2="240" stroke="#94a3b8" stroke-width="2"/>
+              <text x="130" y="260" fill="#94a3b8" font-size="10">GND</text>
+            </svg>
+            <div style="font-size: 0.8rem; color: #94a3b8; text-align: center;">
+              Amplificador en Emisor Común con polarización universal por divisor de tensión.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Polarización, Punto Q y Distorsión por Recorte (Clipping) -->
+    <section class="slide-wrapper" data-title="Polarización del Punto Q y Distorsión por Recorte">
+      <div class="slide-card">
+        <span class="slide-badge badge-activa">Polarización y Linealidad</span>
+        <h2 class="slide-title">Polarización de Reposo $Q$ y Distorsión por Recorte</h2>
+        <p class="slide-subtitle">Importancia pedagógica del centrado del punto $Q$ para evitar recortes por saturación o por corte (Slides 36-37).</p>
+
+        <div class="grid-3">
+          <!-- Caso 1: Punto Q cerca de Saturación -->
+          <div class="info-box" style="border-top: 4px solid var(--accent-green);">
+            <h3 style="color: var(--accent-green); font-size: 1rem;">Q cerca de Saturación</h3>
+            <p style="font-size: 0.82rem; color: #cbd5e1;">
+              La corriente $I_B$ de reposo es demasiado alta. El transistor opera muy cerca del límite de conducción máxima.
+            </p>
+            <div style="background: #090d16; padding: 10px; border-radius: 6px; margin: 10px 0; text-align: center;">
+              <svg viewBox="0 0 160 90" style="width: 100%; height: 75px;">
+                <!-- Sine wave with flattened top for Ic / flattened bottom for Vce -->
+                <path d="M 10,70 Q 30,15 45,15 L 65,15 Q 80,15 90,70 Q 110,85 130,85 Q 140,85 150,70" fill="none" stroke="#4ade80" stroke-width="2.5"/>
+                <line x1="10" y1="15" x2="150" y2="15" stroke="#f87171" stroke-dasharray="2,2"/>
+                <text x="25" y="12" fill="#f87171" font-size="8">Límite Saturación</text>
+              </svg>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8;">
+              <strong>Consecuencia:</strong> $I_C$ no puede aumentar más. El semiciclo positivo de corriente (o inferior de $V_{CE}$) se trunca plano.
+            </p>
+          </div>
+
+          <!-- Caso 2: Punto Q Óptimo (Centrado) -->
+          <div class="info-box" style="border-top: 4px solid var(--accent-blue);">
+            <h3 style="color: var(--accent-blue); font-size: 1rem;">Q Óptimo en el Centro</h3>
+            <p style="font-size: 0.82rem; color: #cbd5e1;">
+              $V_{CEQ} \approx \frac{V_{CC}}{2}$. El punto de trabajo se encuentra exactamente a medio camino de la recta de carga.
+            </p>
+            <div style="background: #090d16; padding: 10px; border-radius: 6px; margin: 10px 0; text-align: center;">
+              <svg viewBox="0 0 160 90" style="width: 100%; height: 75px;">
+                <!-- Clean unclipped sine wave -->
+                <path d="M 10,45 Q 40,5 75,45 Q 110,85 145,45" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                <line x1="10" y1="45" x2="150" y2="45" stroke="#64748b" stroke-dasharray="2,2"/>
+              </svg>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8;">
+              <strong>Consecuencia:</strong> <strong>Máxima excursión simétrica</strong> de señal ($V_{opp(max)} \approx V_{CC}$). Salida limpia sin distorsión armónica.
+            </p>
+          </div>
+
+          <!-- Caso 3: Punto Q cerca de Corte -->
+          <div class="info-box" style="border-top: 4px solid var(--accent-red);">
+            <h3 style="color: var(--accent-red); font-size: 1rem;">Q cerca del Corte</h3>
+            <p style="font-size: 0.82rem; color: #cbd5e1;">
+              La polarización de base es insuficiente ($I_{BQ}$ muy baja). El transistor roza el apagado en reposo.
+            </p>
+            <div style="background: #090d16; padding: 10px; border-radius: 6px; margin: 10px 0; text-align: center;">
+              <svg viewBox="0 0 160 90" style="width: 100%; height: 75px;">
+                <!-- Sine wave with flattened bottom for Ic (Cutoff clipping) -->
+                <path d="M 10,65 Q 40,20 75,65 L 105,75 L 130,75 Q 140,75 150,65" fill="none" stroke="#f87171" stroke-width="2.5"/>
+                <line x1="10" y1="75" x2="150" y2="75" stroke="#f87171" stroke-dasharray="2,2"/>
+                <text x="35" y="85" fill="#f87171" font-size="8">Límite de Corte (Ic=0)</text>
+              </svg>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8;">
+              <strong>Consecuencia:</strong> Al oscilar negativamente, el transistor se apaga por completo ($I_C = 0$). El valle de la onda queda recortado.
+            </p>
+          </div>
+        </div>
+
+        <div class="formula-card" style="margin-top: 20px;">
+          <strong>Regla de Diseño para Máxima Excursión No Distorsionada (MPP - Maximum Peak-to-Peak):</strong>
+          $$V_{CEQ} = \frac{V_{CC} + V_{CE(sat)}}{2} \approx \frac{V_{CC}}{2} \quad \implies \quad I_{CQ} = \frac{V_{CC}}{2 R_C}$$
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: SIMULACIÓN INTERACTIVA 3 - Osciloscopio Virtual de Amplificación y Recorte -->
+    <section class="slide-wrapper" data-title="Laboratorio 3: Osciloscopio Virtual y Recorte (Clipping)">
+      <div class="slide-card">
+        <span class="slide-badge badge-sim">Simulación Interactiva #3</span>
+        <h2 class="slide-title">Laboratorio Virtual: Osciloscopio y Recorte de Señal</h2>
+        <p class="slide-subtitle">Modifica la posición del punto de polarización $Q$ y la amplitud de entrada para ver cómo se deforma la onda senoidal.</p>
+
+        <div class="grid-2">
+          <!-- Canvas con trazo tipo osciloscopio -->
+          <div>
+            <canvas id="scopeCanvas" class="sim-canvas" width="550" height="340"></canvas>
+            
+            <div id="scopeStateBadge" class="state-indicator" style="background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue);">
+              ESTADO DE SEÑAL: AMPLIFICACIÓN LINEAL SIN RECORTE
+            </div>
+
+            <div class="telemetry-grid">
+              <div class="telemetry-card">
+                <div class="telemetry-title">Voltaje Q $V_{CEQ}$</div>
+                <div class="telemetry-val" id="tele3_vceq">6.0 V</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Corriente Q $I_{CQ}$</div>
+                <div class="telemetry-val" id="tele3_icq">6.0 mA</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Amplitud $V_{out(pk)}$</div>
+                <div class="telemetry-val" id="tele3_vout">3.2 V</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="telemetry-title">Distorsión (THD aprox)</div>
+                <div class="telemetry-val" id="tele3_thd" style="color:var(--accent-green);">&lt; 1 %</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controles de la simulación 3 y Esquema del Circuito -->
+          <div class="sim-panel">
+            <h3 style="color: var(--accent-blue); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+              <span>Circuito Amplificador y Señal</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Emisor Común AC + DC</span>
+            </h3>
+
+            <!-- Esquema SVG del Circuito Simulado #3 -->
+            <div style="background: #050811; border: 1px solid #1e293b; border-radius: 8px; padding: 6px; margin-bottom: 14px; text-align: center;">
+              <svg viewBox="0 0 340 135" style="width: 100%; max-height: 125px;">
+                <!-- VCC Rail across top -->
+                <line x1="90" y1="12" x2="225" y2="12" stroke="#f87171" stroke-width="2"/>
+                <circle cx="225" cy="12" r="3" fill="#f87171"/>
+                <text x="232" y="16" fill="#f87171" font-size="10" font-weight="bold">+V_CC (12V)</text>
+
+                <!-- R1 on top -->
+                <line x1="95" y1="12" x2="95" y2="24" stroke="#cbd5e1" stroke-width="1.5"/>
+                <rect x="88" y="24" width="14" height="24" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="68" y="38" fill="#38bdf8" font-size="8">R_1</text>
+                <line x1="95" y1="48" x2="95" y2="62" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                <!-- Node VB -->
+                <circle cx="95" cy="62" r="3" fill="#38bdf8"/>
+                <line x1="95" y1="62" x2="160" y2="62" stroke="#38bdf8" stroke-width="2"/>
+
+                <!-- R2 on bottom -->
+                <line x1="95" y1="62" x2="95" y2="76" stroke="#cbd5e1" stroke-width="1.5"/>
+                <rect x="88" y="76" width="14" height="24" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="68" y="90" fill="#38bdf8" font-size="8">R_2</text>
+                <line x1="95" y1="100" x2="95" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                <!-- Vin AC and Cin -->
+                <circle cx="25" cy="62" r="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
+                <path d="M 20,62 Q 22,58 25,62 Q 28,66 30,62" fill="none" stroke="#a855f7" stroke-width="1.2"/>
+                <text x="12" y="80" fill="#a855f7" font-size="8" font-weight="bold">v_in(t)</text>
+                <line x1="33" y1="62" x2="52" y2="62" stroke="#cbd5e1" stroke-width="1.5"/>
+                <!-- Cin capacitor -->
+                <line x1="52" y1="54" x2="52" y2="70" stroke="#a855f7" stroke-width="1.8"/>
+                <line x1="57" y1="54" x2="57" y2="70" stroke="#a855f7" stroke-width="1.8"/>
+                <text x="47" y="50" fill="#a855f7" font-size="8">C_1</text>
+                <line x1="57" y1="62" x2="95" y2="62" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                <!-- NPN Transistor -->
+                <line x1="160" y1="62" x2="180" y2="62" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="180" y1="50" x2="180" y2="74" stroke="#fff" stroke-width="3"/>
+                <line x1="180" y1="56" x2="205" y2="44" stroke="#cbd5e1" stroke-width="2"/>
+                <line x1="180" y1="68" x2="205" y2="80" stroke="#4ade80" stroke-width="2"/>
+                <!-- Emitter Arrow -->
+                <polygon points="203,79 192,72 195,83" fill="#4ade80"/>
+
+                <!-- RC Resistor -->
+                <line x1="205" y1="12" x2="205" y2="22" stroke="#cbd5e1" stroke-width="1.5"/>
+                <rect x="198" y="22" width="14" height="22" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="216" y="34" fill="#38bdf8" font-size="8" font-weight="bold">R_C</text>
+                <line x1="205" y1="44" x2="205" y2="44" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                <!-- Vout AC and Cout -->
+                <circle cx="205" cy="44" r="2.5" fill="#f87171"/>
+                <line x1="205" y1="44" x2="250" y2="44" stroke="#cbd5e1" stroke-width="1.5"/>
+                <!-- Cout capacitor -->
+                <line x1="250" y1="36" x2="250" y2="52" stroke="#a855f7" stroke-width="1.8"/>
+                <line x1="255" y1="36" x2="255" y2="52" stroke="#a855f7" stroke-width="1.8"/>
+                <text x="245" y="32" fill="#a855f7" font-size="8">C_2</text>
+                <line x1="255" y1="44" x2="280" y2="44" stroke="#38bdf8" stroke-width="2"/>
+                <!-- Output sine arrow to scope -->
+                <circle cx="280" cy="44" r="3" fill="#38bdf8"/>
+                <text x="286" y="47" fill="#38bdf8" font-size="9" font-weight="bold">v_out(t)</text>
+                <text x="286" y="58" fill="#94a3b8" font-size="7">Al Osciloscopio</text>
+
+                <!-- RE and CE on Emitter -->
+                <line x1="205" y1="80" x2="205" y2="92" stroke="#cbd5e1" stroke-width="1.5"/>
+                <circle cx="205" cy="92" r="2" fill="#cbd5e1"/>
+                <!-- RE branch -->
+                <line x1="205" y1="92" x2="195" y2="92" stroke="#cbd5e1"/>
+                <rect x="189" y="96" width="12" height="18" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+                <text x="174" y="108" fill="#38bdf8" font-size="7">R_E</text>
+                <line x1="195" y1="114" x2="195" y2="120" stroke="#cbd5e1"/>
+                <!-- CE branch -->
+                <line x1="205" y1="92" x2="218" y2="92" stroke="#cbd5e1"/>
+                <line x1="214" y1="99" x2="222" y2="99" stroke="#a855f7" stroke-width="1.5"/>
+                <line x1="214" y1="103" x2="222" y2="103" stroke="#a855f7" stroke-width="1.5"/>
+                <text x="225" y="104" fill="#a855f7" font-size="7">C_E</text>
+                <line x1="218" y1="103" x2="218" y2="120" stroke="#cbd5e1"/>
+                <line x1="195" y1="120" x2="218" y2="120" stroke="#cbd5e1"/>
+
+                <!-- GND Rail -->
+                <line x1="80" y1="120" x2="230" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="145" y1="124" x2="165" y2="124" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="170" y="129" fill="#94a3b8" font-size="8">GND</text>
+              </svg>
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Posición de Polarización DC ($V_{CEQ}$):</span>
+                <span class="val" id="val_vceq">6.0 V (Centrado)</span>
+              </div>
+              <input type="range" id="slider_vceq" min="0.5" max="11.5" step="0.2" value="6.0" oninput="updateScopeSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Amplitud de la Señal de Entrada AC:</span>
+                <span class="val" id="val_vin_ac">25 mV pk</span>
+              </div>
+              <input type="range" id="slider_vin_ac" min="5" max="90" step="1" value="25" oninput="updateScopeSim()">
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>Ganancia de Voltaje del Amplificador ($|A_v|$):</span>
+                <span class="val" id="val_gain">120 V/V</span>
+              </div>
+              <input type="range" id="slider_gain" min="30" max="250" step="5" value="120" oninput="updateScopeSim()">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; font-size: 0.85rem; color: #cbd5e1; margin-top: 14px;">
+              <strong>Ejercicios de demostración docente:</strong>
+              <br>&bull; <strong>Recorte por Saturación:</strong> Baja el slider $V_{CEQ}$ por debajo de $2.5\text{ V}$. Observa el aplanamiento del valle inferior de $V_{CE}$.
+              <br>&bull; <strong>Recorte por Corte:</strong> Sube el slider $V_{CEQ}$ por encima de $9.5\text{ V}$. Observa el recorte superior en $V_{CC}$.
+              <br>&bull; <strong>Recorte Simétrico por Sobremarcha:</strong> Centra $V_{CEQ} = 6.0\text{ V}$ y sube la amplitud de entrada al máximo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: Otros Circuitos de Aplicación Clave (Fuente de Corriente y Buffer) -->
+    <section class="slide-wrapper" data-title="Otras Aplicaciones: Fuente de Corriente y Buffer Seguidor">
+      <div class="slide-card">
+        <span class="slide-badge badge-activa">Circuitos Lineales Avanzados</span>
+        <h2 class="slide-title">Fuente de Corriente Constante y Seguidor de Emisor</h2>
+        <p class="slide-subtitle">Aprovechamiento de la región activa para control preciso de corriente y acoplamiento de impedancias.</p>
+
+        <div class="grid-2">
+          <!-- Aplicación: Fuente de Corriente Constante -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-blue);">1. Fuente de Corriente Constante (Current Sink)</h3>
+            <p style="font-size: 0.88rem; color: #cbd5e1;">
+              En región activa, la corriente de colector $I_C$ es <strong>independiente de la resistencia de carga</strong> y del voltaje de alimentación $V_{CC}$, dependiendo exclusivamente del voltaje fijado en la base.
+            </p>
+
+            <div class="formula-card">
+              $$V_E = V_Z - V_{BE} = V_Z - 0.7\text{ V}$$
+              $$I_{carga} = I_C \approx I_E = \frac{V_Z - 0.7\text{ V}}{R_E} = \text{Constante}$$
+            </div>
+
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              <strong>Ventajas y Usos:</strong>
+            </p>
+            <ul style="font-size: 0.82rem; margin-top: 6px;">
+              <li>Alimentación de tiras de LEDs con brillo perfectamente uniforme sin importar fluctuaciones de la batería.</li>
+              <li>Carga lineal de capacitores para generadores de rampa / diente de sierra.</li>
+              <li>Polarización de etapas diferenciales en amplificadores operacionales.</li>
+            </ul>
+          </div>
+
+          <!-- Aplicación: Buffer Seguidor de Emisor -->
+          <div class="info-box">
+            <h3 style="color: var(--accent-purple);">2. Buffer / Seguidor de Emisor (Colector Común)</h3>
+            <p style="font-size: 0.88rem; color: #cbd5e1;">
+              En esta configuración, la señal de salida se toma en el emisor:
+            </p>
+
+            <div class="formula-card">
+              $$v_{out} = v_E = v_B - 0.7\text{ V} \implies A_v = \frac{v_{out}}{v_{in}} \approx 1$$
+              $$Z_{in} \approx \beta \cdot (r_e' + R_L) \quad (\text{Muy Alta: } > 100\text{ k}\Omega)$$
+              $$Z_{out} \approx r_e' + \frac{R_S}{\beta} \quad (\text{Muy Baja: } < 10\ \Omega)$$
+            </div>
+
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              <strong>Función principal: Adaptador de impedancia.</strong>
+            </p>
+            <ul style="font-size: 0.82rem; margin-top: 6px;">
+              <li>Evita el efecto de carga: Permite que una fuente de señal débil (sensor piezoeléctrico, micrófono) excite un altavoz o carga de baja resistencia sin caída de voltaje.</li>
+              <li>Ganancia de voltaje unitaria ($A_v \approx 1$), pero altísima <strong>ganancia de corriente y potencia</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: Resumen Metodológico, Tabla Guía y Enlace a Ejercicios -->
+    <section class="slide-wrapper" data-title="Resumen General y Guía de Ejercicios">
+      <div class="slide-card">
+        <span class="slide-badge badge-theory">Síntesis y Práctica</span>
+        <h2 class="slide-title">Síntesis de Diseño y Evaluación Formativa</h2>
+        <p class="slide-subtitle">Árbol de decisión para determinar la región de operación y recursos didácticos de ejercitación.</p>
+
+        <div class="info-box" style="margin-bottom: 24px;">
+          <h3 style="color: var(--accent-amber);">Algoritmo Sistemático para Resolver Cualquier Circuito BJT</h3>
+          <div class="grid-3" style="margin-top: 12px; font-size: 0.85rem;">
+            <div style="background: #090d16; padding: 12px; border-radius: 8px;">
+              <strong style="color: var(--accent-blue);">Paso 1: Evaluar Unión B-E</strong>
+              <p style="margin-top: 6px;">Calcular el equivalente de Thevenin en la base. Si $V_{TH} < 0.7\text{ V} \implies I_B = 0 \implies$ <strong>CORTE</strong> ($I_C = 0, V_{CE} = V_{CC}$).</p>
+            </div>
+            <div style="background: #090d16; padding: 12px; border-radius: 8px;">
+              <strong style="color: var(--accent-blue);">Paso 2: Asumir Región Activa</strong>
+              <p style="margin-top: 6px;">Fijar $V_{BE} = 0.7\text{ V}$. Hallar $I_B = \frac{V_{TH} - 0.7}{R_{TH} + (\beta+1)R_E}$. Calcular $I_C = \beta I_B$ y $V_{CE} = V_{CC} - I_C(R_C + R_E)$.</p>
+            </div>
+            <div style="background: #090d16; padding: 12px; border-radius: 8px;">
+              <strong style="color: var(--accent-blue);">Paso 3: Validar Hipótesis</strong>
+              <p style="margin-top: 6px;">Si $V_{CE} \ge 0.3\text{ V} \implies$ ¡Confirmado Activa! Si $V_{CE} < 0.2\text{ V} \implies$ <strong>SATURACIÓN</strong> ($V_{CE} = 0.2\text{ V}$, recalcular $I_C$).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="align-items: center;">
+          <div class="info-box" style="border: 1px solid var(--accent-green); background: rgba(74, 222, 128, 0.05);">
+            <h3 style="color: var(--accent-green);">&#128218; Guía de Ejercicios de Práctica</h3>
+            <p style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 12px;">
+              Se ha preparado un documento complementario con <strong>8 problemas de aplicación práctica</strong> con datos reales de componentes de laboratorio (2N2222, 2N3904, 2N3906, TIP31C) para ejercitar los conceptos de clase:
+            </p>
+            <ul style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">
+              <li>Conmutación de relés y LEDs con microcontroladores (saturación forzada).</li>
+              <li>Dimensionamiento de sensores de luz y temperatura con LDR y divisor resistivo.</li>
+              <li>Cálculo de punto Q y trazado analítico de recta de carga DC.</li>
+              <li>Diseño de amplificadores con máxima excursión no distorsionada ($V_{opp}$).</li>
+              <li>Diagnóstico de fallas en circuitos BJT a partir de voltajes de nodo medidos.</li>
+            </ul>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <a href="guia_ejercicios_transistor.html" target="_blank" class="btn btn-primary" style="flex: 1; text-align: center; justify-content: center; padding: 10px;">
+                &#128221; Guía de Ejercicios &#8599;
+              </a>
+              <a href="guia_laboratorio_simulide.html" target="_blank" class="btn" style="flex: 1; text-align: center; justify-content: center; padding: 10px; border-color: var(--accent-green); color: var(--accent-green);">
+                &#128300; Lab SimulIDE &#8599;
+              </a>
+            </div>
+          </div>
+
+          <div class="info-box" style="text-align: center;">
+            <h3 style="justify-content: center; color: var(--accent-purple);">Control de Navegación de la Presentación</h3>
+            <p style="font-size: 0.88rem; color: #94a3b8; margin: 12px 0;">
+              Puedes utilizar los siguientes atajos de teclado en cualquier momento:
+            </p>
+            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+              <div><span class="key-badge">&#8592;</span> Slide anterior</div>
+              <div><span class="key-badge">&#8594;</span> o <span class="key-badge">Espacio</span> Siguiente</div>
+              <div><span class="key-badge">F</span> Pantalla Completa</div>
+              <div><span class="key-badge">T</span> Abrir Temario</div>
+            </div>
+            <button class="btn" onclick="goToSlide(0)" style="margin-top: 18px;">
+              &#8634; Volver al Inicio
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Info Bar -->
+  <footer>
+    <div>
+      Fundamentos de Electrónica &bull; Basado en <em>Transistor.pdf</em>
+    </div>
+    <div>
+      Usa <span class="key-badge">&#8592;</span> <span class="key-badge">&#8594;</span> para navegar | Tecla <span class="key-badge">F</span> Pantalla Completa
+    </div>
+  </footer>
+
+  <!-- Script for Presentation Logic & Simulations -->
+  <script>
+    // --- Slide Deck Navigation Engine ---
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-wrapper');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slideCounter');
+    const progressBar = document.getElementById('progressBar');
+    const drawerList = document.getElementById('drawerList');
+    const drawer = document.getElementById('drawer');
+    const backdrop = document.getElementById('backdrop');
+
+    // Build Drawer index items
+    slides.forEach((slide, idx) => {
+      const title = slide.getAttribute('data-title') || `Diapositiva ${idx + 1}`;
+      const item = document.createElement('div');
+      item.className = `drawer-item ${idx === 0 ? 'active' : ''}`;
+      item.innerHTML = `<span style="opacity:0.6; font-family:monospace; font-size:0.8rem;">${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}.</span> <span>${title}</span>`;
+      item.onclick = () => {
+        goToSlide(idx);
+        toggleDrawer();
+      };
+      drawerList.appendChild(item);
+    });
+
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+      
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+      });
+
+      // Update drawer active item
+      const drawerItems = drawerList.querySelectorAll('.drawer-item');
+      drawerItems.forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+      });
+
+      currentSlide = index;
+      slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+
+      // Trigger redraws if simulations are on active slide
+      if (currentSlide === 4) {
+        setTimeout(updateLoadLineSim, 50);
+      } else if (currentSlide === 8) {
+        setTimeout(updateLdrSim, 50);
+      } else if (currentSlide === 11) {
+        setTimeout(updateScopeSim, 50);
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function goToSlide(idx) {
+      showSlide(idx);
+    }
+
+    function toggleDrawer() {
+      drawer.classList.toggle('open');
+      backdrop.classList.toggle('open');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleDrawer();
+      } else if (e.key === 'Escape') {
+        if (drawer.classList.contains('open')) toggleDrawer();
+      }
+    });
+
+    // Touch swipe listener for mobile / tablets
+    let touchStartX = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    window.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 60) nextSlide();
+      if (touchEndX - touchStartX > 60) prevSlide();
+    }, {passive: true});
+
+
+    // ==========================================
+    // SIMULACIÓN 1: RECTA DE CARGA Y CURVAS BJT
+    // ==========================================
+    function updateLoadLineSim() {
+      const canvas = document.getElementById('loadLineCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Inputs
+      const Vcc = parseFloat(document.getElementById('slider_vcc').value);
+      const Vbb = parseFloat(document.getElementById('slider_vbb').value);
+      const Rb = parseFloat(document.getElementById('slider_rb').value) * 1000; // ohms
+      const Rc = parseFloat(document.getElementById('slider_rc').value) * 1000; // ohms
+      const beta = parseFloat(document.getElementById('slider_beta').value);
+
+      // Labels update
+      document.getElementById('val_vcc').textContent = Vcc.toFixed(1) + ' V';
+      document.getElementById('val_vbb').textContent = Vbb.toFixed(2) + ' V';
+      document.getElementById('val_rb').textContent = (Rb/1000).toFixed(0) + ' kΩ';
+      document.getElementById('val_rc').textContent = (Rc/1000).toFixed(1) + ' kΩ';
+      document.getElementById('val_beta').textContent = beta.toFixed(0);
+
+      // Physical calculations
+      const Vbe_on = 0.7;
+      let Ib = 0;
+      let state = 'CORTE';
+      let stateColor = '#f87171';
+      let Ic = 0;
+      let Vce = Vcc;
+
+      if (Vbb > Vbe_on) {
+        Ib = (Vbb - Vbe_on) / Rb; // Amperes
+        const Ic_active = beta * Ib;
+        const Vce_active = Vcc - Ic_active * Rc;
+
+        if (Vce_active <= 0.2) {
+          // Saturation
+          state = 'SATURACIÓN';
+          stateColor = '#4ade80';
+          Vce = 0.2;
+          Ic = (Vcc - Vce) / Rc;
+        } else {
+          // Active
+          state = 'ACTIVA';
+          stateColor = '#38bdf8';
+          Vce = Vce_active;
+          Ic = Ic_active;
+        }
+      } else {
+        // Cutoff
+        state = 'CORTE';
+        stateColor = '#f87171';
+        Ib = 0;
+        Ic = 0;
+        Vce = Vcc;
+      }
+
+      const Pd = Vce * Ic; // Watts
+
+      // Update Telemetry
+      document.getElementById('tele_ib').textContent = (Ib * 1e6).toFixed(1) + ' µA';
+      document.getElementById('tele_ic').textContent = (Ic * 1e3).toFixed(2) + ' mA';
+      document.getElementById('tele_vce').textContent = Vce.toFixed(2) + ' V';
+      document.getElementById('tele_pd').textContent = (Pd * 1e3).toFixed(1) + ' mW';
+
+      const badge = document.getElementById('sim1StateBadge');
+      badge.textContent = `ESTADO ACTUAL: REGIÓN DE ${state}`;
+      badge.style.color = stateColor;
+      badge.style.borderColor = stateColor;
+      badge.style.background = state === 'ACTIVA' ? 'rgba(56,189,248,0.2)' : (state === 'SATURACIÓN' ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)');
+
+      // Draw Graphics
+      ctx.clearRect(0, 0, w, h);
+
+      // Coordinate mapping
+      const originX = 55;
+      const originY = h - 45;
+      const maxPlotVce = 25; // Volts full scale
+      const maxPlotIc = 25;  // mA full scale
+
+      const scaleX = (w - originX - 30) / maxPlotVce;
+      const scaleY = (originY - 30) / maxPlotIc;
+
+      function toX(v) { return originX + v * scaleX; }
+      function toY(i_ma) { return originY - i_ma * scaleY; }
+
+      // Saturation shading band (0 to 0.7V)
+      ctx.fillStyle = 'rgba(74, 222, 128, 0.1)';
+      ctx.fillRect(originX, toY(maxPlotIc), toX(0.7) - originX, originY - toY(maxPlotIc));
+      ctx.fillStyle = '#4ade80';
+      ctx.font = '10px system-ui';
+      ctx.fillText('SATURACIÓN', originX + 2, toY(maxPlotIc) + 12);
+
+      // Grid lines
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let v = 5; v <= 20; v += 5) {
+        ctx.beginPath();
+        ctx.moveTo(toX(v), originY);
+        ctx.lineTo(toX(v), toY(maxPlotIc));
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px monospace';
+        ctx.fillText(v + 'V', toX(v) - 8, originY + 16);
+      }
+
+      for (let i = 5; i <= 20; i += 5) {
+        ctx.beginPath();
+        ctx.moveTo(originX, toY(i));
+        ctx.lineTo(toX(maxPlotVce), toY(i));
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px monospace';
+        ctx.fillText(i + 'mA', originX - 34, toY(i) + 4);
+      }
+
+      // Main Axes
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(originX, toY(maxPlotIc));
+      ctx.lineTo(originX, originY);
+      ctx.lineTo(toX(maxPlotVce), originY);
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 11px system-ui';
+      ctx.fillText('V_CE (Voltios)', toX(maxPlotVce) - 60, originY + 34);
+      ctx.fillText('I_C (mA)', originX - 45, toY(maxPlotIc) - 10);
+
+      // Draw characteristic curves for family of Ib (10uA to 60uA)
+      for (let ib_step = 10; ib_step <= 60; ib_step += 10) {
+        const ic_step = (beta * ib_step * 1e-6) * 1e3; // mA
+        if (ic_step > maxPlotIc) continue;
+
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        // Knee in saturation
+        ctx.quadraticCurveTo(toX(0.4), toY(ic_step * 0.85), toX(1.0), toY(ic_step));
+        // Flat active region
+        ctx.lineTo(toX(maxPlotVce), toY(ic_step + (maxPlotVce * 0.05)));
+        ctx.stroke();
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px monospace';
+        ctx.fillText(`${ib_step}µA`, toX(maxPlotVce) - 25, toY(ic_step) - 2);
+      }
+
+      // Draw Active Ib Curve for current input
+      const ic_current_ideal = (beta * Ib) * 1e3; // mA
+      if (Ib > 0 && ic_current_ideal <= maxPlotIc * 1.3) {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 2]);
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.quadraticCurveTo(toX(0.4), toY(ic_current_ideal * 0.85), toX(1.0), toY(ic_current_ideal));
+        ctx.lineTo(toX(maxPlotVce), toY(ic_current_ideal + (maxPlotVce * 0.05)));
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Draw DC Load Line
+      const ic_sat_max = (Vcc / Rc) * 1e3; // mA
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(toX(0), toY(ic_sat_max));
+      ctx.lineTo(toX(Vcc), toY(0));
+      ctx.stroke();
+
+      // Label load line endpoints
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`Ic(max)=${ic_sat_max.toFixed(1)}mA`, toX(0) + 6, toY(ic_sat_max) + 14);
+      ctx.fillText(`Vcc=${Vcc.toFixed(1)}V`, toX(Vcc) - 30, originY - 8);
+
+      // Draw Q Point
+      const qX = toX(Vce);
+      const qY = toY(Ic * 1e3);
+
+      // Projections to axes
+      ctx.strokeStyle = stateColor;
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(qX, qY);
+      ctx.lineTo(qX, originY);
+      ctx.moveTo(qX, qY);
+      ctx.lineTo(originX, qY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Point circle
+      ctx.fillStyle = stateColor;
+      ctx.beginPath();
+      ctx.arc(qX, qY, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Q Label
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px system-ui';
+      ctx.fillText(`Punto Q (${Vce.toFixed(2)}V, ${(Ic*1000).toFixed(1)}mA)`, qX + 10, qY - 10);
+    }
+
+
+    // ==========================================
+    // SIMULACIÓN 2: SENSOR LDR (CREPUSCULAR)
+    // ==========================================
+    function updateLdrSim() {
+      const mode = document.getElementById('select_ldr_mode').value;
+      const lux = parseFloat(document.getElementById('slider_lux').value);
+      const Rpot = parseFloat(document.getElementById('slider_pot').value) * 1000; // ohms
+      const Vcc = parseFloat(document.getElementById('slider_vcc_ldr').value);
+
+      document.getElementById('val_lux').textContent = lux < 20 ? `${lux} Lux (Noche cerrada)` : (lux < 200 ? `${lux} Lux (Atardecer/Interior)` : `${lux} Lux (Día soleado)`);
+      document.getElementById('val_pot').textContent = (Rpot / 1000).toFixed(0) + ' kΩ';
+      document.getElementById('val_vcc_ldr').textContent = Vcc.toFixed(1) + ' V';
+      document.getElementById('val_mode_label').textContent = mode === 'dark' ? 'Activado por Oscuridad' : 'Activado por Luz';
+
+      // LDR model: R_ldr = 1000 / (Lux + 0.1)^0.7 kOhms
+      const Rldr = (500000 / Math.pow(lux + 1, 0.75)) + 400; // Range: ~500k in pitch black to ~500 ohms in full sun
+      document.getElementById('tele2_rldr').textContent = (Rldr > 10000) ? (Rldr / 1000).toFixed(1) + ' kΩ' : Rldr.toFixed(0) + ' Ω';
+
+      // Voltage divider calculation
+      let Vb_open = 0;
+      if (mode === 'dark') {
+        // Darkness-activated: R1 on top, LDR on bottom -> Wait: Slide 19 shows:
+        // Vb = Vcc * (R_LDR / (R1 + R_LDR)) or Vb = Vcc * (R_pot / (R_LDR + R_pot))
+        // In Slide 20: Darkness-activated: LDR on top, R1 on bottom OR R1 on top, LDR bottom?
+        // Let's verify standard physical operation:
+        // When it gets DARK -> R_LDR INCREASES.
+        // To turn ON when DARK: V_B must RISE above 0.7V in dark.
+        // Therefore, if LDR is connected to VCC (top) and R1 is on bottom:
+        // In dark, R_LDR is huge -> V_B = Vcc * R1 / (R_LDR + R1) would DECREASE! That's Light-activated!
+        // To turn ON when DARK: R1 is on top (VCC) and LDR is on bottom (GND)? Wait:
+        // If R1 is on top and LDR is on bottom:
+        // In LIGHT: R_LDR is small -> V_B = Vcc * R_LDR / (R1 + R_LDR) is LOW (BJT OFF).
+        // In DARK: R_LDR is large -> V_B = Vcc * R_LDR / (R1 + R_LDR) is HIGH (BJT ON)!
+        // Yes! Slide 19-20 shows: Vb = Vcc * R_LDR / (R1 + R_LDR) turns ON in the DARK!
+        Vb_open = Vcc * (Rldr / (Rpot + Rldr));
+      } else {
+        // Light-activated: LDR on top (VCC), Rpot on bottom (GND)
+        // In light: R_LDR is small -> V_B is HIGH (BJT ON).
+        Vb_open = Vcc * (Rpot / (Rldr + Rpot));
+      }
+
+      // Check transistor conduction
+      let state = 'CORTE';
+      let stateColor = '#f87171';
+      let Ic = 0;
+      let Vce = Vcc;
+      let Vb_actual = Vb_open;
+
+      if (Vb_open > 0.7) {
+        Vb_actual = 0.75;
+        const Ib = (Vb_open - 0.7) / (mode === 'dark' ? Rpot : Rldr);
+        const beta = 150;
+        const Rload = 220; // 220 ohms lamp/LED circuit
+        const Ic_active = beta * Ib;
+        const Vce_active = Vcc - Ic_active * Rload;
+
+        if (Vce_active <= 0.25) {
+          state = 'SATURACIÓN';
+          stateColor = '#4ade80';
+          Vce = 0.2;
+          Ic = (Vcc - Vce) / Rload;
+        } else {
+          state = 'ACTIVA';
+          stateColor = '#38bdf8';
+          Vce = Vce_active;
+          Ic = Ic_active;
+        }
+      } else {
+        state = 'CORTE';
+        stateColor = '#f87171';
+        Ic = 0;
+        Vce = Vcc;
+      }
+
+      // Telemetry update
+      document.getElementById('tele2_vb').textContent = Vb_open.toFixed(2) + ' V';
+      document.getElementById('tele2_ic').textContent = (Ic * 1e3).toFixed(1) + ' mA';
+      document.getElementById('tele2_vce').textContent = Vce.toFixed(2) + ' V';
+      
+      const isLampOn = (state === 'SATURACIÓN' || (state === 'ACTIVA' && Ic > 0.015));
+      const loadText = document.getElementById('tele2_load');
+      loadText.textContent = isLampOn ? 'ACTIVADA (ENCENDIDA)' : 'DESACTIVADA (APAGADA)';
+      loadText.style.color = isLampOn ? '#4ade80' : '#f87171';
+
+      const badge = document.getElementById('sim2StateBadge');
+      badge.textContent = `ESTADO DEL BJT: ${state} (${isLampOn ? 'CONDUCCIÓN PLENA' : 'SIN CONDUCCIÓN'})`;
+      badge.style.color = stateColor;
+      badge.style.borderColor = stateColor;
+      badge.style.background = state === 'SATURACIÓN' ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)';
+
+      // Scene visuals
+      const scene = document.getElementById('sim2Scene');
+      const skyIcon = document.getElementById('sim2SkyIcon');
+      const bulb = document.getElementById('sim2Bulb');
+      const bulbText = document.getElementById('sim2BulbText');
+
+      // Ambient background shade according to Lux
+      const darknessRatio = Math.max(0, Math.min(1, 1 - (lux / 800)));
+      scene.style.background = `rgb(${Math.round(5 + 25 * (1 - darknessRatio))}, ${Math.round(8 + 35 * (1 - darknessRatio))}, ${Math.round(17 + 50 * (1 - darknessRatio))})`;
+      skyIcon.innerHTML = lux < 80 ? '&#127769;' : '&#9728;&#65039;';
+
+      if (isLampOn) {
+        bulb.style.background = '#fef08a';
+        bulb.style.boxShadow = '0 0 40px #facc15, 0 0 80px rgba(250, 204, 21, 0.6)';
+        bulbText.textContent = 'LÁMPARA: ¡ENCENDIDA!';
+        bulbText.style.color = '#facc15';
+      } else {
+        bulb.style.background = '#334155';
+        bulb.style.boxShadow = 'none';
+        bulbText.textContent = 'LÁMPARA: APAGADA';
+        bulbText.style.color = '#94a3b8';
+      }
+    }
+
+
+    // ==================================================
+    // SIMULACIÓN 3: OSCILOSCOPIO Y DISTORSIÓN (CLIPPING)
+    // ==================================================
+    function updateScopeSim() {
+      const canvas = document.getElementById('scopeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const Vceq = parseFloat(document.getElementById('slider_vceq').value);
+      const Vin_ac = parseFloat(document.getElementById('slider_vin_ac').value) / 1000; // V peak
+      const Gain = parseFloat(document.getElementById('slider_gain').value);
+
+      document.getElementById('val_vceq').textContent = Vceq.toFixed(1) + ' V' + (Math.abs(Vceq - 6.0) < 0.3 ? ' (Óptimo)' : '');
+      document.getElementById('val_vin_ac').textContent = (Vin_ac * 1000).toFixed(0) + ' mV pk';
+      document.getElementById('val_gain').textContent = Gain.toFixed(0) + ' V/V';
+
+      const Vcc = 12.0;
+      const Vce_sat = 0.3;
+      const Vout_ideal_pk = Vin_ac * Gain;
+
+      document.getElementById('tele3_vceq').textContent = Vceq.toFixed(1) + ' V';
+      document.getElementById('tele3_icq').textContent = ((Vcc - Vceq) / 1.0).toFixed(1) + ' mA';
+      document.getElementById('tele3_vout').textContent = Vout_ideal_pk.toFixed(2) + ' V pk';
+
+      // Detect clipping
+      let satClipped = false;
+      let cutoffClipped = false;
+
+      // In common emitter: Vce(t) = Vceq - Vout_ac(t) (180 deg out of phase)
+      // Max possible positive swing of Vce before CUTOFF is Vcc
+      // Max possible negative swing of Vce before SATURATION is Vce_sat
+      if (Vceq + Vout_ideal_pk > Vcc) cutoffClipped = true;
+      if (Vceq - Vout_ideal_pk < Vce_sat) satClipped = true;
+
+      const badge = document.getElementById('scopeStateBadge');
+      const thd = document.getElementById('tele3_thd');
+
+      if (satClipped && cutoffClipped) {
+        badge.textContent = 'DISTORSIÓN SEVERA: RECORTE SIMÉTRICO (SATURACIÓN Y CORTE)';
+        badge.style.color = '#f87171';
+        badge.style.borderColor = '#f87171';
+        badge.style.background = 'rgba(248, 113, 113, 0.2)';
+        thd.textContent = '> 25 %';
+        thd.style.color = '#f87171';
+      } else if (satClipped) {
+        badge.textContent = 'DISTORSIÓN ASIMÉTRICA: RECORTE POR SATURACIÓN (VALLE PLANO)';
+        badge.style.color = '#4ade80';
+        badge.style.borderColor = '#4ade80';
+        badge.style.background = 'rgba(74, 222, 128, 0.2)';
+        thd.textContent = '12 % - 18 %';
+        thd.style.color = '#fbbf24';
+      } else if (cutoffClipped) {
+        badge.textContent = 'DISTORSIÓN ASIMÉTRICA: RECORTE POR CORTE (PICO PLANO EN VCC)';
+        badge.style.color = '#f87171';
+        badge.style.borderColor = '#f87171';
+        badge.style.background = 'rgba(248, 113, 113, 0.2)';
+        thd.textContent = '10 % - 15 %';
+        thd.style.color = '#fbbf24';
+      } else {
+        badge.textContent = 'AMPLIFICACIÓN LINEAL PURA (SIN DISTORSIÓN)';
+        badge.style.color = '#38bdf8';
+        badge.style.borderColor = '#38bdf8';
+        badge.style.background = 'rgba(56, 189, 248, 0.2)';
+        thd.textContent = '< 0.8 %';
+        thd.style.color = '#4ade80';
+      }
+
+      // Draw Scope Screen
+      ctx.clearRect(0, 0, w, h);
+
+      // Oscilloscope background grid
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+      ctx.lineWidth = 1;
+      const numCols = 10;
+      const numRows = 8;
+      for (let c = 0; c <= numCols; c++) {
+        const x = (w / numCols) * c;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let r = 0; r <= numRows; r++) {
+        const y = (h / numRows) * r;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Voltages limits lines
+      function vToY(v) {
+        // Map 0V to h - 30, and 14V to 30
+        return (h - 30) - (v / 14) * (h - 60);
+      }
+
+      // Vcc line (Cutoff limit)
+      ctx.strokeStyle = '#f87171';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, vToY(Vcc));
+      ctx.lineTo(w, vToY(Vcc));
+      ctx.stroke();
+      ctx.fillStyle = '#f87171';
+      ctx.font = '10px monospace';
+      ctx.fillText(`LÍMITE DE CORTE: Vcc = ${Vcc.toFixed(1)}V`, 10, vToY(Vcc) - 4);
+
+      // Vce_sat line (Saturation limit)
+      ctx.strokeStyle = '#4ade80';
+      ctx.beginPath();
+      ctx.moveTo(0, vToY(Vce_sat));
+      ctx.lineTo(w, vToY(Vce_sat));
+      ctx.stroke();
+      ctx.fillStyle = '#4ade80';
+      ctx.fillText(`LÍMITE DE SATURACIÓN: Vce(sat) = ${Vce_sat.toFixed(1)}V`, 10, vToY(Vce_sat) + 12);
+
+      // Q point center line
+      ctx.strokeStyle = '#64748b';
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, vToY(Vceq));
+      ctx.lineTo(w, vToY(Vceq));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`Nivel DC Q = ${Vceq.toFixed(1)}V`, w - 140, vToY(Vceq) - 4);
+
+      // Draw Output Waveform Vce(t)
+      ctx.strokeStyle = (satClipped || cutoffClipped) ? '#fbbf24' : '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = (satClipped || cutoffClipped) ? 'rgba(251, 191, 36, 0.6)' : 'rgba(56, 189, 248, 0.6)';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+
+      const twoCycles = 2 * Math.PI * 2;
+      for (let px = 0; px < w; px++) {
+        const angle = (px / w) * twoCycles;
+        // Inverted phase: - sin(angle)
+        let v_inst = Vceq - Vout_ideal_pk * Math.sin(angle);
+
+        // Saturation clipping (cannot drop below Vce_sat)
+        if (v_inst < Vce_sat) v_inst = Vce_sat;
+        // Cutoff clipping (cannot exceed Vcc)
+        if (v_inst > Vcc) v_inst = Vcc;
+
+        const py = vToY(v_inst);
+        if (px === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0; // reset
+    }
+
+    // Initialize all simulations on load
+    window.addEventListener('DOMContentLoaded', () => {
+      showSlide(0);
+      updateLoadLineSim();
+      updateLdrSim();
+      updateScopeSim();
+    });
+  </script>
+</body>
+</html>
