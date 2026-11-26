@@ -1,8 +1,7 @@
 # Material Didáctico: El Transistor Bipolar (BJT)
 ## Regiones de Operación, Circuitos de Aplicación, Simulaciones y Guía Docente
 
-Este repositorio contiene el material docente digital interactivo desarrollado para la asignatura de **Fundamentos de Electrónica**, tomando como base el documento maestro [`Transistor.pdf`](file:///home/leonard0/Documentos/clases2026/Fundamentos%20de%20electr%C3%B3nica/HTML_SLIDES/Transistor.pdf).
-
+Este repositorio contiene el material digital interactivo desarrollado para la asignatura de **Fundamentos de Electrónica** abarcando la temática de transistores, tomando como referencia el documento Transistor.pdf
 ---
 
 ## 📁 Archivos Desarrollados

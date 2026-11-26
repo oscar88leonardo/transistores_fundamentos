@@ -497,7 +497,7 @@
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 16px 0;
+      margin: 18px 0;
       font-size: 0.88rem;
     }
 
@@ -655,7 +655,7 @@
     <div id="mode-banner" class="mode-banner mode-banner-docente">
       <div>
         <strong id="banner-title">🎓 Versión Docente Activa:</strong>
-        <span id="banner-desc"> Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\text{V}$, transistor BC548B) y coordenadas resueltas del Punto Q.</span>
+        <span id="banner-desc"> Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\text{ V}$, transistor BC548B) y coordenadas resueltas del Punto Q.</span>
       </div>
       <button class="btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="toggleDocMode()">
         Cambiar a Vista <span id="banner-btn-text">Estudiante</span>
@@ -691,7 +691,7 @@
             <strong>Dominar el simulador virtual SimulIDE:</strong> Configurar fuentes de $9\text{ V}$, transistores BJT NPN BC548B ($\beta = 200$), termistores NTC, fotorresistencias (LDR), relés electromecánicos, motores de CC y osciloscopio virtual.
           </li>
           <li style="margin-bottom: 8px;">
-            <strong>Contrastar modelo teórico vs simulación:</strong> Evaluar cuantitativamente la concordancia entre los cálculos teóricos ($V_{BE} = 0.70 - 0.75\text{ V}, V_{CE(sat)} = 0.20\text{ V}$) y las mediciones de SimulIDE.
+            <strong>Contrastar modelo teórico vs simulación:</strong> Evaluar cuantitativamente la concordancia entre los cálculos teóricos ($V_{BE} = 0.70 - 0.75\text{ V}, V_{CE(sat)} = 0.20\text{ V}$) y las mediciones de SimulIDE mediante tablas experimentales en cada práctica.
           </li>
           <li style="margin-bottom: 8px;">
             <strong>Analizar la conmutación y la protección inductiva:</strong> Comprobar el fenómeno de sobretensión inductiva ($-L \frac{di}{dt}$) en bobinas de relé y motores y el papel protector del diodo <em>flyback</em> en antiparalelo.
@@ -764,7 +764,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 3.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $\text{VR1}=5\text{K}$, $R_B=2.2\text{K}$, $\text{BC548B}$, $R_C=470\ \Omega$, LED $\text{D1}$, $\text{LDR1}$.
+            Componentes: $9\text{ V}$, $\text{VR1}=5\text{ k}\Omega$, $R_B=2.2\text{ k}\Omega$, $\text{BC548B}$, $R_C=470\ \Omega$, LED $\text{D1}$, $\text{LDR1}$.
           </div>
         </div>
 
@@ -837,7 +837,7 @@
               <div class="calc-row">
                 <span>$V_{TH} =$ </span><input type="text" class="calc-input" placeholder="Ej: 8.57 V">
                 <span>$R_{B(total)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 6.96 kΩ">
-                <span>$I_B = \frac{V_{TH} - 0.75\text{V}}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.12 mA">
+                <span>$I_B = \frac{V_{TH} - 0.75\text{ V}}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.12 mA">
               </div>
               <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 8px;">
                 Malla de colector: calcule la corriente máxima de saturación ($V_{CE(sat)} = 0.20\text{ V}$) y verifique el criterio de saturación:
@@ -875,14 +875,15 @@
           </ol>
         </div>
 
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 1 -->
         <table class="data-table">
           <thead>
             <tr>
               <th>Condición LDR</th>
-              <th>$R_{LDR}$ Estimada</th>
-              <th>$V_B$ Medido</th>
-              <th>$V_{CE}$ Medido</th>
-              <th>$I_C$ Medida</th>
+              <th>R<sub>LDR</sub> Estimada</th>
+              <th>V<sub>B</sub> Medido</th>
+              <th>V<sub>CE</sub> Medido</th>
+              <th>I<sub>C</sub> Medida</th>
               <th>Estado LED</th>
               <th>Región del Transistor</th>
             </tr>
@@ -890,28 +891,28 @@
           <tbody>
             <tr>
               <td><strong>Luz Plena</strong></td>
-              <td>$\approx 200\ \Omega$</td>
-              <td><span class="view-docente-only">$\approx 0.35\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$9.00\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$0.00\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>≈ 200 Ω</td>
+              <td><span class="view-docente-only">≈ 0.35 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
               <td>Apagado</td>
               <td><strong>Corte</strong></td>
             </tr>
             <tr>
               <td><strong>Luz Intermedia</strong></td>
-              <td>$\approx 1.5\text{ k}\Omega$</td>
-              <td><span class="view-docente-only">$\approx 0.68\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$\approx 4.20\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$\approx 6.4\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>≈ 1.5 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.68 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 4.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 6.4 mA</span><span class="view-estudiante-only">______ mA</span></td>
               <td>Tenue</td>
               <td><strong>Activa Lineal</strong></td>
             </tr>
             <tr>
               <td><strong>Oscuridad Total</strong></td>
-              <td>$> 50\text{ k}\Omega$</td>
-              <td><span class="view-docente-only">$\approx 0.77\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$\approx 0.19\text{ V}$</span><span class="view-estudiante-only">______ V</span></td>
-              <td><span class="view-docente-only">$\approx 14.8\text{ mA}$</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>&gt; 50 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.77 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.19 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 14.8 mA</span><span class="view-estudiante-only">______ mA</span></td>
               <td>Brillo Pleno</td>
               <td><strong>Saturación</strong></td>
             </tr>
@@ -935,7 +936,7 @@
         </div>
 
         <p style="font-size: 0.92rem; color: #cbd5e1;">
-          El circuito emplea un divisor de tensión formado por el termistor $\text{NTC}$ ($-t^\circ$) en la rama superior y un potenciómetro de $500\ \Omega$ en la rama inferior. La base del transistor $\text{BC548B}$ se conecta mediante una resistencia de $R_B = 2.2\text{ k}\Omega$. El colector acciona la bobina de un relé $\text{RL1}$ (con diodo de protección en antiparalelo). Al activarse el relé, sus contactos cierran el circuito para encender un motor de corriente continua $\text{MT1}$ conectado a la fuente de $+9\text{ V}$.
+          El circuito emplea un divisor de tensión formado por el termistor $\text{NTC}$ (coeficiente de temperatura negativo, $-t$) en la rama superior y un potenciómetro de $500\ \Omega$ en la rama inferior. La base del transistor $\text{BC548B}$ se conecta mediante una resistencia de $R_B = 2.2\text{ k}\Omega$. El colector acciona la bobina de un relé $\text{RL1}$ (con diodo de protección en antiparalelo). Al activarse el relé, sus contactos cierran el circuito para encender un motor de corriente continua $\text{MT1}$ conectado a la fuente de $+9\text{ V}$.
         </p>
 
         <!-- ESQUEMÁTICO OFICIAL DE LA FUENTE ORIGINAL -->
@@ -948,7 +949,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 4.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/ventilador_activado_por_ntc.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $\text{NTC}$ (arriba), Potenciómetro $500\ \Omega$ (abajo), $R_B=2.2\text{K}$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo, motor $\text{MT1}$.
+            Componentes: $9\text{ V}$, $\text{NTC}$ (arriba), Potenciómetro $500\ \Omega$ (abajo), $R_B=2.2\text{ k}\Omega$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo, motor $\text{MT1}$.
           </div>
         </div>
 
@@ -961,7 +962,7 @@
             </p>
 
             <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
-              <strong>1. En reposo / Frío ($15^\circ\text{C}$, $R_{NTC} \approx 15\text{ k}\Omega$):</strong><br>
+              <strong>1. En reposo / Frío (15 °C, $R_{NTC} \approx 15\text{ k}\Omega$):</strong><br>
               Calculamos la tensión en el nodo de base:
               $$V_{nodo} = V_{CC} \cdot \frac{R_{pot}}{R_{NTC} + R_{pot}} = 9\text{ V} \cdot \frac{500\ \Omega}{15000\ \Omega + 500\ \Omega} = 9 \cdot \frac{500}{15500} \approx \mathbf{0.290\text{ V}}$$
               Como $V_{nodo} = 0.29\text{ V} < 0.65\text{ V}$, el transistor está en <strong>CORTE</strong>:
@@ -970,7 +971,7 @@
             </p>
 
             <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 10px;">
-              <strong>2. Activación por calor ($60^\circ\text{C}$, $R_{NTC} \approx 400\ \Omega$):</strong><br>
+              <strong>2. Activación por calor (60 °C, $R_{NTC} \approx 400\ \Omega$):</strong><br>
               Equivalente de Thévenin del divisor:
               $$V_{TH} = 9\text{ V} \cdot \frac{500\ \Omega}{400\ \Omega + 500\ \Omega} = 9 \cdot \frac{5}{9} = \mathbf{5.00\text{ V}}$$
               $$R_{TH} = 400\ \Omega \parallel 500\ \Omega = \frac{200000}{900} \approx \mathbf{222\ \Omega}$$
@@ -1023,7 +1024,7 @@
                 <span>$I_B = \frac{V_{TH} - 0.75}{R_{B(total)}} =$ </span><input type="text" class="calc-input" placeholder="Ej: 1.75 mA">
               </div>
               <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 8px;">
-                Calcule la corriente de activación de la bobina del relé ($V_{CE(sat)} = 0.2\text{ V}$):
+                Calcule la corriente de activación de la bobina del relé ($V_{CE(sat)} = 0.20\text{ V}$):
               </p>
               $$I_{C(sat)} = \frac{V_{CC} - V_{CE(sat)}}{R_{bobina}}, \qquad I_{B(min)} = \frac{I_{C(sat)}}{\beta}$$
               <div class="calc-row">
@@ -1056,6 +1057,64 @@
             <li>Conecte los contactos normalmente abiertos (NO) del relé a un <code>DC Motor</code> y alimente el motor desde $+9\text{ V}$.</li>
           </ol>
         </div>
+
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 2 -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Condición Térmica NTC</th>
+              <th>R<sub>NTC</sub> Estimada</th>
+              <th>V<sub>B</sub> Medido</th>
+              <th>V<sub>CE</sub> Medido</th>
+              <th>I<sub>C</sub> (Bobina Relé)</th>
+              <th>Estado Relé RL1</th>
+              <th>Estado Motor MT1</th>
+              <th>Región del Transistor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Frío Intenso (10 °C)</strong></td>
+              <td>≈ 20 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.22 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Desactivado (Abierto)</td>
+              <td>Detenido</td>
+              <td><strong>Corte</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Ambiente / Reposo (25 °C)</strong></td>
+              <td>≈ 10 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.43 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Desactivado (Abierto)</td>
+              <td>Detenido</td>
+              <td><strong>Corte</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Umbral de Disparo (40 °C)</strong></td>
+              <td>≈ 2.5 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.70 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 4.50 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 11.2 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Transición / Zumbido</td>
+              <td>Detenido</td>
+              <td><strong>Activa Lineal</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Calor Intenso (60 °C)</strong></td>
+              <td>≈ 400 Ω</td>
+              <td><span class="view-docente-only">≈ 0.85 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.19 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 22.0 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Activado (Cerrado)</td>
+              <td>Giro Pleno (9V)</td>
+              <td><strong>Saturación Forzada</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1087,7 +1146,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 5.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/temporizador.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $\text{SW1}$, $C_1=150\ \mu\text{F}$, $R_B=1.8\text{K}$, $\text{BC548B}$, $R_C=330\ \Omega$, LED.
+            Componentes: $9\text{ V}$, $\text{SW1}$, $C_1=150\ \mu\text{F}$, $R_B=1.8\text{ k}\Omega$, $\text{BC548B}$, $R_C=330\ \Omega$, LED.
           </div>
         </div>
 
@@ -1176,6 +1235,68 @@
             <li>Conecte una sonda al condensador y otra al colector en el osciloscopio virtual para registrar el decaimiento.</li>
           </ol>
         </div>
+
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 3 -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Instante de Tiempo</th>
+              <th>V<sub>C1</sub>(t) Condensador</th>
+              <th>I<sub>B</sub>(t) Estimada</th>
+              <th>V<sub>CE</sub>(t) Medido</th>
+              <th>I<sub>C</sub>(t) Medida</th>
+              <th>Estado LED</th>
+              <th>Región del Transistor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>t = 0 s (Pulsador presionado)</strong></td>
+              <td>9.00 V</td>
+              <td><span class="view-docente-only">≈ 4.58 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 0.19 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 21.2 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Máximo</td>
+              <td><strong>Saturación</strong></td>
+            </tr>
+            <tr>
+              <td><strong>t ≈ 0.27 s (1τ tras soltar)</strong></td>
+              <td><span class="view-docente-only">≈ 3.75 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 1.67 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 0.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 21.1 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Alto</td>
+              <td><strong>Saturación</strong></td>
+            </tr>
+            <tr>
+              <td><strong>t ≈ 0.54 s (2τ tras soltar)</strong></td>
+              <td><span class="view-docente-only">≈ 1.82 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.59 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 0.25 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 20.8 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Medio</td>
+              <td><strong>Saturación Límite</strong></td>
+            </tr>
+            <tr>
+              <td><strong>t ≈ 0.75 s (≈ 2.8τ Umbral)</strong></td>
+              <td><span class="view-docente-only">≈ 0.95 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.11 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 3.80 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 10.5 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Tenue</td>
+              <td><strong>Activa Lineal</strong></td>
+            </tr>
+            <tr>
+              <td><strong>t ≥ 1.0 s (&gt; 3.5τ Corte)</strong></td>
+              <td><span class="view-docente-only">&lt; 0.65 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 μA</span><span class="view-estudiante-only">0 μA</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Apagado Completo</td>
+              <td><strong>Corte</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1207,7 +1328,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 6.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/multivibrador_astable.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $R_{C}=330\ \Omega$, LEDs, $R_{B}=22\text{K}$, $C=100\ \mu\text{F}$, $2\times\text{BC548B}$.
+            Componentes: $9\text{ V}$, $R_{C}=330\ \Omega$, LEDs, $R_{B}=22\text{ k}\Omega$, $C=100\ \mu\text{F}$, $2\times\text{BC548B}$.
           </div>
         </div>
 
@@ -1292,6 +1413,53 @@
             <li>Conecte el <code>Oscilloscope</code> y mida el semiperiodo ($T_1 \approx 1.5\text{ s}$).</li>
           </ol>
         </div>
+
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 4 -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fase de Oscilación</th>
+              <th>V<sub>CE1</sub> (Q<sub>1</sub>)</th>
+              <th>V<sub>B1</sub> (Q<sub>1</sub>)</th>
+              <th>Estado LED 1</th>
+              <th>V<sub>CE2</sub> (Q<sub>2</sub>)</th>
+              <th>V<sub>B2</sub> (Q<sub>2</sub>)</th>
+              <th>Estado LED 2</th>
+              <th>Regiones Operación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fase A (0 ≤ t &lt; 1.52 s)</strong></td>
+              <td><span class="view-docente-only">≈ 0.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.72 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td>Encendido Pleno</td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">-7.5 V → +0.6 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td>Apagado</td>
+              <td><strong>Q<sub>1</sub> Sat / Q<sub>2</sub> Corte</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Fase B (1.52 s ≤ t &lt; 3.05 s)</strong></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">-7.5 V → +0.6 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td>Apagado</td>
+              <td><span class="view-docente-only">≈ 0.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.72 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td>Encendido Pleno</td>
+              <td><strong>Q<sub>1</sub> Corte / Q<sub>2</sub> Sat</strong></td>
+            </tr>
+            <tr>
+              <td colspan="8" style="background: rgba(56, 189, 248, 0.08); font-weight: 600; text-align: left; padding-left: 18px;">
+                ⏱️ <strong>Medición Cronometrada / Osciloscopio:</strong>
+                Semiperiodo T<sub>1</sub>: <span class="view-docente-only"><strong>1.52 s</strong></span><span class="view-estudiante-only">______ s</span> &bull; 
+                Semiperiodo T<sub>2</sub>: <span class="view-docente-only"><strong>1.52 s</strong></span><span class="view-estudiante-only">______ s</span> &bull; 
+                Periodo Total T: <span class="view-docente-only"><strong>3.05 s</strong></span><span class="view-estudiante-only">______ s</span> &bull; 
+                Frecuencia f: <span class="view-docente-only"><strong>0.33 Hz</strong></span><span class="view-estudiante-only">______ Hz</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1323,7 +1491,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 7.1:</strong> Esquemático oficial de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/par_darlington.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $R_{in}=100\text{K}$, $R_{C1}=10\text{K}$, $R_{C2}=330\ \Omega$, LED, $2\times\text{BC548B}$.
+            Componentes: $9\text{ V}$, $R_{in}=100\text{ k}\Omega$, $R_{C1}=10\text{ k}\Omega$, $R_{C2}=330\ \Omega$, LED, $2\times\text{BC548B}$.
           </div>
         </div>
 
@@ -1385,7 +1553,7 @@
 
             <div class="student-guided-step">
               <h5>Paso 2: Saturación del Transistor de Salida $Q_2$</h5>
-              $$I_{C2(sat)} = \frac{V_{CC} - V_{LED} - 0.2\text{V}}{R_{C2}}, \qquad I_{B2(min)} = \frac{I_{C2(sat)}}{\beta_2}$$
+              $$I_{C2(sat)} = \frac{V_{CC} - V_{LED} - 0.2\text{ V}}{R_{C2}}, \qquad I_{B2(min)} = \frac{I_{C2(sat)}}{\beta_2}$$
               <div class="calc-row">
                 <span>$I_{C2(sat)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 21.21 mA">
                 <span>$I_{B2(min)} =$ </span><input type="text" class="calc-input" placeholder="Ej: 106 μA">
@@ -1416,6 +1584,58 @@
             <li>Conecte en la base de $Q_1$ la resistencia $R_{in} = 100\text{ k}\Omega$ en serie con el pulsador <code>SW1</code> a $+9\text{ V}$.</li>
           </ol>
         </div>
+
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 5 -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Condición de Entrada</th>
+              <th>I<sub>B1</sub> Inyectada</th>
+              <th>V<sub>B1</sub> Medido</th>
+              <th>V<sub>CE1</sub> (Q<sub>1</sub>)</th>
+              <th>I<sub>B2</sub> Base Q<sub>2</sub></th>
+              <th>V<sub>CE2</sub> (Q<sub>2</sub>)</th>
+              <th>I<sub>C2</sub> (LED)</th>
+              <th>Estado LED</th>
+              <th>Región del Par</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pulsador SW1 Abierto</strong></td>
+              <td><span class="view-docente-only">0.00 μA</span><span class="view-estudiante-only">______ μA</span></td>
+              <td><span class="view-docente-only">0.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 μA</span><span class="view-estudiante-only">______ μA</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Apagado</td>
+              <td><strong>Corte (Q<sub>1</sub> y Q<sub>2</sub>)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Pulsador SW1 Cerrado (100 kΩ)</strong></td>
+              <td><span class="view-docente-only">≈ 76 μA</span><span class="view-estudiante-only">______ μA</span></td>
+              <td><span class="view-docente-only">≈ 1.45 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.88 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 0.19 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 21.2 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Pleno</td>
+              <td><strong>Saturación (Q<sub>1</sub> y Q<sub>2</sub>)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Contacto de Alta Resistencia (1 MΩ)</strong></td>
+              <td><span class="view-docente-only">≈ 7.6 μA</span><span class="view-estudiante-only">______ μA</span></td>
+              <td><span class="view-docente-only">≈ 1.38 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.25 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.82 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td><span class="view-docente-only">≈ 0.20 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 21.1 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Pleno</td>
+              <td><strong>Saturación Super-Beta</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1447,7 +1667,7 @@
           </div>
           <div class="circuit-caption">
             <strong>Figura 8.1:</strong> Esquemático oficial completo de la fuente original (<a href="https://angelmicelti.github.io/4ESO/EAN/detector_de_oscuridad_con_activacin_de_rel.html" target="_blank">angelmicelti.github.io</a>). 
-            Componentes: $9\text{V}$, $\text{SW1}$, $\text{POT1}=5\text{K}$, $R_B=2.2\text{K}$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo $\text{D1}$, $\text{LED1}$ con $470\ \Omega$.
+            Componentes: $9\text{ V}$, $\text{SW1}$, $\text{POT1}=5\text{ k}\Omega$, $R_B=2.2\text{ k}\Omega$, $\text{BC548B}$, Relé $\text{RL1}$ con diodo $\text{D1}$, $\text{LED1}$ con $470\ \Omega$.
           </div>
         </div>
 
@@ -1462,7 +1682,7 @@
             <p style="font-size: 0.9rem; color: #e2e8f0; margin-top: 8px;">
               <strong>1. Malla del BJT en Oscuridad ($R_{LDR} \approx 100\text{ k}\Omega$):</strong><br>
               Equivalente de Thévenin del divisor de base:
-              $$V_{TH} = 9\text{ V} \cdot \frac{100\text{ k}\Omega}{5\text{ k}\Omega + 100\text{ k}\Omega} \approx \mathbf{8.57\text{ V}}, \quad R_{TH} = 5\text{ k} \parallel 100\text{ k} \approx \mathbf{4.76\text{ k}\Omega}$$
+              $$V_{TH} = 9\text{ V} \cdot \frac{100\text{ k}\Omega}{5\text{ k}\Omega + 100\text{ k}\Omega} \approx \mathbf{8.57\text{ V}}, \quad R_{TH} = 5\text{ k}\Omega \parallel 100\text{ k}\Omega \approx \mathbf{4.76\text{ k}\Omega}$$
               Resistencia total de base: $R_{B(total)} = 4.76\text{ k}\Omega + 2.2\text{ k}\Omega = \mathbf{6.96\text{ k}\Omega}$.<br>
               Corriente de base inyectada ($V_{BE(sat)} \approx 0.75\text{ V}$):
               $$I_B = \frac{V_{TH} - V_{BE}}{R_{B(total)}} = \frac{8.57\text{ V} - 0.75\text{ V}}{6.96\text{ k}\Omega} \approx \mathbf{1.124\text{ mA} = 1124\ \mu\text{A}}$$
@@ -1537,6 +1757,58 @@
             <li>En los contactos normalmente abiertos (NO) conecte un LED en serie con $470\ \Omega$ alimentado a $+9\text{ V}$.</li>
           </ol>
         </div>
+
+        <!-- TABLA EXPERIMENTAL PRÁCTICA 6 -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Condición de Luz LDR</th>
+              <th>R<sub>LDR</sub> Estimada</th>
+              <th>V<sub>B</sub> Medido</th>
+              <th>V<sub>CE</sub> Medido</th>
+              <th>I<sub>C</sub> (Bobina Relé)</th>
+              <th>Estado Relé RL1</th>
+              <th>I<sub>LED1</sub> Auxiliar</th>
+              <th>Estado LED1</th>
+              <th>Región del Transistor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Luz Plena (Directa)</strong></td>
+              <td>≈ 200 Ω</td>
+              <td><span class="view-docente-only">≈ 0.35 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">9.00 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Desactivado (Abierto)</td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Apagado</td>
+              <td><strong>Corte</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Luz Intermedia (Umbral)</strong></td>
+              <td>≈ 1.5 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.69 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 4.50 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 11.2 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Transición / Inestable</td>
+              <td><span class="view-docente-only">0.00 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Apagado</td>
+              <td><strong>Activa Lineal</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Oscuridad Total</strong></td>
+              <td>&gt; 50 kΩ</td>
+              <td><span class="view-docente-only">≈ 0.77 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 0.19 V</span><span class="view-estudiante-only">______ V</span></td>
+              <td><span class="view-docente-only">≈ 22.0 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Activado (Cerrado)</td>
+              <td><span class="view-docente-only">≈ 15.3 mA</span><span class="view-estudiante-only">______ mA</span></td>
+              <td>Brillo Pleno</td>
+              <td><strong>Saturación Forzada</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1548,7 +1820,7 @@
         <!-- Tabla Docente Completa con Valores Exactos -->
         <div class="view-docente-only">
           <p style="font-size: 0.92rem; color: #a7f3d0; margin-bottom: 12px; font-weight: 600;">
-            🎓 Tabla Maestra Resuelta con los Valores Exactos de los Esquemáticos ($V_{CC} = 9\text{V}$, BC548B):
+            🎓 Tabla Maestra Resuelta con los Valores Exactos de los Esquemáticos ($V_{CC} = 9\text{ V}$, BC548B):
           </p>
           <table class="data-table">
             <thead>
@@ -1573,7 +1845,7 @@
                 <td>BC548B</td>
                 <td>$Q_{frio} = (9.0\text{ V},\ 0\text{ mA})$ [Corte]</td>
                 <td>$Q_{calor} \approx (0.20\text{ V},\ 22.0\text{ mA})$ [Saturación]</td>
-                <td>Relé activa motor DC $\text{MT1}$ a $9\text{V}$.</td>
+                <td>Relé activa motor DC $\text{MT1}$ a $9\text{ V}$.</td>
               </tr>
               <tr>
                 <td class="text-left"><strong>3. Temporizador RC</strong></td>
@@ -1702,7 +1974,7 @@
 
         banner.className = 'mode-banner mode-banner-docente';
         bannerTitle.textContent = '🎓 Versión Docente Activa:';
-        bannerDesc.textContent = ' Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\\text{V}$, transistor BC548B) y coordenadas resueltas del Punto Q.';
+        bannerDesc.textContent = ' Incluye el solucionario analítico paso a paso con los valores exactos de los esquemáticos ($V_{CC}=9\\text{ V}$, transistor BC548B) y coordenadas resueltas del Punto Q.';
         bannerBtnText.textContent = 'Estudiante';
       } else {
         document.body.classList.remove('mode-docente');
